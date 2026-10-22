@@ -164,7 +164,7 @@ export function buildGallery(data, materials, manager, renderer) {
         holder.add(screen);
         hitMeshes.push(screen);
         // screen glow on the wall
-        pool.material.opacity = 0.16;
+        pool.material.opacity = work.room === 'r3' ? 0.05 : 0.1;
         const frames = work.frames && work.frames.length ? work.frames : [work.image];
         const entry = { work, mat, frames, textures: [], idx: 0, t: Math.random() * 6 };
         screens.push(entry);
@@ -178,8 +178,11 @@ export function buildGallery(data, materials, manager, renderer) {
       } else {
         // Mounted print: thin panel with white edges, artwork on the front face
         const front = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.62, metalness: 0, emissive: 0xffffff, emissiveIntensity: 0.18 });
-        const panel = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.025), [sideMat, sideMat, sideMat, sideMat, front, sideMat]);
-        panel.position.z = 0.0125;
+        const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.025), sideMat);
+        body.position.z = 0.0125;
+        holder.add(body);
+        const panel = new THREE.Mesh(new THREE.PlaneGeometry(w, h), front);
+        panel.position.z = 0.0252;
         panel.userData.work = work;
         holder.add(panel);
         hitMeshes.push(panel);
@@ -212,6 +215,7 @@ export function buildGallery(data, materials, manager, renderer) {
       hitMeshes.push(label);
 
       group.add(holder);
+      work._pin = { x: f.x, z: f.z };
       work._focus = { x: f.x + f.nx * Math.max(1.6, w * 1.5), z: f.z + f.nz * Math.max(1.6, w * 1.5), look: [f.x, work.hang.y, f.z] };
     } else if (work.anchor) {
       // Installation / projection: invisible but clickable volume
@@ -223,6 +227,7 @@ export function buildGallery(data, materials, manager, renderer) {
       hit.userData.work = work;
       group.add(hit);
       hitMeshes.push(hit);
+      work._pin = { x: a.x, z: a.z };
       work._focus = { x: work.view.x, z: work.view.z, look: [a.x, a.y, a.z] };
     }
   }

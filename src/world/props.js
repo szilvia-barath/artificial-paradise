@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { OBSTACLES, CEILING, PARTITION } from './layout.js';
 
 // Furniture, fixtures and installations. Kept low-poly; repeated parts are instanced.
@@ -371,5 +372,35 @@ export function buildProps(materials, stairwell) {
     g.add(spots, lenses);
   }
 
+  mergeStatic(g);
   return { group: g, anim };
+}
+
+// Bake every plain (non-instanced) mesh into one merged mesh per material: ~150 draw
+// calls of furniture become a couple of dozen.
+function mergeStatic(group) {
+  group.updateMatrixWorld(true);
+  const byMat = new Map();
+  group.traverse((o) => {
+    if (o.isMesh && !o.isInstancedMesh) {
+      if (!byMat.has(o.material)) byMat.set(o.material, []);
+      byMat.get(o.material).push(o);
+    }
+  });
+  for (const [mat, meshes] of byMat) {
+    if (meshes.length < 2) continue;
+    const geos = meshes.map((m) => {
+      const geo = m.geometry.clone();
+      geo.applyMatrix4(m.matrixWorld);
+      for (const k of Object.keys(geo.attributes)) if (!['position', 'normal', 'uv'].includes(k)) geo.deleteAttribute(k);
+      return geo;
+    });
+    const allIndexed = geos.every((g) => g.index);
+    const merged = mergeGeometries(allIndexed ? geos : geos.map((g) => (g.index ? g.toNonIndexed() : g)), false);
+    if (!merged) continue;
+    for (const m of meshes) m.parent.remove(m);
+    const mesh = new THREE.Mesh(merged, mat);
+    mesh.matrixAutoUpdate = false;
+    group.add(mesh);
+  }
 }

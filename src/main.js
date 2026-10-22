@@ -8,6 +8,9 @@ import { buildProps } from './world/props.js';
 import { buildLights } from './world/lights.js';
 import { FirstPersonControls } from './controls.js';
 import { setupPanels } from './ui/panels.js';
+import { buildGallery } from './world/gallery.js';
+import { setupViewer } from './ui/viewer.js';
+import { EYE } from './world/layout.js';
 
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 document.body.classList.toggle('touch', isTouch);
@@ -54,6 +57,9 @@ const props = buildProps(materials, arch.stairwell);
 scene.add(props.group);
 const lights = buildLights(scene);
 
+const gallery = buildGallery(data, materials, manager, renderer);
+scene.add(gallery.group);
+
 const controls = new FirstPersonControls(camera, canvas, arch.segments);
 const r1 = roomById('r1');
 controls.setPose(r1.spawn.x, r1.spawn.z, 0);
@@ -69,6 +75,80 @@ const ui = setupPanels(data, {
     controls.enabled = entered;
   },
   onJumpRoom: (id) => jumpToRoom(id),
+});
+
+const viewer = setupViewer(data, {
+  onOpen: () => {
+    controls.enabled = false;
+    controls.unlock();
+  },
+  onClose: () => {
+    controls.enabled = entered;
+  },
+  onGoto: (w) => gotoWork(w),
+});
+
+function gotoWork(w) {
+  const f = w._focus;
+  if (!f) return;
+  controls.setPose(f.x, f.z, 0);
+  controls.lookAt(f.look[0], f.look[2]);
+  const d = Math.hypot(f.look[0] - f.x, f.look[2] - f.z);
+  controls.pitch = Math.atan2(f.look[1] - EYE, d) * 0.8;
+}
+
+// ---------------------------------------------------------------- picking
+const raycaster = new THREE.Raycaster();
+raycaster.far = 7.5;
+const ndc = new THREE.Vector2();
+const prompt = document.getElementById('prompt');
+const crosshair = document.getElementById('crosshair');
+let hovered = null;
+let mouseInside = false;
+canvas.addEventListener('mousemove', (e) => {
+  mouseInside = true;
+  if (!controls.locked) ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
+});
+canvas.addEventListener('mouseleave', () => { mouseInside = false; });
+
+function pick(x, y) {
+  raycaster.setFromCamera(new THREE.Vector2(x, y), camera);
+  const hit = raycaster.intersectObjects(gallery.hitMeshes, false)[0];
+  return hit ? hit.object.userData : null;
+}
+function updateHover() {
+  let ud = null;
+  if (entered && controls.enabled && !isTouch) {
+    if (controls.locked) ud = pick(0, 0);
+    else if (mouseInside) ud = pick(ndc.x, ndc.y);
+  }
+  const target = ud && (ud.work || (ud.text ? 'text' : null));
+  if (target !== hovered) {
+    hovered = target;
+    crosshair.classList.toggle('active', !!hovered);
+    prompt.classList.toggle('show', !!hovered);
+    canvas.style.cursor = hovered && !controls.locked ? 'pointer' : '';
+    if (hovered === 'text') prompt.textContent = 'Click to read the exhibition text';
+    else if (hovered) prompt.textContent = `Click to view · ${hovered.title}`;
+  }
+}
+function activate(ud) {
+  if (!ud) return false;
+  if (ud.work) { viewer.open(ud.work); return true; }
+  if (ud.text) { ui.about(); return true; }
+  return false;
+}
+controls.onTap = (x, y, touch) => {
+  const ud = pick((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1);
+  if (activate(ud)) return;
+  if (!touch && !controls.locked) controls.lock();
+};
+canvas.addEventListener('click', () => {
+  if (controls.locked && controls.enabled) activate(pick(0, 0));
+});
+window.addEventListener('keydown', (e) => {
+  if (!entered || viewer.isOpen() || ui.isOpen()) return;
+  if (e.code === 'KeyE' || e.code === 'Enter') activate(pick(0, 0));
 });
 
 document.getElementById('toolbar').addEventListener('click', (e) => {
@@ -117,9 +197,6 @@ enterBtn.addEventListener('click', () => {
   if (!isTouch) controls.lock();
 });
 controls.onLockChange = (locked) => document.body.classList.toggle('locked', locked);
-canvas.addEventListener('click', () => {
-  if (entered && !controls.locked && !isTouch && controls.enabled) controls.lock();
-});
 
 // ---------------------------------------------------------------- resize
 function resize() {
@@ -141,6 +218,8 @@ function frame() {
   controls.update(dt);
   updateRoom();
   for (const fn of props.anim) fn(t, dt);
+  gallery.update(t, dt, camera.position, 0);
+  updateHover();
   renderer.render(scene, camera);
 }
 
@@ -156,8 +235,8 @@ function markReady() {
   enterBtn.focus({ preventScroll: true });
 }
 manager.onLoad = markReady;
-// No queued assets in M1 -> ready immediately after first frame.
-requestAnimationFrame(() => requestAnimationFrame(markReady));
+// Safety net: never block the Enter button for more than 12 s on a slow network.
+setTimeout(markReady, 12000);
 
 // Debug handle for screenshots / tinkering in the console.
-window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, ROOMS, ui };
+window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, ROOMS, ui, viewer, gotoWork, data };

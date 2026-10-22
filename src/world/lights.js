@@ -21,7 +21,7 @@ export function buildLights(scene) {
   lights.r1a = point(0xf3f4ff, 7, 2.8, 1.95, 3.0, 12);
   lights.r1b = point(0xf3f4ff, 7, 7.4, 1.95, 3.0, 12);
   // Room 2: warm pendant lamps
-  lights.r2 = point(0xffb866, 7.5, 3.0, CEILING - 0.85, -2.9, 9);
+  lights.r2 = point(0xffc88a, 7, 3.0, CEILING - 0.85, -2.9, 9);
   // Room 3 white zone
   lights.r3 = point(0xf4f6ff, 7, 11.2, 1.95, -2.8, 11);
   // Room 3 dark zone: light spilling from the projection (colour driven per frame)

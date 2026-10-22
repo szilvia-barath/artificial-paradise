@@ -144,7 +144,7 @@ export function createMaterials(renderer) {
 
   return {
     whiteBrick: brickMat(0xf1efe9),
-    warmBrick: brickMat(0xe9cf8f),
+    warmBrick: brickMat(0xe2cc98),
     greyBrick: brickMat(0x6c6b70),
     darkBrick: brickMat(0x2b2c31, 0.95, 1.2),
     whitePlaster: new THREE.MeshStandardMaterial({ color: 0xf3f2ee, roughness: 0.95, map: concrete }),

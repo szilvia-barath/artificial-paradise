@@ -21,18 +21,45 @@
   ],
   "textCredit": "Text by Luca Cserhalmi, aesthete. The exhibition was opened by Barabás Zemlényi-Kovács, theorist and independent curator.",
   "credits": [
-    ["Artist", "Kristóf Szabó / KristofLab"],
-    ["Gallery", "MAMŰ, Budapest"],
-    ["Text", "Luca Cserhalmi"],
-    ["Opening", "Barabás Zemlényi-Kovács"],
-    ["Digital exhibition", "Szilvia Barath"],
-    ["Photography", "Szilvia Barath"]
+    [
+      "Artist",
+      "Kristóf Szabó / KristofLab"
+    ],
+    [
+      "Gallery",
+      "MAMŰ, Budapest"
+    ],
+    [
+      "Text",
+      "Luca Cserhalmi"
+    ],
+    [
+      "Opening",
+      "Barabás Zemlényi-Kovács"
+    ],
+    [
+      "Digital exhibition",
+      "Szilvia Barath"
+    ],
+    [
+      "Photography",
+      "Szilvia Barath"
+    ]
   ],
   "behindTheScenes": "This digital exhibition is a hand-built WebGL piece, written in vanilla JavaScript on Three.js and bundled with Vite. It has no game engine and no backend. The basement is generated procedurally from a small floor plan: walls, doorways, reveals and a stairwell are extruded from room rectangles, and brick, tile and concrete textures are painted into canvases at load time, so the 3D world itself downloads almost nothing. The artworks were extracted from on-site photographs with a perspective-correcting crop pipeline (sharp → WebP) and hung where they hung at MAMŰ. In Room 3, the projection is replaced by a live GLSL piece: a raymarch-free 2D shader that glitches between fbm foliage and a quantised grid of leaves and tower blocks. The ambient sound is synthesised with the Web Audio API (detuned drones, filtered room tone, a bar murmur near Room 2), and an AnalyserNode feeds its spectrum into the shader, the projector light and the post-processing (bloom, grain, chromatic aberration and a glitch pulse at every threshold). Everything runs at a capped pixel ratio with adaptive resolution, so it stays smooth on laptops and phones.",
   "rooms": {
-    "r1": { "name": "Room 1", "blurb": "Down the stairs: hydroponic seedlings under LED light, a plant on a drip, and four large prints of tower blocks swallowed by synthetic green." },
-    "r2": { "name": "Room 2", "blurb": "The narrow warm-brick room with the bar, where the screens loop footage of glasshouses, geodesic domes and managed foliage." },
-    "r3": { "name": "Room 3", "blurb": "A long, narrow space. A white gallery of smaller prints opens through a curtain into a dark room: projected trees, a river of plastic, and the generative piece." }
+    "r1": {
+      "name": "Room 1",
+      "blurb": "Down the stairs: hydroponic seedlings under LED light, a plant on a drip, and four large prints of tower blocks swallowed by synthetic green."
+    },
+    "r2": {
+      "name": "Room 2",
+      "blurb": "The narrow warm-brick room with the bar, where the screens loop footage of glasshouses, geodesic domes and managed foliage."
+    },
+    "r3": {
+      "name": "Room 3",
+      "blurb": "A long, narrow space. A white gallery of smaller prints opens through a curtain into a dark room: projected trees, a river of plastic, and the generative piece."
+    }
   },
   "works": [
     {
@@ -44,7 +71,12 @@
       "medium": "Giclée print",
       "caption": "Turquoise façades dissolve into a pixelated meadow; a strip of red marks the horizon line between city and field.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "W", "along": 4.0, "y": 1.55, "width": 1.35 },
+      "hang": {
+        "wall": "W",
+        "along": 4.0,
+        "y": 1.55,
+        "width": 1.35
+      },
       "image": "img/r1-print-1",
       "photo": "DSC_0017"
     },
@@ -57,7 +89,12 @@
       "medium": "Giclée print",
       "caption": "A tower block rises out of dense green brushwork, framed by cyan planes like a screen interface.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "N", "along": 1.05, "y": 1.6, "width": 1.0 },
+      "hang": {
+        "wall": "N",
+        "along": 1.05,
+        "y": 1.6,
+        "width": 1.0
+      },
       "image": "img/r1-print-2",
       "photo": "DSC_0018"
     },
@@ -70,7 +107,12 @@
       "medium": "Giclée print",
       "caption": "Housing estates on a hillside, collaged over a sliding slope of earth and violet digital stripes.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "N", "along": 6.4, "y": 1.6, "width": 1.35 },
+      "hang": {
+        "wall": "N",
+        "along": 6.4,
+        "y": 1.6,
+        "width": 1.35
+      },
       "image": "img/r1-print-3",
       "photo": "DSC_0026"
     },
@@ -83,7 +125,12 @@
       "medium": "Giclée print",
       "caption": "A prefab façade overgrown by a pixel-perfect canopy: the green has been rendered, not grown.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "N", "along": 8.6, "y": 1.6, "width": 1.2 },
+      "hang": {
+        "wall": "N",
+        "along": 8.6,
+        "y": 1.6,
+        "width": 1.2
+      },
       "image": "img/r1-print-4",
       "photo": "DSC_0029"
     },
@@ -96,9 +143,18 @@
       "medium": "Video on small LED screen",
       "caption": "A small screen beside the hydroponic line, glowing in shifting blues and greens like a monitoring display.",
       "todo": "TODO: confirm title and whether this is a single video loop.",
-      "hang": { "wall": "E", "along": 1.05, "y": 1.75, "width": 0.36 },
+      "hang": {
+        "wall": "E",
+        "along": 1.05,
+        "y": 1.75,
+        "width": 0.36
+      },
       "image": "img/r1-screen",
-      "frames": ["img/r1-screen", "img/r1-screen-b", "img/r1-screen-c"],
+      "frames": [
+        "img/r1-screen",
+        "img/r1-screen-b",
+        "img/r1-screen-c"
+      ],
       "photo": "DSC_0032"
     },
     {
@@ -110,8 +166,15 @@
       "medium": "Installation: hydroponic pipe, seedlings, LED tubes, drip-fed plant",
       "caption": "Lettuce seedlings grow in a white pipe under LED light, and a tall plant is kept alive by a drip bag. Nature as infrastructure.",
       "todo": "TODO: confirm title and materials.",
-      "anchor": { "x": 9.0, "y": 1.3, "z": 3.1 },
-      "view": { "x": 6.6, "z": 3.4 },
+      "anchor": {
+        "x": 9.0,
+        "y": 1.3,
+        "z": 3.1
+      },
+      "view": {
+        "x": 6.6,
+        "z": 3.4
+      },
       "image": "img/r1-hydroponics",
       "photo": "DSC_0013"
     },
@@ -124,9 +187,13 @@
       "medium": "Video, flat screen",
       "caption": "Split-screen footage: violet blossoms, glasshouse struts and geodesic grids, cut into a cold blue rhythm.",
       "todo": "TODO: confirm title and duration; replace stills with the video file if available.",
-      "hang": { "wall": "W", "along": -3.3, "y": 1.6, "width": 1.0 },
+      "hang": {
+        "wall": "W",
+        "along": -3.3,
+        "y": 1.6,
+        "width": 1.0
+      },
       "image": "img/r2-video-1",
-      "frames": ["img/r2-video-1", "img/r2-video-1b"],
       "photo": "DSC_0053"
     },
     {
@@ -138,9 +205,13 @@
       "medium": "Video, flat screen",
       "caption": "Hexagonal glazing, a waterfall and ivy: four views of a managed paradise, side by side.",
       "todo": "TODO: confirm title and duration; replace stills with the video file if available.",
-      "hang": { "wall": "N", "along": 1.6, "y": 1.6, "width": 1.0 },
+      "hang": {
+        "wall": "N",
+        "along": 1.6,
+        "y": 1.6,
+        "width": 1.0
+      },
       "image": "img/r2-video-2",
-      "frames": ["img/r2-video-2", "img/r2-video-2b"],
       "photo": "DSC_0056"
     },
     {
@@ -150,12 +221,16 @@
       "title": "Untitled (video) 3",
       "year": "2024",
       "medium": "Video, flat screen",
-      "caption": "The view through the doorway: a screen by the entrance loops domes and glass roofs.",
-      "todo": "TODO: confirm which footage played on this screen.",
-      "hang": { "wall": "S", "along": 1.15, "y": 1.6, "width": 0.95 },
+      "caption": "Hexagonal glazing over a glasshouse roof, above a leaf beaded with water: the dome as a second sky.",
+      "todo": "TODO: confirm title and duration; replace the still with the video file if available.",
+      "hang": {
+        "wall": "S",
+        "along": 1.15,
+        "y": 1.6,
+        "width": 0.95
+      },
       "image": "img/r2-video-3",
-      "frames": ["img/r2-video-3", "img/r2-video-1"],
-      "photo": "DSC_0052"
+      "photo": "DSC_0057"
     },
     {
       "id": "r3-tv-cyan",
@@ -166,7 +241,12 @@
       "medium": "Video, flat screen",
       "caption": "A glitching cyan cityscape on the grey brick wall, with tower blocks and pink slabs sliding through each other.",
       "todo": "TODO: confirm title and duration.",
-      "hang": { "wall": "N", "along": 10.6, "y": 1.6, "width": 1.25 },
+      "hang": {
+        "wall": "N",
+        "along": 10.6,
+        "y": 1.6,
+        "width": 1.25
+      },
       "image": "img/r3-tv-cyan",
       "photo": "DSC_0090"
     },
@@ -179,7 +259,12 @@
       "medium": "Giclée print",
       "caption": "Black-and-white organic forms cut against a strip of rendered greenery.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "S", "along": 14.4, "y": 1.6, "width": 0.62 },
+      "hang": {
+        "wall": "S",
+        "along": 14.4,
+        "y": 1.6,
+        "width": 0.62
+      },
       "image": "img/r3-print-1",
       "photo": "DSC_0073"
     },
@@ -192,7 +277,12 @@
       "medium": "Giclée print",
       "caption": "A corporate atrium wrapped in planted terraces, nature stacked like office floors.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "S", "along": 12.9, "y": 1.6, "width": 0.7 },
+      "hang": {
+        "wall": "S",
+        "along": 12.9,
+        "y": 1.6,
+        "width": 0.7
+      },
       "image": "img/r3-print-2",
       "photo": "DSC_0075"
     },
@@ -205,7 +295,12 @@
       "medium": "Giclée print",
       "caption": "Steel supertrees over a manicured garden: the botanical park as a theme park.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "S", "along": 11.4, "y": 1.6, "width": 0.58 },
+      "hang": {
+        "wall": "S",
+        "along": 11.4,
+        "y": 1.6,
+        "width": 0.58
+      },
       "image": "img/r3-print-3",
       "photo": "DSC_0077"
     },
@@ -218,7 +313,12 @@
       "medium": "Giclée print",
       "caption": "A magenta tower block above a frozen cyan thicket, with a white tree drawn in like a circuit.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "W", "along": -1.25, "y": 1.6, "width": 0.55 },
+      "hang": {
+        "wall": "W",
+        "along": -1.25,
+        "y": 1.6,
+        "width": 0.55
+      },
       "image": "img/r3-print-4",
       "photo": "DSC_0080"
     },
@@ -231,7 +331,12 @@
       "medium": "Giclée print",
       "caption": "Pink and violet slabs stacked into a skyline over a pale blue ground.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "PW", "along": -1.4, "y": 1.6, "width": 0.52 },
+      "hang": {
+        "wall": "PW",
+        "along": -1.4,
+        "y": 1.6,
+        "width": 0.52
+      },
       "image": "img/r3-print-5",
       "photo": "DSC_0071"
     },
@@ -244,7 +349,12 @@
       "medium": "Giclée print",
       "caption": "Abstract architecture in rose, mauve and black, hung on the white pillar at the threshold of the dark room.",
       "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": { "wall": "PW", "along": -4.2, "y": 1.6, "width": 0.5 },
+      "hang": {
+        "wall": "PW",
+        "along": -4.2,
+        "y": 1.6,
+        "width": 0.5
+      },
       "image": "img/r3-print-6",
       "photo": "DSC_0094"
     },
@@ -257,7 +367,12 @@
       "medium": "Video, flat screen",
       "caption": "Ferns filmed up close, glowing on a dark wall among the basement's pipes.",
       "todo": "TODO: confirm title and duration.",
-      "hang": { "wall": "N", "along": 19.4, "y": 1.65, "width": 0.95 },
+      "hang": {
+        "wall": "N",
+        "along": 19.4,
+        "y": 1.65,
+        "width": 0.95
+      },
       "image": "img/r3-tv-fern",
       "photo": "DSC_0109"
     },
@@ -270,7 +385,12 @@
       "medium": "Video, flat screen",
       "caption": "A waterfront of red and white blocks above a rolling sea, its reflections broken into vertical glitches.",
       "todo": "TODO: confirm title and duration.",
-      "hang": { "wall": "S", "along": 21.0, "y": 1.65, "width": 1.3 },
+      "hang": {
+        "wall": "S",
+        "along": 21.0,
+        "y": 1.65,
+        "width": 1.3
+      },
       "image": "img/r3-tv-sea",
       "photo": "DSC_0120"
     },
@@ -283,8 +403,15 @@
       "medium": "Installation: plastic waste, floor",
       "caption": "A river of colourful plastic runs across the floor of the dark room, beneath projected trees.",
       "todo": "TODO: confirm title and materials.",
-      "anchor": { "x": 21.5, "y": 0.1, "z": -2.0 },
-      "view": { "x": 17.4, "z": -2.6 },
+      "anchor": {
+        "x": 21.5,
+        "y": 0.1,
+        "z": -2.0
+      },
+      "view": {
+        "x": 17.4,
+        "z": -2.6
+      },
       "image": "img/r3-river",
       "photo": "DSC_0113"
     },
@@ -297,36 +424,280 @@
       "medium": "Real-time GLSL, audio-reactive. A digital response to the projected forest shown at MAMŰ",
       "caption": "At MAMŰ, trees were projected onto the end wall of the dark room. Here the wall carries a live shader: foliage that keeps glitching into grids, leaves and tower-block silhouettes, driven by the room's synthesised sound.",
       "todo": "TODO: add the title of the original projection work.",
-      "anchor": { "x": 25.9, "y": 1.45, "z": -2.8 },
-      "view": { "x": 19.5, "z": -2.8 },
+      "anchor": {
+        "x": 25.9,
+        "y": 1.45,
+        "z": -2.8
+      },
+      "view": {
+        "x": 19.5,
+        "z": -2.8
+      },
       "image": "img/r3-projection",
       "photo": "DSC_0114"
     }
   ],
   "tour": [
-    { "x": 5.0, "z": 6.35, "look": [0, 1.6, 3.2], "text": "Down the stairs into the basement of MAMŰ. Artificial Paradise by KristofLab, 10–31 January 2025.", "dwell": 4 },
-    { "x": 6.8, "z": 3.4, "look": [9.2, 1.3, 3.1], "work": "r1-hydroponics", "dwell": 5 },
-    { "x": 7.6, "z": 2.4, "look": [10, 1.75, 1.05], "work": "r1-screen", "dwell": 4 },
-    { "x": 3.2, "z": 4.0, "look": [0, 1.55, 4.0], "work": "r1-print-1", "dwell": 5 },
-    { "x": 1.4, "z": 3.0, "look": [1.05, 1.6, 0], "work": "r1-print-2", "dwell": 5 },
-    { "x": 6.4, "z": 3.2, "look": [6.4, 1.6, 0], "work": "r1-print-3", "dwell": 5 },
-    { "x": 8.4, "z": 3.4, "look": [8.6, 1.6, 0], "work": "r1-print-4", "dwell": 5 },
-    { "x": 3.0, "z": 1.0, "look": [3.0, 1.6, -3], "dwell": 0.1 },
-    { "x": 3.0, "z": -1.6, "look": [0, 1.6, -3.3], "work": "r2-video-1", "dwell": 5 },
-    { "x": 2.0, "z": -2.6, "look": [1.6, 1.6, -5], "work": "r2-video-2", "dwell": 5 },
-    { "x": 3.6, "z": -3.0, "look": [6.5, 1.3, -1.2], "text": "The bar: during the opening and finissage, drinks were served here between the screens.", "dwell": 4 },
-    { "x": 7.6, "z": -3.0, "look": [16, 1.6, -2.8], "dwell": 0.1 },
-    { "x": 9.0, "z": -2.2, "look": [6.8, 1.6, -1.25], "work": "r3-print-4", "dwell": 4 },
-    { "x": 10.6, "z": -2.6, "look": [10.6, 1.6, -5], "work": "r3-tv-cyan", "dwell": 5 },
-    { "x": 11.4, "z": -3.0, "look": [11.4, 1.6, -0.6], "work": "r3-print-3", "dwell": 4 },
-    { "x": 12.9, "z": -3.0, "look": [12.9, 1.6, -0.6], "work": "r3-print-2", "dwell": 4 },
-    { "x": 14.2, "z": -3.0, "look": [14.4, 1.6, -0.6], "work": "r3-print-1", "dwell": 4 },
-    { "x": 13.8, "z": -1.6, "look": [15.6, 1.6, -1.4], "work": "r3-print-5", "dwell": 4 },
-    { "x": 13.8, "z": -3.8, "look": [15.6, 1.6, -4.2], "work": "r3-print-6", "dwell": 4 },
-    { "x": 15.0, "z": -2.8, "look": [18, 1.6, -2.8], "dwell": 0.1 },
-    { "x": 19.4, "z": -3.4, "look": [19.4, 1.65, -5], "work": "r3-tv-fern", "dwell": 5 },
-    { "x": 21.0, "z": -2.4, "look": [21.0, 1.65, -0.6], "work": "r3-tv-sea", "dwell": 5 },
-    { "x": 18.0, "z": -3.6, "look": [22, 0.0, -2.0], "work": "r3-river", "dwell": 5 },
-    { "x": 19.5, "z": -2.8, "look": [26, 1.45, -2.8], "work": "r3-projection", "dwell": 10 }
+    {
+      "x": 5.0,
+      "z": 6.35,
+      "look": [
+        0,
+        1.6,
+        3.2
+      ],
+      "text": "Down the stairs into the basement of MAMŰ. Artificial Paradise by KristofLab, 10–31 January 2025.",
+      "dwell": 4
+    },
+    {
+      "x": 6.8,
+      "z": 3.4,
+      "look": [
+        9.2,
+        1.3,
+        3.1
+      ],
+      "work": "r1-hydroponics",
+      "dwell": 5
+    },
+    {
+      "x": 7.6,
+      "z": 2.4,
+      "look": [
+        10,
+        1.75,
+        1.05
+      ],
+      "work": "r1-screen",
+      "dwell": 4
+    },
+    {
+      "x": 3.2,
+      "z": 4.0,
+      "look": [
+        0,
+        1.55,
+        4.0
+      ],
+      "work": "r1-print-1",
+      "dwell": 5
+    },
+    {
+      "x": 1.4,
+      "z": 3.0,
+      "look": [
+        1.05,
+        1.6,
+        0
+      ],
+      "work": "r1-print-2",
+      "dwell": 5
+    },
+    {
+      "x": 6.4,
+      "z": 3.2,
+      "look": [
+        6.4,
+        1.6,
+        0
+      ],
+      "work": "r1-print-3",
+      "dwell": 5
+    },
+    {
+      "x": 8.4,
+      "z": 3.4,
+      "look": [
+        8.6,
+        1.6,
+        0
+      ],
+      "work": "r1-print-4",
+      "dwell": 5
+    },
+    {
+      "x": 3.0,
+      "z": 1.0,
+      "look": [
+        3.0,
+        1.6,
+        -3
+      ],
+      "dwell": 0.1
+    },
+    {
+      "x": 3.0,
+      "z": -1.6,
+      "look": [
+        0,
+        1.6,
+        -3.3
+      ],
+      "work": "r2-video-1",
+      "dwell": 5
+    },
+    {
+      "x": 2.0,
+      "z": -2.6,
+      "look": [
+        1.6,
+        1.6,
+        -5
+      ],
+      "work": "r2-video-2",
+      "dwell": 5
+    },
+    {
+      "x": 3.6,
+      "z": -3.0,
+      "look": [
+        6.5,
+        1.3,
+        -1.2
+      ],
+      "text": "The bar: during the opening and finissage, drinks were served here between the screens.",
+      "dwell": 4
+    },
+    {
+      "x": 7.6,
+      "z": -3.0,
+      "look": [
+        16,
+        1.6,
+        -2.8
+      ],
+      "dwell": 0.1
+    },
+    {
+      "x": 9.0,
+      "z": -2.2,
+      "look": [
+        6.8,
+        1.6,
+        -1.25
+      ],
+      "work": "r3-print-4",
+      "dwell": 4
+    },
+    {
+      "x": 10.6,
+      "z": -2.6,
+      "look": [
+        10.6,
+        1.6,
+        -5
+      ],
+      "work": "r3-tv-cyan",
+      "dwell": 5
+    },
+    {
+      "x": 11.4,
+      "z": -3.0,
+      "look": [
+        11.4,
+        1.6,
+        -0.6
+      ],
+      "work": "r3-print-3",
+      "dwell": 4
+    },
+    {
+      "x": 12.9,
+      "z": -3.0,
+      "look": [
+        12.9,
+        1.6,
+        -0.6
+      ],
+      "work": "r3-print-2",
+      "dwell": 4
+    },
+    {
+      "x": 14.2,
+      "z": -3.0,
+      "look": [
+        14.4,
+        1.6,
+        -0.6
+      ],
+      "work": "r3-print-1",
+      "dwell": 4
+    },
+    {
+      "x": 13.8,
+      "z": -1.6,
+      "look": [
+        15.6,
+        1.6,
+        -1.4
+      ],
+      "work": "r3-print-5",
+      "dwell": 4
+    },
+    {
+      "x": 13.8,
+      "z": -3.8,
+      "look": [
+        15.6,
+        1.6,
+        -4.2
+      ],
+      "work": "r3-print-6",
+      "dwell": 4
+    },
+    {
+      "x": 15.0,
+      "z": -2.8,
+      "look": [
+        18,
+        1.6,
+        -2.8
+      ],
+      "dwell": 0.1
+    },
+    {
+      "x": 19.4,
+      "z": -3.4,
+      "look": [
+        19.4,
+        1.65,
+        -5
+      ],
+      "work": "r3-tv-fern",
+      "dwell": 5
+    },
+    {
+      "x": 21.0,
+      "z": -2.4,
+      "look": [
+        21.0,
+        1.65,
+        -0.6
+      ],
+      "work": "r3-tv-sea",
+      "dwell": 5
+    },
+    {
+      "x": 18.0,
+      "z": -3.6,
+      "look": [
+        22,
+        0.0,
+        -2.0
+      ],
+      "work": "r3-river",
+      "dwell": 5
+    },
+    {
+      "x": 19.5,
+      "z": -2.8,
+      "look": [
+        26,
+        1.45,
+        -2.8
+      ],
+      "work": "r3-projection",
+      "dwell": 10
+    }
   ]
 }

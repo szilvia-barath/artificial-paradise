@@ -3,6 +3,9 @@ import { ROOMS } from '../world/layout.js';
 // Corner minimap: walls (from the collision segments), works, current room highlight
 // and the visitor as a view cone. Click a room on the map to jump there.
 
+// Unit vector pointing to true north in plan coordinates (x right, z down).
+const NORTH = [-0.829, -0.56];
+
 export function setupMinimap(canvas, segments, works, onJump) {
   const ctx = canvas.getContext('2d');
   const bounds = { x0: -0.6, x1: 26.2, z0: -0.6, z1: 7.9 };
@@ -63,6 +66,20 @@ export function setupMinimap(canvas, segments, works, onJump) {
       if (!f) continue;
       ctx.fillStyle = w.type === 'video' || w.type === 'projection' ? '#5fe7ff' : '#ff4fa3';
       ctx.fillRect(X(f.x) - 1.5, Y(f.z) - 1.5, 3, 3);
+    }
+    // compass: true north in plan coordinates (the rooms run from the Damjanich utca
+    // front towards bearing 146°, measured on the OpenStreetMap outline of no. 39)
+    {
+      const cx = W - 16;
+      const cy = H - 16;
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.beginPath();
+      ctx.moveTo(cx - NORTH[0] * 6, cy - NORTH[1] * 6);
+      ctx.lineTo(cx + NORTH[0] * 8, cy + NORTH[1] * 8);
+      ctx.stroke();
+      ctx.font = '8px ui-monospace, Menlo, monospace';
+      ctx.fillText('N', cx + NORTH[0] * 11 - 3, cy + NORTH[1] * 11 + 3);
     }
     // visitor view cone
     const fx = -Math.sin(yaw);

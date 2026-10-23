@@ -46,9 +46,13 @@
     [
       "Photography",
       "Szilvia Barath"
+    ],
+    [
+      "Building outline",
+      "© OpenStreetMap contributors (ODbL)"
     ]
   ],
-  "behindTheScenes": "A reconstruction, not an invention. The floor plan is traced from the gallery's own room sheet, which was photographed on the wall next to the bar, and checked against a 360° panorama of Room 1: the camera position solved from the corner bearings agrees with the plan's scale. Every painting hangs at its listed canvas size and at the height measured in the photos. The brick on the walls is cut from the photographs too. A script measures the 7.7 cm brick courses to get the scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops (sharp → WebP), and the screens show the frames caught on camera. Paradise Factory and the plastic river of Let it Flow are modelled procedurally from the photos. Built with Three.js and Vite, with no backend: the basement is generated from a small floor-plan file and merged into a few dozen draw calls, and the room tone is synthesised with the Web Audio API.",
+  "behindTheScenes": "A reconstruction, not an invention. The floor plan is traced from the gallery's own room sheet, photographed on the wall by the bar. It is checked twice: against a 360° panorama of Room 1, where the camera position solved from the corner bearings agrees with the plan's scale, and against the building's OpenStreetMap outline, whose 26.5 m wing on Murányi utca matches the length of the basement. Every painting hangs at its listed canvas size and at the height measured in the photos. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops, and the screens show the frames caught on camera. Paradise Factory and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
   "rooms": {
     "r1": {
       "name": "Room 1",

@@ -2,9 +2,15 @@
 // sheet (the plan printed next to the works list, photographed in DSC_0049) at
 // 0.026 m per plan pixel, then checked against the photos: the Room 1 panorama
 // (camera solved from the corner bearings), brick courses, floor tiles and the
-// canvas sizes on the works list.
+// canvas sizes on the works list. Cross-check with OpenStreetMap: the gallery is in
+// the basement of Damjanich utca 39, a corner building whose wing along Murányi utca
+// is 26.5 m from the street front to the back; this basement measures 26.47 m from
+// the outer face of Room 1's west wall to the outer face of Room 4's end wall.
+// +x (Room 1 -> Room 4) points to bearing 146° (south-east); Room 1's window wall
+// faces Damjanich utca.
 //
-// x = east, z = south, y = up. Room 1 inner north-west corner is the origin.
+// x = right on the plan, z = down on the plan, y = up ("north/south/east/west" in this
+// code mean plan directions, not compass ones). Room 1's inner top-left corner is the origin.
 //
 //   Room 1 (stairs, paintings, Paradise Factory) → Room 2 (videos, bar) →
 //   Room 3 (prints) | Room 4 (Let it Flow), 3 and 4 being one long room split only

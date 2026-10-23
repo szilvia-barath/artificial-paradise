@@ -20,7 +20,7 @@
       "ready": "Ready",
       "enter": "Enter",
       "hint": "Sound on · headphones recommended",
-      "howtoDesk": "WASD / arrows to walk · mouse to look · click a work to view · Shift to run · Esc to release",
+      "howtoDesk": "WASD / arrows or the scroll wheel to walk · mouse to look · click a work to view · Shift to run · Esc to release",
       "howtoTouch": "Left stick to walk · drag to look · tap a work to view",
       "failure": "This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari."
     },
@@ -43,7 +43,16 @@
       "promptSheet": "Click to read the list of works",
       "promptWork": "Click to view · {no} {title}",
       "minimap": "Map: click a room to jump there",
-      "north": "N"
+      "north": "N",
+      "keys": {
+        "group": "Movement keys",
+        "forward": "Forward (W / ↑)",
+        "back": "Back (S / ↓)",
+        "left": "Step left (A / ←)",
+        "right": "Step right (D / →)",
+        "run": "Run (Shift): click to switch on or off",
+        "wheel": "scroll to walk"
+      }
     },
     "viewer": {
       "close": "Close",
@@ -71,7 +80,7 @@
       "btsEyebrow": "Behind the scenes",
       "btsTitle": "How it's built",
       "controls": "Controls",
-      "controlsDesk": "Desktop: WASD / arrows to walk, mouse to look, Shift to run, click a work to open it, T for the tour, M to mute.",
+      "controlsDesk": "Desktop: WASD / arrows to walk (or hold the keys on screen), scroll wheel to walk forward and back, mouse to look, Shift to run, click a work to open it, T for the tour, M to mute.",
       "controlsTouch": "Touch: left stick to walk, drag to look, tap a work."
     },
     "wall": {

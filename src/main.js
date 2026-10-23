@@ -15,6 +15,7 @@ import { Tour } from './tour.js';
 import { setupPanels } from './ui/panels.js';
 import { setupViewer } from './ui/viewer.js';
 import { setupMinimap } from './ui/minimap.js';
+import { setupKeypad } from './ui/keypad.js';
 import { localize, onLangChange, setText } from './i18n.js';
 
 localize(data);
@@ -190,8 +191,10 @@ window.addEventListener('keydown', (e) => {
   else if (e.code === 'KeyM') toggleSound();
   else if (tour.active && ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Escape'].includes(e.code)) tour.stop();
 });
-// Touching the joystick ends the tour on mobile
+// Touching the joystick ends the tour on mobile; the wheel or an on-screen key on desktop
 document.getElementById('joystick').addEventListener('touchstart', () => tour.stop(), { passive: true });
+controls.onManualMove = () => tour.stop();
+const updateKeypad = setupKeypad(document.getElementById('keypad'), controls);
 
 const minimap = setupMinimap(document.getElementById('minimap'), arch.segments, data.works, (id) => jumpToRoom(id));
 
@@ -342,7 +345,10 @@ function frame() {
   gallery.update(t, dt, camera.position);
   letItFlow.update(t, lights.proj);
   updateHover();
-  if (entered) minimap(controls.pos.x, controls.pos.y, controls.yaw, currentRoomId, t);
+  if (entered) {
+    minimap(controls.pos.x, controls.pos.y, controls.yaw, currentRoomId, t);
+    updateKeypad();
+  }
   post.update(dt, bands);
   post.render(dt);
   if (entered && !window.__apNoAdapt) adapt(dt);

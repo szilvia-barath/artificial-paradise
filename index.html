@@ -80,7 +80,7 @@
         <button id="enter" class="btn-enter" disabled>|&nbsp;<span data-i18n="loader.enter">Enter</span>&nbsp;|</button>
         <p class="hint" id="enter-hint" data-i18n="loader.hint">Sound on · headphones recommended</p>
         <div class="howto">
-          <span class="desk" data-i18n="loader.howtoDesk">WASD / arrows to walk · mouse to look · click a work to view · Shift to run · Esc to release</span>
+          <span class="desk" data-i18n="loader.howtoDesk">WASD / arrows or the scroll wheel to walk · mouse to look · click a work to view · Shift to run · Esc to release</span>
           <span class="touch" data-i18n="loader.howtoTouch">Left stick to walk · drag to look · tap a work to view</span>
         </div>
       </div>
@@ -112,6 +112,15 @@
       </nav>
       <div id="tour-caption" aria-live="polite"></div>
       <div id="joystick"><div id="joystick-knob"></div></div>
+      <!-- On-screen movement keys (desktop): hold to walk, the real keys light them up -->
+      <div id="keypad" role="group" aria-label="Movement keys" data-i18n-attr="aria-label:hud.keys.group">
+        <button class="cap k-w" data-keys="ArrowUp KeyW" title="Forward (W / ↑)" data-i18n-attr="title:hud.keys.forward;aria-label:hud.keys.forward"><i>W</i>↑</button>
+        <button class="cap k-shift" data-keys="ShiftLeft ShiftRight" data-toggle title="Run (Shift)" aria-pressed="false" data-i18n-attr="title:hud.keys.run;aria-label:hud.keys.run"><i>Shift</i>⇧</button>
+        <button class="cap k-a" data-keys="ArrowLeft KeyA" title="Step left (A / ←)" data-i18n-attr="title:hud.keys.left;aria-label:hud.keys.left"><i>A</i>←</button>
+        <button class="cap k-s" data-keys="ArrowDown KeyS" title="Back (S / ↓)" data-i18n-attr="title:hud.keys.back;aria-label:hud.keys.back"><i>S</i>↓</button>
+        <button class="cap k-d" data-keys="ArrowRight KeyD" title="Step right (D / →)" data-i18n-attr="title:hud.keys.right;aria-label:hud.keys.right"><i>D</i>→</button>
+        <span class="wheel" aria-hidden="true"><b></b><span data-i18n="hud.keys.wheel">scroll to walk</span></span>
+      </div>
       <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Click to look around</div>
     </div>
 

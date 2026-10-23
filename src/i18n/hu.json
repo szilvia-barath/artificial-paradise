@@ -20,7 +20,7 @@
       "ready": "Kész",
       "enter": "Belépés",
       "hint": "Hanggal · fejhallgató ajánlott",
-      "howtoDesk": "WASD / nyilak: séta · egér: körülnézés · kattintás egy műre: megtekintés · Shift: futás · Esc: kilépés",
+      "howtoDesk": "WASD / nyilak vagy görgő: séta · egér: körülnézés · kattintás egy műre: megtekintés · Shift: futás · Esc: kilépés",
       "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · koppintás egy műre: megtekintés",
       "failure": "Ez a böngésző nem tudta elindítani a 3D kiállítást (WebGL szükséges). Próbáld meg egy friss Chrome, Firefox vagy Safari böngészővel."
     },
@@ -43,7 +43,16 @@
       "promptSheet": "Kattints a műlista megnyitásához",
       "promptWork": "Kattints a megtekintéshez · {no} {title}",
       "minimap": "Térkép: kattints egy teremre az odaugráshoz",
-      "north": "É"
+      "north": "É",
+      "keys": {
+        "group": "Mozgásbillentyűk",
+        "forward": "Előre (W / ↑)",
+        "back": "Hátra (S / ↓)",
+        "left": "Lépés balra (A / ←)",
+        "right": "Lépés jobbra (D / →)",
+        "run": "Futás (Shift): kattintásra be/ki",
+        "wheel": "görgess a sétához"
+      }
     },
     "viewer": {
       "close": "Bezárás",
@@ -71,7 +80,7 @@
       "btsEyebrow": "Kulisszák mögött",
       "btsTitle": "Hogyan készült",
       "controls": "Irányítás",
-      "controlsDesk": "Asztali gépen: WASD / nyilak: séta, egér: körülnézés, Shift: futás, kattintás egy műre: megnyitás, T: tárlatvezetés, M: némítás.",
+      "controlsDesk": "Asztali gépen: WASD / nyilak: séta (vagy tartsd lenyomva a képernyőn látható billentyűket), görgő: előre-hátra, egér: körülnézés, Shift: futás, kattintás egy műre: megnyitás, T: tárlatvezetés, M: némítás.",
       "controlsTouch": "Érintőképernyőn: bal oldali kar: séta, húzás: körülnézés, koppintás egy műre: megnyitás."
     },
     "wall": {
@@ -94,13 +103,34 @@
   ],
   "textCredit": "Szöveg: Cserhalmi Luca esztéta. A kiállítást Zemlényi-Kovács Barabás teoretikus, független kurátor nyitotta meg.",
   "credits": [
-    ["Művész", "Szabó Kristóf / KristofLab"],
-    ["Galéria", "MAMŰ, Budapest"],
-    ["Szöveg", "Cserhalmi Luca"],
-    ["Megnyitó", "Zemlényi-Kovács Barabás"],
-    ["Digitális kiállítás", "Barath Szilvia"],
-    ["Fotó", "Barath Szilvia"],
-    ["Épületkörvonal", "© OpenStreetMap-közreműködők (ODbL)"]
+    [
+      "Művész",
+      "Szabó Kristóf / KristofLab"
+    ],
+    [
+      "Galéria",
+      "MAMŰ, Budapest"
+    ],
+    [
+      "Szöveg",
+      "Cserhalmi Luca"
+    ],
+    [
+      "Megnyitó",
+      "Zemlényi-Kovács Barabás"
+    ],
+    [
+      "Digitális kiállítás",
+      "Barath Szilvia"
+    ],
+    [
+      "Fotó",
+      "Barath Szilvia"
+    ],
+    [
+      "Épületkörvonal",
+      "© OpenStreetMap-közreműködők (ODbL)"
+    ]
   ],
   "behindTheScenes": "Rekonstrukció, nem kitaláció. Az alaprajz a galéria saját teremlapja alapján készült, amely a bár melletti falon volt kifüggesztve; teljes hossza egyezik az épület OpenStreetMap-körvonalával. Az 1. terem egy 360°-os panorámafotó alapján van felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik a terem mérete, az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falak téglái a fotókból vannak kivágva: egy szkript a 7,7 cm-es téglasorokból számolja ki a méretarányt, kiszűri a galéria világítását, és a fugák mentén illeszti a foltokat, hogy hézagmentesen ismétlődjenek. A műalkotások perspektívakorrigált kivágások, a képernyőkön a fényképeken rögzített képkockák láthatók. A Paradise Factory és a Let it Flow műanyag folyója a fotók alapján készült modell. Three.js és Vite, szerver nélkül; a terem alapzaját Web Audio szintetizálja.",
   "rooms": {

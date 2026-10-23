@@ -1,7 +1,7 @@
 # PROGRESS: Artificial Paradise, Digital Exhibition
 
 ## Status
-- [x] **M1 Skeleton + deploy**: Vite + Three.js, first-person controls (pointer lock + WASD, touch joystick + drag look), wall collision, loader + Enter, GitHub Pages workflow.
+- [x] **M1 Skeleton + deploy**: Vite + Three.js, first-person controls (pointer lock + WASD / arrows, on-screen keycaps you can hold with the mouse and that light up with the real keys, scroll wheel to walk forward and back, Shift or the on-screen ⇧ to run; touch joystick + drag look), wall collision, loader + Enter, GitHub Pages workflow.
 - [x] **M2 The art** (redone as a reconstruction):
   - Room 1 is parametric (`R1` in `src/world/layout.js`; walls, stairs, bench, radiators, windows, Paradise Factory, lights and the Room 1 hangs all follow it). The 360° panorama solve gave 4.5 × 6.55 m, but the owner reports the real room is larger (little space between the last stair and the first painting), so it is **provisionally 5.0 × 7.0 m** until the owner's tape measurements arrive. The Room 2 doorway sits in a 55 cm recess between two thick piers (z 3.70–4.55), plinths either side. Street wall, south → north: bench L, small radiator + window, screen (#3), big radiator + round-vent window, stair opening. Plant at (1.85, 3.35), hydroponic pipe along x 1.27. Spawn faces Human as Error VI (what you see coming down the stairs).
   - Scale confirmed by the OpenStreetMap outline of Damjanich utca 39 (corner building; its Murányi utca wing is 26.5 m deep, the reconstructed basement is 26.1 m outer length). Minimap shows true north (rooms run towards bearing 146° from the Damjanich utca front).

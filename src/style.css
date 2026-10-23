@@ -456,6 +456,109 @@ body.touring #joystick { opacity: 0.25; }
   border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
+/* On-screen keys: an inverted T of keycaps with Shift on the left, as on a keyboard */
+#keypad {
+  position: absolute;
+  left: 18px;
+  bottom: calc(var(--foot-h) + 8px + var(--safe-b));
+  display: grid;
+  grid-template-columns: 52px repeat(3, 40px);
+  grid-template-rows: 40px 40px auto;
+  gap: 4px;
+  pointer-events: auto;
+  transition: opacity 0.4s ease;
+}
+body.touch #keypad { display: none; }
+body.locked #keypad { opacity: 0.5; pointer-events: none; }
+.cap {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--glass);
+  box-shadow: inset 0 -3px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: var(--fg);
+  font-size: 16px;
+  line-height: 1;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  transition: background 0.12s, border-color 0.12s, transform 0.08s, box-shadow 0.12s;
+}
+.cap i {
+  position: absolute;
+  left: 5px;
+  top: 4px;
+  font-style: normal;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+.cap:hover { border-color: rgba(255, 255, 255, 0.35); }
+.cap.pressed {
+  background: rgba(157, 255, 106, 0.2);
+  border-color: var(--accent);
+  box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+  transform: translateY(1px);
+}
+.cap.pressed i { color: var(--accent); }
+.k-w { grid-column: 3; grid-row: 1; }
+.k-shift { grid-column: 1; grid-row: 2; font-size: 14px; }
+.k-a { grid-column: 2; grid-row: 2; }
+.k-s { grid-column: 3; grid-row: 2; }
+.k-d { grid-column: 4; grid-row: 2; }
+.wheel {
+  grid-column: 1 / -1;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  padding: 5px 9px 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--glass);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: #c9c9c6;
+}
+.wheel b { color: var(--fg); }
+/* a small mouse with its wheel rolling */
+.wheel b {
+  position: relative;
+  display: block;
+  width: 12px;
+  height: 18px;
+  border: 1.5px solid currentColor;
+  border-radius: 6px;
+  flex: none;
+}
+.wheel b::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 3px;
+  width: 2px;
+  height: 4px;
+  margin-left: -1px;
+  border-radius: 1px;
+  background: currentColor;
+  animation: wheel-roll 1.8s ease-in-out infinite;
+}
+@keyframes wheel-roll {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(5px); opacity: 0.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wheel b::after { animation: none; }
+}
+
 /* ---------------- Viewer & panel ---------------- */
 #viewer, #panel {
   position: fixed;

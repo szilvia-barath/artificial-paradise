@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { EYE, OBSTACLES } from './world/layout.js';
 
-// First-person controls: pointer-lock mouse look + WASD on desktop, virtual joystick +
+// First-person controls: pointer-lock mouse look + WASD on desktop (also held through
+// the on-screen keys), the scroll wheel to glide forward and back, virtual joystick +
 // drag-to-look on touch devices. Collision is resolved in 2D against wall segments and
 // furniture boxes (circle vs. segment).
 
@@ -18,13 +19,17 @@ export class FirstPersonControls {
     this.pitch = 0;
     this.pos = new THREE.Vector2(0, 0); // x, z
     this.vel = new THREE.Vector2(0, 0);
-    this.keys = new Set();
+    this.keys = new Set(); // real keyboard
+    this.held = new Set(); // on-screen keys (see press/release)
+    this.runLock = false; // the on-screen Shift toggles running
+    this.glide = 0; // m/s along the view, from the scroll wheel; decays
     this.joy = new THREE.Vector2(0, 0);
     this.locked = false;
     this.bob = 0;
     this.isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
     this.onTap = null; // (clientX, clientY) => void
     this.onLockChange = null;
+    this.onManualMove = null; // wheel / on-screen key used (e.g. to end the tour)
 
     this.segments = segments.slice();
     for (const o of OBSTACLES) {
@@ -61,6 +66,19 @@ export class FirstPersonControls {
 
   unlock() {
     if (document.pointerLockElement) document.exitPointerLock();
+  }
+
+  press(code) {
+    this.held.add(code);
+    if (this.onManualMove) this.onManualMove();
+  }
+
+  release(code) {
+    this.held.delete(code);
+  }
+
+  isDown(code) {
+    return this.keys.has(code) || this.held.has(code);
   }
 
   _bindDesktop() {
@@ -106,7 +124,20 @@ export class FirstPersonControls {
       this.keys.add(e.code);
     });
     window.addEventListener('keyup', (e) => this.keys.delete(e.code));
-    window.addEventListener('blur', () => this.keys.clear());
+    window.addEventListener('blur', () => {
+      this.keys.clear();
+      this.held.clear();
+    });
+    // Scroll wheel: rolling it away from you walks forward, towards you walks back. Each
+    // notch is a short glide; a trackpad's stream of small deltas adds up to a steady one.
+    this.dom.addEventListener('wheel', (e) => {
+      if (e.ctrlKey) return; // pinch-zoom
+      e.preventDefault();
+      if (this.onManualMove) this.onManualMove();
+      if (!this.enabled) return;
+      const px = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY;
+      this.glide = Math.max(-RUN, Math.min(RUN, this.glide - px * 0.02));
+    }, { passive: false });
   }
 
   _bindTouch() {
@@ -176,18 +207,18 @@ export class FirstPersonControls {
   }
 
   _input() {
-    const k = this.keys;
+    const k = (code) => this.isDown(code);
     let f = 0;
     let s = 0;
-    if (k.has('KeyW') || k.has('ArrowUp')) f += 1;
-    if (k.has('KeyS') || k.has('ArrowDown')) f -= 1;
-    if (k.has('KeyD') || k.has('ArrowRight')) s += 1;
-    if (k.has('KeyA') || k.has('ArrowLeft')) s -= 1;
+    if (k('KeyW') || k('ArrowUp')) f += 1;
+    if (k('KeyS') || k('ArrowDown')) f -= 1;
+    if (k('KeyD') || k('ArrowRight')) s += 1;
+    if (k('KeyA') || k('ArrowLeft')) s -= 1;
     f -= this.joy.y;
     s += this.joy.x;
     const len = Math.hypot(f, s);
     if (len > 1) { f /= len; s /= len; }
-    const run = k.has('ShiftLeft') || k.has('ShiftRight') || Math.hypot(this.joy.x, this.joy.y) > 0.92;
+    const run = this.runLock || k('ShiftLeft') || k('ShiftRight') || Math.hypot(this.joy.x, this.joy.y) > 0.92;
     return { f, s, speed: run ? RUN : WALK };
   }
 
@@ -226,8 +257,10 @@ export class FirstPersonControls {
       const sin = Math.sin(this.yaw);
       const cos = Math.cos(this.yaw);
       // forward = (-sin, -cos), right = (cos, -sin)
-      const tx = (-sin * f + cos * s) * speed;
-      const tz = (-cos * f - sin * s) * speed;
+      const g = this.glide;
+      this.glide = Math.abs(g) < 0.02 ? 0 : g * Math.exp(-dt * 3.5);
+      const tx = (-sin * f + cos * s) * speed - sin * g;
+      const tz = (-cos * f - sin * s) * speed - cos * g;
       const a = 1 - Math.exp(-dt * 10);
       this.vel.x += (tx - this.vel.x) * a;
       this.vel.y += (tz - this.vel.y) * a;
@@ -238,6 +271,8 @@ export class FirstPersonControls {
         this.pos.y += (this.vel.y * dt) / steps;
         this._collide();
       }
+    } else {
+      this.glide = 0;
     }
     this._apply(dt);
   }

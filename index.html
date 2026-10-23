@@ -6,10 +6,12 @@
     <title>Artificial Paradise: Digital Exhibition</title>
     <meta name="description" content="Walk through KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser." />
     <meta name="theme-color" content="#0b0c0e" />
-    <meta name="color-scheme" content="dark" />
+    <meta name="color-scheme" content="light dark" />
     <!-- Styles load from the head (render-blocking) so the title screen never flashes
          unstyled while the 3D engine is still downloading. -->
-    <style>html, body { background: #0b0c0e; color: #f2f1ed; }</style>
+    <style>html, body { background: #eceef0; color: #072fcc; }</style>
+    <link rel="preload" as="image" href="./brand/key-visual.webp" media="(min-aspect-ratio: 4/5)" />
+    <link rel="preload" as="image" href="./brand/logo-blue.webp" />
     <link rel="stylesheet" href="/src/style.css" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
@@ -30,22 +32,27 @@
   <body>
     <canvas id="scene" aria-label="3D exhibition view"></canvas>
 
-    <!-- Loading / title screen -->
+    <!-- Loading / title screen, styled after the exhibition's key visual -->
     <section id="loader" aria-live="polite">
-      <div class="loader-inner">
-        <p class="eyebrow">KristofLab · MAMŰ Gallery, Budapest · 10–31.01.2025</p>
-        <h1 class="title glitch" data-text="Artificial Paradise">Artificial Paradise</h1>
-        <p class="subtitle">Digital Exhibition</p>
+      <picture class="loader-bg" aria-hidden="true">
+        <source media="(max-aspect-ratio: 4/5)" srcset="./brand/key-visual-portrait.webp" />
+        <img src="./brand/key-visual.webp" alt="" fetchpriority="high" />
+      </picture>
+      <div class="loader-grain" aria-hidden="true"></div>
+      <div class="loader-card">
+        <h1 class="sr-only">Artificial Paradise · KristofLab · Digital Exhibition</h1>
+        <img class="loader-logo" src="./brand/logo-blue.webp" alt="" width="1480" height="816" />
+        <p class="loader-meta">Digital exhibition<br />MAMŰ Gallery, Budapest · 10–31.01.2025</p>
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="progress-bar"></span></div>
-        <p id="progress-label" class="mono">Preparing the basement…</p>
-        <button id="enter" class="btn-enter" disabled>Enter</button>
-        <p class="hint mono" id="enter-hint">Sound on · headphones recommended</p>
-        <div class="howto mono">
+        <p id="progress-label">Preparing the basement…</p>
+        <button id="enter" class="btn-enter" disabled>|&nbsp;Enter&nbsp;|</button>
+        <p class="hint" id="enter-hint">Sound on · headphones recommended</p>
+        <div class="howto">
           <span class="desk">WASD / arrows to walk · mouse to look · click a work to view · Shift to run · Esc to release</span>
           <span class="touch">Left stick to walk · drag to look · tap a work to view</span>
         </div>
       </div>
-      <footer class="loader-foot mono">Artworks © Kristóf Szabó / KristofLab · Digital exhibition by Szilvia Barath</footer>
+      <footer class="loader-foot">Artworks © Kristóf Szabó / KristofLab · Digital exhibition by Szilvia Barath</footer>
     </section>
 
     <!-- In-world HUD -->

@@ -2,11 +2,12 @@
 //  - a slow, detuned drone whose chord drifts every ~20 s
 //  - filtered room tone (air handling / basement hum)
 //  - a bar murmur near Room 2: formant-filtered noise "voices" + glass clinks
-//  - a soft pulse and data blips near the projection in Room 3
+//  - the projector's fan in Room 4
 // An AnalyserNode on the master bus exposes bass/mid/high/level for the visuals.
+// None of it is part of the artworks: the videos' own soundtracks are not reproduced.
 
-const BAR = { x: 5.2, z: -1.6 };
-const PROJ = { x: 24, z: -2.8 };
+const BAR = { x: 8.6, z: 4.6 };
+const PROJ = { x: 17.4, z: 3.83 };
 
 function noiseBuffer(ctx, seconds = 4, pink = true) {
   const len = ctx.sampleRate * seconds;
@@ -244,64 +245,6 @@ export class Ambience {
     fg.gain.value = 0.012;
     fan.connect(fbp).connect(fg).connect(this.projGain);
     fan.start();
-    // soft sub pulse (a slow heartbeat for the piece) + glassy pad
-    const pulse = () => {
-      const t = ctx.currentTime;
-      const o = ctx.createOscillator();
-      o.type = 'sine';
-      o.frequency.setValueAtTime(70, t);
-      o.frequency.exponentialRampToValueAtTime(42, t + 0.35);
-      const g = ctx.createGain();
-      g.gain.setValueAtTime(0.0001, t);
-      g.gain.exponentialRampToValueAtTime(0.5, t + 0.015);
-      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
-      o.connect(g).connect(this.projGain);
-      o.start(t);
-      o.stop(t + 1);
-      // random data blips (trigger visual glitches)
-      if (Math.random() < 0.45) {
-        const n = 2 + Math.floor(Math.random() * 6);
-        for (let i = 0; i < n; i++) {
-          const bt = t + 0.4 + i * 0.07;
-          const b = ctx.createOscillator();
-          b.type = 'square';
-          b.frequency.value = 600 + Math.floor(Math.random() * 8) * 220;
-          const bg = ctx.createGain();
-          bg.gain.setValueAtTime(0.0001, bt);
-          bg.gain.exponentialRampToValueAtTime(0.03, bt + 0.005);
-          bg.gain.exponentialRampToValueAtTime(0.0001, bt + 0.05);
-          const hp = ctx.createBiquadFilter();
-          hp.type = 'highpass';
-          hp.frequency.value = 500;
-          b.connect(hp).connect(bg).connect(this.projGain);
-          b.start(bt);
-          b.stop(bt + 0.08);
-        }
-        setTimeout(() => { this._glitch = 1; }, 400);
-      }
-      setTimeout(pulse, 1650 + Math.random() * 300);
-    };
-    pulse();
-    const pad = ctx.createOscillator();
-    pad.type = 'triangle';
-    pad.frequency.value = 659.25;
-    const pad2 = ctx.createOscillator();
-    pad2.type = 'triangle';
-    pad2.frequency.value = 987.77;
-    pad2.detune.value = 7;
-    const padG = ctx.createGain();
-    padG.gain.value = 0.018;
-    const trem = ctx.createOscillator();
-    trem.frequency.value = 0.2;
-    const tremG = ctx.createGain();
-    tremG.gain.value = 0.012;
-    trem.connect(tremG).connect(padG.gain);
-    pad.connect(padG);
-    pad2.connect(padG);
-    padG.connect(this.projGain);
-    pad.start();
-    pad2.start();
-    trem.start();
   }
 
   // Short digital burst used when crossing between rooms.
@@ -354,7 +297,7 @@ export class Ambience {
     const ang = Math.atan2(-(BAR.x - x), -(BAR.z - z)) - yaw;
     this.barPan.pan.setTargetAtTime(Math.max(-0.8, Math.min(0.8, -Math.sin(ang))), ct, 0.2);
     const dProj = Math.hypot(x - PROJ.x, z - PROJ.z);
-    const projLevel = x > 15.6 ? 1 : Math.max(0, 1 - dProj / 14) * 0.35;
+    const projLevel = Math.max(0, 1 - dProj / 7);
     this.projGain.gain.setTargetAtTime(projLevel * 0.9, ct, 0.4);
     this.roomGain.gain.setTargetAtTime(x > 15.6 ? 0.1 : 0.16, ct, 0.5);
 

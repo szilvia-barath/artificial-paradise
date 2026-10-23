@@ -1,0 +1,17 @@
+{
+ "brick-warm": {
+  "w": 0.795,
+  "h": 1.575,
+  "photo": "DSC_0061"
+ },
+ "brick-grey": {
+  "w": 1.205,
+  "h": 0.55,
+  "photo": "DSC_0087"
+ },
+ "brick-white": {
+  "w": 1.3,
+  "h": 0.88,
+  "photo": "DSC_0074"
+ }
+}

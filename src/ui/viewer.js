@@ -28,18 +28,16 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
 
   const show = () => {
     const w = works[index];
-    const isPhotoOnly = w.type === 'installation' || w.type === 'projection';
     const src = situ ? `${base}${w.image}-situ.webp` : `${base}${w.image}.webp`;
     img.classList.remove('ready');
     loading.hidden = false;
     img.onload = () => { img.classList.add('ready'); loading.hidden = true; };
     img.src = src;
     img.alt = `${w.title}, ${w.medium}`;
-    room.textContent = `${data.rooms[w.room].name} · ${w.type}`;
+    room.textContent = `${data.rooms[w.room].name} · No. ${w.no}`;
     title.textContent = w.title;
-    meta.innerHTML = `${esc(data.meta.artist)}<br />${esc(w.medium)}, ${esc(w.year)}`;
+    meta.innerHTML = `${esc(data.meta.artist)}<br />${esc([w.medium, w.size, w.year].filter(Boolean).join(', '))}`;
     caption.textContent = w.caption;
-    situBtn.hidden = isPhotoOnly;
     situBtn.textContent = situ ? 'View the work' : 'View in situ (installation photo)';
     count.textContent = `${index + 1} / ${works.length}`;
     // Preload neighbours

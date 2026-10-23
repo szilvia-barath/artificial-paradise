@@ -1,16 +1,29 @@
-# PROGRESS — Artificial Paradise: Digital Exhibition
+# PROGRESS: Artificial Paradise, Digital Exhibition
 
 ## Status
-- [x] **M1 Skeleton + deploy**: Vite + Three.js, procedural 3-room basement (walls, doorways with reveals, stairwell, partition), furniture, lights, first-person controls (pointer lock + WASD, touch joystick + drag look), wall collision, loading screen + Enter, GitHub Pages workflow.
-- [x] **M2 The art**: 22 perspective-corrected crops (sharp → WebP: 1600 detail / 1024 texture / 512 thumb / in-situ photo), hung on the walls with fake spotlight pools and wall labels; video stills on animated screen shaders; artwork viewer (prev/next, in-situ toggle, exhibition text, walk-to). All content in `src/data/exhibition.json`; crop corners in `scripts/crops.json`.
-- [x] **M3 Wow factor**: generative GLSL projection in Room 3 (natural fbm forest ⇄ quantised leaf grid + tower blocks, cell-by-cell dissolve, glitch bands, brick-modulated, projector beam with dust); Web Audio ambience (drone with drifting chords, room tone + mains hum, spatial bar murmur with glass clinks near Room 2, pulse + data blips near the projection) feeding an AnalyserNode → shader/light/post; post chain (bloom, ACES, vignette, grain, chromatic aberration, custom glitch pulse on room change); guided tour (T); minimap with click-to-jump; rooms menu; Behind-the-scenes panel. Static props merged (≤ ~90 draw calls per view).
-- [ ] M4 Polish
+- [x] **M1 Skeleton + deploy**: Vite + Three.js, first-person controls (pointer lock + WASD, touch joystick + drag look), wall collision, loader + Enter, GitHub Pages workflow.
+- [x] **M2 The art** (redone as a reconstruction):
+  - Scale confirmed by the OpenStreetMap outline of Damjanich utca 39 (corner building; its Murányi utca wing is 26.5 m deep, the reconstructed basement is 26.47 m outer length). Minimap shows true north (rooms run towards bearing 146° from the Damjanich utca front).
+  - Floor plan traced from the gallery's own room sheet (the plan + works list photographed in DSC_0049, also supplied by the owner) at 0.026 m per plan pixel, cross-checked with the Room 1 panorama (camera solved from corner bearings), brick courses (7.7 cm) and floor tiles (30 cm). Rooms run west → east: Room 1 (stairs, bench) → Room 2 (narrow: videos, table + chairs, bar; storage alcove and toilets not walkable) → Room 3 | Room 4, one long room split only by two wall stubs and a curtain.
+  - All 17 works from the room sheet, with real titles, media, sizes and years, at their numbered spots; paintings at their canvas sizes; crops forced to the canvas proportions (`scripts/crops.json`).
+  - Paradise Factory (#3) modelled in the middle of Room 1 (hydroponic pipe, ZZ plant on a drip, LED bars); position triangulated from the panorama.
+  - Let it Flow (#16): the photographed projection (DSC_0113) on the end wall plus the plastic river on the floor. The old generative shader piece is removed.
+  - Wall textures cut from the photos (`scripts/make_textures.py`): white brick (DSC_0074), Room 2 cream brick (DSC_0061), grey brick (DSC_0087).
+- [x] **M3** (kept, toned down): Web Audio room tone, bar murmur, projector fan; light post (bloom, grain, vignette, small transition pulse); guided tour along the works in catalogue order through the doorways; minimap; rooms menu; works list; Behind-the-scenes panel. No effects on the artworks themselves (screens show the photographed frames, crossfading only where several frames exist).
+- [ ] **M4 Polish**: OG screenshot image, README check, phone performance pass.
 
 ## Next
-M4: OG image, README, mobile check, final polish.
+1. Real video files for #3 (screen), 6, 7, 8, 15, 16, 17 would replace the stills (put them in `public/video/` and point `frames`/a new `video` field at them).
+2. Owner to confirm/replace the visual captions in `src/data/exhibition.json` (`note` field marks them).
+3. OG image (`public/og.jpg`) from a screenshot of Room 1.
 
-## Known issues
+## Known issues / assumptions
+- The R2/R3 doorway width and pass-through were fitted to DSC_0098/0130 rather than the plan (the plan's north pillar looked too wide against the photos).
+- Painting hanging heights come from the panorama and photos (±10 cm).
+- Outer walls are modelled 40 cm thick. If the real façade walls are thicker (old Budapest basements are often 60–90 cm), the rooms would be up to ~3% shorter than modelled.
+- The stair top continues into an invented dark shaft (not photographed).
 - GitHub Pages must be switched on once: Settings → Pages → Source "Deploy from a branch" → `gh-pages` / `(root)`.
 
 ## How to continue
-`npm install && npm run dev` → http://localhost:5173. Floor plan: `src/world/layout.js`. Content: `src/data/exhibition.json`.
+`npm install && npm run dev` → http://localhost:5173. Floor plan + walls: `src/world/layout.js`. Content: `src/data/exhibition.json`. Furniture: `src/world/props.js`. Installations: `src/world/paradiseFactory.js`, `src/world/letItFlow.js`.
+Regenerate crops: `npm run images` (needs the original DSC_*.JPG in the repo root). Regenerate wall textures: `npm run textures` (Python 3 + Pillow + NumPy).

@@ -4,22 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Artificial Paradise: Digital Exhibition</title>
-    <meta name="description" content="Walk through KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) as an explorable, audio-reactive 3D exhibition in the browser." />
+    <meta name="description" content="Walk through KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser." />
     <meta name="theme-color" content="#0b0c0e" />
+    <meta name="color-scheme" content="dark" />
+    <!-- Styles load from the head (render-blocking) so the title screen never flashes
+         unstyled while the 3D engine is still downloading. -->
+    <style>html, body { background: #0b0c0e; color: #f2f1ed; }</style>
+    <link rel="stylesheet" href="/src/style.css" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
 
     <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Artificial Paradise: Digital Exhibition" />
-    <meta property="og:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), rebuilt as a walkable WebGL exhibition with a generative, audio-reactive projection." />
+    <meta property="og:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed from photographs as a walkable 3D exhibition: the four rooms, the paintings, videos and installations where they hung." />
     <meta property="og:image" content="https://szilvia-barath.github.io/artificial-paradise/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:url" content="https://szilvia-barath.github.io/artificial-paradise/" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Artificial Paradise: Digital Exhibition" />
-    <meta name="twitter:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), as a walkable WebGL exhibition." />
+    <meta name="twitter:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed as a walkable 3D exhibition." />
     <meta name="twitter:image" content="https://szilvia-barath.github.io/artificial-paradise/og.jpg" />
   </head>
   <body>
@@ -55,6 +60,7 @@
           <button data-action="rooms" title="Jump to room"><span class="ico">⌖</span><span class="lbl">Rooms</span></button>
           <div id="rooms-menu" hidden></div>
         </div>
+        <button data-action="works" title="List of works"><span class="ico">≡</span><span class="lbl">Works</span></button>
         <button data-action="about" title="About the exhibition"><span class="ico">i</span><span class="lbl">About</span></button>
         <button data-action="bts" title="Behind the scenes"><span class="ico">{ }</span><span class="lbl">Build</span></button>
         <button data-action="sound" title="Sound on/off (M)"><span class="ico">♪</span><span class="lbl">Sound</span></button>
@@ -95,6 +101,7 @@
       <div id="panel-body"></div>
     </section>
 
+    <noscript><p class="noscript">This exhibition needs JavaScript and WebGL.</p></noscript>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

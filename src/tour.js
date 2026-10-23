@@ -39,15 +39,16 @@ export class Tour {
     const s = stops[this.i];
     this.from = new THREE.Vector2(this.controls.pos.x, this.controls.pos.y);
     this.to = new THREE.Vector2(s.x, s.z);
-    this.look = new THREE.Vector3(...s.look);
-    this.travel = Math.max(0.8, this.from.distanceTo(this.to) / SPEED);
+    // waypoints (doorways) look ahead along the path
+    this.look = s.look ? new THREE.Vector3(...s.look) : new THREE.Vector3(s.x + (s.x - this.from.x), EYE, s.z + (s.z - this.from.y));
+    this.travel = Math.max(s.look ? 0.8 : 0.3, this.from.distanceTo(this.to) / SPEED);
     this.dwell = s.dwell ?? 4;
     this.t = 0;
     this.shown = false;
     this.caption.classList.remove('show');
     const w = s.work ? this.byId[s.work] : null;
     this.text = w
-      ? `<span class="t">${w.title} · ${w.medium.split(':')[0]}</span>${w.caption}`
+      ? `<span class="t">${w.no} · ${w.title} · ${[w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', ')}</span>${w.caption}`
       : s.text
         ? `<span class="t">Artificial Paradise</span>${s.text}`
         : '';

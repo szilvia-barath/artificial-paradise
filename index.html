@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Artificial Paradise: Digital Exhibition</title>
+    <meta name="description" content="Walk through KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser." />
+    <meta name="theme-color" content="#0b0c0e" />
+    <meta name="color-scheme" content="light dark" />
+    <!-- Styles load from the head (render-blocking) so the title screen never flashes
+         unstyled while the 3D engine is still downloading. -->
+    <style>html,body{color:#072fcc;background:#eceef0}.i18n-wait [data-i18n]{visibility:hidden}</style>
+    <script>
+      // Pick the language before first paint: ?lang= → saved choice → browser language.
+      (function () {
+        var q = new URLSearchParams(location.search).get('lang');
+        var s = null;
+        try { s = localStorage.getItem('ap-lang'); } catch (e) {}
+        var l = q === 'hu' || q === 'en' ? q : s === 'hu' || s === 'en' ? s : /^hu\b/i.test(navigator.language || '') ? 'hu' : 'en';
+        document.documentElement.lang = l;
+        if (l !== 'en') document.documentElement.classList.add('i18n-wait');
+      })();
+    </script>
+    <link rel="preload" as="image" href="./brand/key-visual.webp" media="(min-aspect-ratio: 4/5)" />
+    <link rel="preload" as="image" href="./brand/logo-blue.webp" />
+    <link rel="alternate" hreflang="en" href="https://szilvia-barath.github.io/artificial-paradise/?lang=en" />
+    <link rel="alternate" hreflang="hu" href="https://szilvia-barath.github.io/artificial-paradise/?lang=hu" />
+    <link rel="alternate" hreflang="x-default" href="https://szilvia-barath.github.io/artificial-paradise/" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+
+    <!-- Open Graph / Twitter -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Artificial Paradise: Digital Exhibition" />
+    <meta property="og:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed from photographs as a walkable 3D exhibition: the four rooms, the paintings, videos and installations where they hung." />
+    <meta property="og:image" content="https://szilvia-barath.github.io/artificial-paradise/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:locale:alternate" content="hu_HU" />
+    <meta property="og:url" content="https://szilvia-barath.github.io/artificial-paradise/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Artificial Paradise: Digital Exhibition" />
+    <meta name="twitter:description" content="KristofLab at MAMŰ Gallery, Budapest (2025), reconstructed as a walkable 3D exhibition." />
+    <meta name="twitter:image" content="https://szilvia-barath.github.io/artificial-paradise/og.jpg" />
+    <script type="module" crossorigin src="./assets/index-BJutllki.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DX-JBd1e.css">
+  </head>
+  <body>
+    <canvas id="scene" aria-label="3D exhibition view" data-i18n-attr="aria-label:sceneLabel"></canvas>
+
+    <!-- Navbar: brand, site sections, language switch. Fades out while walking. -->
+    <header id="site-nav">
+      <span class="brand"><b>|Artificial Paradise|</b> <span>KristofLab</span></span>
+      <nav class="nav-links" id="nav-links" aria-label="Main" data-i18n-attr="aria-label:nav.main">
+        <button data-nav="about" data-i18n="nav.about">About</button>
+        <button data-nav="works" data-i18n="nav.works">Works</button>
+        <button data-nav="bts" data-i18n="nav.build">Behind the scenes</button>
+      </nav>
+      <div class="lang-switch" role="group" aria-label="Language" data-i18n-attr="aria-label:nav.language">
+        <button data-lang="en" lang="en" title="English" aria-pressed="true">EN</button>
+        <span aria-hidden="true">/</span>
+        <button data-lang="hu" lang="hu" title="Magyar" aria-pressed="false">HU</button>
+      </div>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu" data-i18n-attr="aria-label:nav.menu"><span></span></button>
+    </header>
+
+    <!-- Loading / title screen, styled after the exhibition's key visual -->
+    <section id="loader" aria-live="polite">
+      <picture class="loader-bg" aria-hidden="true">
+        <source media="(max-aspect-ratio: 4/5)" srcset="./brand/key-visual-portrait.webp" />
+        <img src="./brand/key-visual.webp" alt="" fetchpriority="high" />
+      </picture>
+      <div class="loader-grain" aria-hidden="true"></div>
+      <div class="loader-card">
+        <h1 class="sr-only">Artificial Paradise · KristofLab · Digital Exhibition</h1>
+        <img class="loader-logo" src="./brand/logo-blue.webp" alt="" width="1480" height="816" />
+        <p class="loader-meta"><span data-i18n="loader.meta1">Digital exhibition</span><br /><span data-i18n="loader.meta2">MAMŰ Gallery, Budapest · 10–31.01.2025</span></p>
+        <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="progress-bar"></span></div>
+        <p id="progress-label" data-i18n="loader.preparing">Preparing the basement…</p>
+        <button id="enter" class="btn-enter" disabled>|&nbsp;<span data-i18n="loader.enter">Enter</span>&nbsp;|</button>
+        <p class="hint" id="enter-hint" data-i18n="loader.hint">Sound on · headphones recommended</p>
+        <div class="howto">
+          <span class="desk" data-i18n="loader.howtoDesk">↑↓ or the scroll wheel to walk · ←→ to turn · mouse to look · +/− to zoom · click a work to view · Shift to run · Esc to release</span>
+          <span class="touch" data-i18n="loader.howtoTouch">Left stick to walk · drag to look · pinch to zoom · tap a work to view</span>
+        </div>
+      </div>
+    </section>
+
+    <footer id="site-foot">
+      <span data-i18n="footer.rights">Artworks © Kristóf Szabó / KristofLab</span>
+      <span class="sep" aria-hidden="true">·</span>
+      <span data-i18n="footer.digital">Digital exhibition by Szilvia Barath</span>
+      <span class="sep wide" aria-hidden="true">·</span>
+      <span class="wide" data-i18n="footer.venue">MAMŰ Gallery, Budapest, 2025</span>
+      <span class="sep" aria-hidden="true">·</span>
+      <a href="https://www.instagram.com/p/DFH19tjo3ph/" target="_blank" rel="noopener">Instagram ↗</a>
+    </footer>
+
+    <!-- In-world HUD -->
+    <div id="hud" hidden>
+      <div id="crosshair"></div>
+      <div id="prompt" class="mono"></div>
+      <div id="room-label"><span class="room-name"></span><span class="room-sub mono"></span></div>
+      <canvas id="minimap" width="220" height="150" aria-label="Map" data-i18n-attr="aria-label:hud.minimap;title:hud.minimap"></canvas>
+      <nav id="toolbar" aria-label="Exhibition controls" data-i18n-attr="aria-label:hud.toolbar">
+        <button data-action="tour" title="Guided tour (T)" data-i18n-attr="title:hud.tourTitle"><span class="ico">▶</span><span class="lbl">Tour</span></button>
+        <div class="rooms-wrap">
+          <button data-action="rooms" title="Jump to room" data-i18n-attr="title:hud.roomsTitle"><span class="ico">⌖</span><span class="lbl" data-i18n="hud.rooms">Rooms</span></button>
+          <div id="rooms-menu" hidden></div>
+        </div>
+        <button data-action="sound" title="Sound on/off (M)" data-i18n-attr="title:hud.soundTitle"><span class="ico">♪</span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
+      </nav>
+      <div id="tour-caption" aria-live="polite"></div>
+      <div id="joystick"><div id="joystick-knob"></div></div>
+      <!-- On-screen keys (desktop): hold to walk or turn; the real keys light them up -->
+      <div id="keypad" role="group" aria-label="Movement keys" data-i18n-attr="aria-label:hud.keys.group">
+        <button class="cap k-w" data-keys="ArrowUp KeyW" title="Forward (↑ / W)" data-i18n-attr="title:hud.keys.forward;aria-label:hud.keys.forward"><i>W</i>↑</button>
+        <button class="cap k-shift" data-keys="ShiftLeft ShiftRight" data-toggle title="Run (Shift)" aria-pressed="false" data-i18n-attr="title:hud.keys.run;aria-label:hud.keys.run"><i>Shift</i>⇧</button>
+        <button class="cap k-a" data-keys="ArrowLeft" title="Turn left (←)" data-i18n-attr="title:hud.keys.left;aria-label:hud.keys.left"><i>←</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M15.5 15V12.5a5.5 5.5 0 0 0-11 0V15" /><path d="M2 12.5l2.5 3 2.5-3" /></svg></button>
+        <button class="cap k-s" data-keys="ArrowDown KeyS" title="Back (↓ / S)" data-i18n-attr="title:hud.keys.back;aria-label:hud.keys.back"><i>S</i>↓</button>
+        <button class="cap k-d" data-keys="ArrowRight" title="Turn right (→)" data-i18n-attr="title:hud.keys.right;aria-label:hud.keys.right"><i>→</i><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4.5 15V12.5a5.5 5.5 0 0 1 11 0V15" /><path d="M13 12.5l2.5 3 2.5-3" /></svg></button>
+        <span class="wheel" aria-hidden="true"><b></b><span data-i18n="hud.keys.wheel">scroll to walk</span></span>
+      </div>
+      <div id="zoompad" role="group" aria-label="Zoom" data-i18n-attr="aria-label:hud.keys.zoom">
+        <button class="cap k-zin" data-keys="ZoomIn" title="Zoom in (+)" data-i18n-attr="title:hud.keys.zoomIn;aria-label:hud.keys.zoomIn"><i>+</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5M8.5 6v5" /></svg></button>
+        <button class="cap k-zout" data-keys="ZoomOut" title="Zoom out (−)" data-i18n-attr="title:hud.keys.zoomOut;aria-label:hud.keys.zoomOut"><i>−</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5" /></svg></button>
+      </div>
+      <button id="zoom-level" class="mono" hidden title="Reset zoom (0)" data-i18n-attr="title:hud.keys.zoomReset"><span></span> ✕</button>
+      <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Click to look around</div>
+    </div>
+
+    <!-- Artwork viewer -->
+    <section id="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewer-title">
+      <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
+      <div class="viewer-media">
+        <img id="viewer-img" alt="" />
+        <div class="viewer-loading mono" data-i18n="viewer.loading">loading…</div>
+      </div>
+      <aside class="viewer-info">
+        <p class="eyebrow" id="viewer-room"></p>
+        <h2 id="viewer-title"></h2>
+        <p class="meta mono" id="viewer-meta"></p>
+        <p id="viewer-caption"></p>
+        <details>
+          <summary class="mono" data-i18n="viewer.exhibitionText">Exhibition text</summary>
+          <div id="viewer-text"></div>
+        </details>
+        <nav class="viewer-nav">
+          <button id="viewer-prev" aria-label="Previous work" data-i18n="viewer.prev" data-i18n-attr="aria-label:viewer.prevLabel">← Prev</button>
+          <span id="viewer-count" class="mono"></span>
+          <button id="viewer-next" aria-label="Next work" data-i18n="viewer.next" data-i18n-attr="aria-label:viewer.nextLabel">Next →</button>
+        </nav>
+        <button id="viewer-goto" class="link mono" data-i18n="viewer.goto">Walk to this work</button>
+      </aside>
+    </section>
+
+    <!-- About / Behind the scenes panel -->
+    <section id="panel" hidden role="dialog" aria-modal="true">
+      <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
+      <div id="panel-body"></div>
+    </section>
+
+    <noscript><p class="noscript">This exhibition needs JavaScript and WebGL. · A kiállításhoz JavaScript és WebGL szükséges.</p></noscript>
+  </body>
+</html>

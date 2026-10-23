@@ -7,7 +7,8 @@ import { buildArchitecture } from './world/architecture.js';
 import { buildProps } from './world/props.js';
 import { buildLights } from './world/lights.js';
 import { buildGallery } from './world/gallery.js';
-import { buildProjection } from './fx/projection.js';
+import { buildParadiseFactory } from './world/paradiseFactory.js';
+import { buildLetItFlow } from './world/letItFlow.js';
 import { createPost } from './fx/post.js';
 import { Ambience } from './audio/ambience.js';
 import { FirstPersonControls } from './controls.js';
@@ -37,7 +38,7 @@ renderer.outputColorSpace = THREE.SRGBColorSpace;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x050506);
-scene.fog = new THREE.Fog(0x050506, 14, 30);
+scene.fog = new THREE.Fog(0x050506, 18, 40);
 
 const camera = new THREE.PerspectiveCamera(isTouch ? 72 : 66, window.innerWidth / window.innerHeight, 0.05, 60);
 
@@ -54,16 +55,17 @@ manager.onProgress = (_url, loaded, total) => {
 };
 
 // ---------------------------------------------------------------- world
-const materials = createMaterials(renderer);
+const materials = createMaterials(renderer, manager);
 const arch = buildArchitecture(materials);
 scene.add(arch.group);
-const props = buildProps(materials, arch.stairwell);
+const props = buildProps(materials);
 scene.add(props.group);
+scene.add(buildParadiseFactory(materials));
 const lights = buildLights(scene);
 const gallery = buildGallery(data, materials, manager, renderer);
 scene.add(gallery.group);
-const projection = buildProjection(materials);
-scene.add(projection.group);
+const letItFlow = buildLetItFlow(manager);
+scene.add(letItFlow.group);
 
 const controls = new FirstPersonControls(camera, canvas, arch.segments);
 const r1 = roomById('r1');
@@ -81,6 +83,7 @@ const syncEnabled = () => {
 };
 
 const ui = setupPanels(data, {
+  onOpenWork: (w) => { ui.close(); viewer.open(w); },
   onOpenPanel: () => { blockers.panel = true; controls.unlock(); syncEnabled(); },
   onClosePanel: () => { blockers.panel = false; syncEnabled(); },
   onJumpRoom: (id) => jumpToRoom(id),
@@ -92,6 +95,27 @@ const viewer = setupViewer(data, {
   onGoto: (w) => gotoWork(w),
 });
 
+// Guided tour: the works in catalogue order, routed through the doorways.
+const DOORS = {
+  'r1>r2': [[4.95, 5.24], [6.35, 5.24]],
+  'r2>r3': [[9.25, 3.4], [10.5, 3.4]],
+  'r3>r4': [[15.05, 3.9], [16.15, 3.9]],
+};
+function buildTourStops() {
+  const r1 = roomById('r1');
+  const stops = [{ x: r1.spawn.x, z: r1.spawn.z, look: [r1.spawn.look.x, 1.5, r1.spawn.look.z], text: data.tourIntro, dwell: 4 }];
+  let room = 'r1';
+  for (const w of data.works) {
+    if (!w._focus) continue;
+    if (w.room !== room) {
+      for (const [x, z] of DOORS[`${room}>${w.room}`] || []) stops.push({ x, z, look: null, dwell: 0 });
+      room = w.room;
+    }
+    stops.push({ x: w._focus.x, z: w._focus.z, look: w._focus.look, work: w.id, dwell: 5 });
+  }
+  return stops;
+}
+data.tour = buildTourStops();
 const tour = new Tour(data, controls, document.getElementById('tour-caption'));
 const tourBtn = document.querySelector('[data-action="tour"]');
 tour.onEnd = () => {
@@ -144,6 +168,7 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   if (!b) return;
   const a = b.dataset.action;
   if (a === 'about') ui.about();
+  else if (a === 'works') ui.works();
   else if (a === 'bts') ui.bts();
   else if (a === 'rooms') ui.toggleRooms();
   else if (a === 'tour') toggleTour();
@@ -186,19 +211,21 @@ function updateHover() {
     if (controls.locked) ud = pick(0, 0);
     else if (mouseInside) ud = pick(ndc.x, ndc.y);
   }
-  const target = ud && (ud.work || (ud.text ? 'text' : null));
+  const target = ud && (ud.work || ud.text || null);
   if (target !== hovered) {
     hovered = target;
     crosshair.classList.toggle('active', !!hovered);
     promptEl.classList.toggle('show', !!hovered);
     canvas.style.cursor = hovered && !controls.locked ? 'pointer' : '';
     if (hovered === 'text') promptEl.textContent = 'Click to read the exhibition text';
-    else if (hovered) promptEl.textContent = `Click to view · ${hovered.title}`;
+    else if (hovered === 'roomsheet') promptEl.textContent = 'Click to read the list of works';
+    else if (hovered) promptEl.textContent = `Click to view · ${hovered.no} ${hovered.title}`;
   }
 }
 function activate(ud) {
   if (!ud) return false;
   if (ud.work) { viewer.open(ud.work); return true; }
+  if (ud.text === 'roomsheet') { ui.works(); return true; }
   if (ud.text) { ui.about(); return true; }
   return false;
 }
@@ -227,13 +254,13 @@ let currentRoom = null;
 let currentRoomId = 'r1';
 function updateRoom() {
   const r = roomAt(controls.pos.x, controls.pos.y);
-  const key = r ? r.id + (r.zone || '') : null;
+  const key = r ? r.id : null;
   if (key && key !== currentRoom) {
     const first = currentRoom === null;
     currentRoom = key;
     currentRoomId = r.id;
     roomName.textContent = r.name;
-    roomSub.textContent = r.zone === 'dark' ? 'Projection room' : r.subtitle;
+    roomSub.textContent = r.subtitle;
     if (!first) {
       post.trigger(0.75);
       audio.glitchBurst();
@@ -300,8 +327,8 @@ function frame() {
   updateRoom();
   const bands = audio.update(controls.pos.x, controls.pos.y, controls.yaw, dt, t);
   for (const fn of props.anim) fn(t, dt);
-  gallery.update(t, dt, camera.position, bands.glitch);
-  projection.update(t, dt, bands, lights.proj);
+  gallery.update(t, dt, camera.position);
+  letItFlow.update(t, lights.proj);
   updateHover();
   if (entered) minimap(controls.pos.x, controls.pos.y, controls.yaw, currentRoomId, t);
   post.update(dt, bands);

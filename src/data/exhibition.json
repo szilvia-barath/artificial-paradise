@@ -5,7 +5,7 @@
     "artist": "Kristóf Szabó / KristofLab",
     "venue": "MAMŰ Gallery, Budapest",
     "dates": "10–31 January 2025",
-    "medium": "Giclée prints, video, installation",
+    "medium": "Acrylic paintings, giclée prints, video, installation",
     "digitalBy": "Szilvia Barath",
     "links": {
       "exhibition": "https://artkartell.hu/vizit/759-kristoflab-artificial-paradise",
@@ -46,658 +46,457 @@
       "Szilvia Barath"
     ]
   ],
-  "behindTheScenes": "Built by hand in vanilla JavaScript on Three.js and bundled with Vite: no game engine, no backend. The basement is procedural. Walls, doorways, reveals and the stairwell are extruded from a small floor plan, and the brick, tile and concrete textures are painted into canvases at load time, so the 3D world itself weighs almost nothing. The artworks were cut from my own installation photographs by a perspective-correcting crop pipeline (sharp → WebP) and hung where they hung at MAMŰ. In Room 3 the projection is replaced by a live GLSL piece that dissolves, cell by cell, between fbm foliage and a quantised grid of synthetic leaves and tower blocks. The sound is synthesised with the Web Audio API (detuned drones, room tone, a bar murmur near Room 2), and an AnalyserNode feeds its spectrum into the shader, the projector light and the post-processing: bloom, grain, chromatic aberration and a glitch pulse at every threshold. A capped, adaptive pixel ratio keeps it smooth on laptops and phones.",
+  "behindTheScenes": "A reconstruction, not an invention. The floor plan is traced from the gallery's own room sheet, which was photographed on the wall next to the bar, and checked against a 360° panorama of Room 1: the camera position solved from the corner bearings agrees with the plan's scale. Every painting hangs at its listed canvas size and at the height measured in the photos. The brick on the walls is cut from the photographs too. A script measures the 7.7 cm brick courses to get the scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops (sharp → WebP), and the screens show the frames caught on camera. Paradise Factory and the plastic river of Let it Flow are modelled procedurally from the photos. Built with Three.js and Vite, with no backend: the basement is generated from a small floor-plan file and merged into a few dozen draw calls, and the room tone is synthesised with the Web Audio API.",
   "rooms": {
     "r1": {
       "name": "Room 1",
-      "blurb": "Down the stairs: hydroponic seedlings under LED light, a plant on a drip, and four large prints of tower blocks swallowed by synthetic green."
+      "blurb": "Down the stairs: four large acrylic paintings (Wrong Data Landscape Dresden, Human as Error I, III and VI) and Paradise Factory, the hydroponic installation in the middle of the room."
     },
     "r2": {
       "name": "Room 2",
-      "blurb": "The narrow warm-brick room with the bar, where the screens loop footage of glasshouses, geodesic domes and managed foliage."
+      "blurb": "The bar room: the videos Artificial Paradise I and II, a table and chairs, and the small bar used at the opening and finissage."
     },
     "r3": {
       "name": "Room 3",
-      "blurb": "A long, narrow space. A white gallery of smaller prints opens through a curtain into a dark room: projected trees, a river of plastic, and the generative piece."
+      "blurb": "The Artificial Paradise giclée prints, three Wrong Data Landscape paintings and the 4K video Wiena Wrong Landscape II on the grey wall."
+    },
+    "r4": {
+      "name": "Room 4",
+      "blurb": "Open to Room 3 between two wall stubs and a curtain: Let it Flow, with Wiena Wrong Landscape I and Natural Life on the side walls."
     }
   },
   "works": [
     {
-      "id": "r1-print-1",
+      "id": "w01-dresden",
+      "no": 1,
       "room": "r1",
-      "type": "print",
-      "title": "Untitled 1",
-      "year": "2024",
-      "medium": "Giclée print",
-      "caption": "Turquoise façades dissolve into a pixelated meadow; a strip of red marks the horizon line between city and field.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
+      "type": "painting",
+      "title": "Wrong Data Landscape Dresden",
+      "year": "2023",
+      "medium": "Acrylic on canvas",
+      "size": "140 × 160 cm",
+      "caption": "Cyan and lilac blocks of corrupted data slide across a Dresden housing estate and a sunlit meadow; a thin red strip runs where city and field meet.",
+      "image": "img/w01-dresden",
+      "photo": "DSC_0017",
       "hang": {
-        "wall": "W",
-        "along": 4.0,
-        "y": 1.55,
-        "width": 1.35
+        "face": "+z",
+        "at": 0,
+        "along": 4.1,
+        "y": 1.39,
+        "w": 1.6,
+        "h": 1.4
       },
-      "image": "img/r1-print-1",
-      "photo": "DSC_0017"
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
     },
     {
-      "id": "r1-print-2",
+      "id": "w02-human-as-error-vi",
+      "no": 2,
       "room": "r1",
-      "type": "print",
-      "title": "Untitled 2",
+      "type": "painting",
+      "title": "Human as Error VI",
       "year": "2024",
-      "medium": "Giclée print",
-      "caption": "A tower block rises out of dense green brushwork, framed by cyan planes like a screen interface.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
+      "medium": "Acrylic on canvas",
+      "size": "190 × 150 cm",
+      "caption": "A half-ruined tower block under a marbled sky, its base sinking into dense green brushwork and turquoise interface bars.",
+      "image": "img/w02-human-as-error-vi",
+      "photo": "DSC_0018",
       "hang": {
-        "wall": "N",
-        "along": 1.05,
-        "y": 1.6,
-        "width": 1.0
+        "face": "-x",
+        "at": 5.4,
+        "along": 2.1,
+        "y": 1.32,
+        "w": 1.5,
+        "h": 1.9
       },
-      "image": "img/r1-print-2",
-      "photo": "DSC_0018"
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one.",
+      "view": {
+        "x": 3.15,
+        "z": 2.75
+      }
     },
     {
-      "id": "r1-print-3",
+      "id": "w03-paradise-factory",
+      "no": 3,
       "room": "r1",
-      "type": "print",
-      "title": "Untitled 3",
+      "type": "installation",
+      "title": "Paradise Factory",
       "year": "2024",
-      "medium": "Giclée print",
-      "caption": "Housing estates on a hillside, collaged over a sliding slope of earth and violet digital stripes.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": {
-        "wall": "N",
-        "along": 6.4,
-        "y": 1.6,
-        "width": 1.35
+      "medium": "Installation: hydroponic PVC pipe, seedlings, LED lights, plant on a drip feed, screen",
+      "caption": "Lettuce seedlings grow in a white PVC pipe under an LED tube, hung from the ceiling on chains. In the middle of the room a plant is kept alive in a clear plastic tank, fed from a hanging bottle and lit by two vertical LED bars; a small screen on the wall shows a pixelated loop.",
+      "image": "img/w03-paradise-factory",
+      "photo": "_01_panorama",
+      "anchor": {
+        "x": 2.25,
+        "y": 1.2,
+        "z": 3.6
       },
-      "image": "img/r1-print-3",
-      "photo": "DSC_0026"
+      "view": {
+        "x": 3.9,
+        "z": 4.7
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
     },
     {
-      "id": "r1-print-4",
-      "room": "r1",
-      "type": "print",
-      "title": "Untitled 4",
-      "year": "2024",
-      "medium": "Giclée print",
-      "caption": "A prefab façade overgrown by a pixel-perfect canopy: the green has been rendered, not grown.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": {
-        "wall": "N",
-        "along": 8.6,
-        "y": 1.6,
-        "width": 1.2
-      },
-      "image": "img/r1-print-4",
-      "photo": "DSC_0029"
-    },
-    {
-      "id": "r1-screen",
+      "id": "w03-screen",
+      "no": 3,
       "room": "r1",
       "type": "video",
-      "title": "Untitled (screen)",
+      "title": "Paradise Factory (screen)",
       "year": "2024",
-      "medium": "Video on small LED screen",
-      "caption": "A small screen beside the hydroponic line, glowing in shifting blues and greens like a monitoring display.",
-      "todo": "TODO: confirm title and whether this is a single video loop.",
-      "hang": {
-        "wall": "E",
-        "along": 1.05,
-        "y": 1.75,
-        "width": 0.36
-      },
-      "image": "img/r1-screen",
+      "medium": "Video on a small screen, part of the installation",
+      "caption": "The monitor beside the hydroponic line: slow, vertically smeared blues and greens, like a feed from inside the plant factory.",
+      "image": "img/w03-screen",
+      "photo": "DSC_0032",
       "frames": [
-        "img/r1-screen",
-        "img/r1-screen-b",
-        "img/r1-screen-c"
+        "img/w03-screen",
+        "img/w03-screen-b",
+        "img/w03-screen-c"
       ],
-      "photo": "DSC_0032"
-    },
-    {
-      "id": "r1-hydroponics",
-      "room": "r1",
-      "type": "installation",
-      "title": "Untitled (hydroponics)",
-      "year": "2024",
-      "medium": "Installation: hydroponic pipe, seedlings, LED tubes, drip-fed plant",
-      "caption": "Lettuce seedlings grow in a white pipe under LED light, and a tall plant is kept alive by a drip bag. Nature as infrastructure.",
-      "todo": "TODO: confirm title and materials.",
-      "anchor": {
-        "x": 9.0,
-        "y": 1.3,
-        "z": 3.1
-      },
-      "view": {
-        "x": 6.6,
-        "z": 3.4
-      },
-      "image": "img/r1-hydroponics",
-      "photo": "DSC_0013"
-    },
-    {
-      "id": "r2-video-1",
-      "room": "r2",
-      "type": "video",
-      "title": "Untitled (video) 1",
-      "year": "2024",
-      "medium": "Video, flat screen",
-      "caption": "Split-screen footage: violet blossoms, glasshouse struts and geodesic grids, cut into a cold blue rhythm.",
-      "todo": "TODO: confirm title and duration; replace stills with the video file if available.",
       "hang": {
-        "wall": "W",
-        "along": -3.3,
-        "y": 1.6,
-        "width": 1.0
-      },
-      "image": "img/r2-video-1",
-      "photo": "DSC_0053"
-    },
-    {
-      "id": "r2-video-2",
-      "room": "r2",
-      "type": "video",
-      "title": "Untitled (video) 2",
-      "year": "2024",
-      "medium": "Video, flat screen",
-      "caption": "Hexagonal glazing, a waterfall and ivy: four views of a managed paradise, side by side.",
-      "todo": "TODO: confirm title and duration; replace stills with the video file if available.",
-      "hang": {
-        "wall": "N",
-        "along": 1.6,
-        "y": 1.6,
-        "width": 1.0
-      },
-      "image": "img/r2-video-2",
-      "photo": "DSC_0056"
-    },
-    {
-      "id": "r2-video-3",
-      "room": "r2",
-      "type": "video",
-      "title": "Untitled (video) 3",
-      "year": "2024",
-      "medium": "Video, flat screen",
-      "caption": "Hexagonal glazing over a glasshouse roof, above a leaf beaded with water: the dome as a second sky.",
-      "todo": "TODO: confirm title and duration; replace the still with the video file if available.",
-      "hang": {
-        "wall": "S",
-        "along": 1.15,
-        "y": 1.6,
-        "width": 0.95
-      },
-      "image": "img/r2-video-3",
-      "photo": "DSC_0057"
-    },
-    {
-      "id": "r3-tv-cyan",
-      "room": "r3",
-      "type": "video",
-      "title": "Untitled (video) 4",
-      "year": "2024",
-      "medium": "Video, flat screen",
-      "caption": "A glitching cyan cityscape on the grey brick wall, with tower blocks and pink slabs sliding through each other.",
-      "todo": "TODO: confirm title and duration.",
-      "hang": {
-        "wall": "N",
-        "along": 10.6,
-        "y": 1.6,
-        "width": 1.25
-      },
-      "image": "img/r3-tv-cyan",
-      "photo": "DSC_0090"
-    },
-    {
-      "id": "r3-print-1",
-      "room": "r3",
-      "type": "print",
-      "title": "Untitled 5",
-      "year": "2024",
-      "medium": "Giclée print",
-      "caption": "Black-and-white organic forms cut against a strip of rendered greenery.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": {
-        "wall": "S",
-        "along": 14.4,
-        "y": 1.6,
-        "width": 0.62
-      },
-      "image": "img/r3-print-1",
-      "photo": "DSC_0073"
-    },
-    {
-      "id": "r3-print-2",
-      "room": "r3",
-      "type": "print",
-      "title": "Untitled 6",
-      "year": "2024",
-      "medium": "Giclée print",
-      "caption": "A corporate atrium wrapped in planted terraces, nature stacked like office floors.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": {
-        "wall": "S",
-        "along": 12.9,
-        "y": 1.6,
-        "width": 0.7
-      },
-      "image": "img/r3-print-2",
-      "photo": "DSC_0075"
-    },
-    {
-      "id": "r3-print-3",
-      "room": "r3",
-      "type": "print",
-      "title": "Untitled 7",
-      "year": "2024",
-      "medium": "Giclée print",
-      "caption": "Steel supertrees over a manicured garden: the botanical park as a theme park.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": {
-        "wall": "S",
-        "along": 11.4,
-        "y": 1.6,
-        "width": 0.58
-      },
-      "image": "img/r3-print-3",
-      "photo": "DSC_0077"
-    },
-    {
-      "id": "r3-print-4",
-      "room": "r3",
-      "type": "print",
-      "title": "Untitled 8",
-      "year": "2024",
-      "medium": "Giclée print",
-      "caption": "A magenta tower block above a frozen cyan thicket, with a white tree drawn in like a circuit.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": {
-        "wall": "W",
-        "along": -1.25,
-        "y": 1.6,
-        "width": 0.55
-      },
-      "image": "img/r3-print-4",
-      "photo": "DSC_0080"
-    },
-    {
-      "id": "r3-print-5",
-      "room": "r3",
-      "type": "print",
-      "title": "Untitled 9",
-      "year": "2024",
-      "medium": "Giclée print",
-      "caption": "Pink and violet slabs stacked into a skyline over a pale blue ground.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": {
-        "wall": "PW",
-        "along": -1.4,
-        "y": 1.6,
-        "width": 0.52
-      },
-      "image": "img/r3-print-5",
-      "photo": "DSC_0071"
-    },
-    {
-      "id": "r3-print-6",
-      "room": "r3",
-      "type": "print",
-      "title": "Untitled 10",
-      "year": "2024",
-      "medium": "Giclée print",
-      "caption": "Abstract architecture in rose, mauve and black, hung on the white pillar at the threshold of the dark room.",
-      "todo": "TODO: confirm the real title, year, dimensions and medium with the artist.",
-      "hang": {
-        "wall": "PW",
-        "along": -4.2,
-        "y": 1.6,
-        "width": 0.5
-      },
-      "image": "img/r3-print-6",
-      "photo": "DSC_0094"
-    },
-    {
-      "id": "r3-tv-fern",
-      "room": "r3",
-      "type": "video",
-      "title": "Untitled (video) 5",
-      "year": "2024",
-      "medium": "Video, flat screen",
-      "caption": "Ferns filmed up close, glowing on a dark wall among the basement's pipes.",
-      "todo": "TODO: confirm title and duration.",
-      "hang": {
-        "wall": "N",
-        "along": 19.4,
-        "y": 1.65,
-        "width": 0.95
-      },
-      "image": "img/r3-tv-fern",
-      "photo": "DSC_0109"
-    },
-    {
-      "id": "r3-tv-sea",
-      "room": "r3",
-      "type": "video",
-      "title": "Untitled (video) 6",
-      "year": "2024",
-      "medium": "Video, flat screen",
-      "caption": "A waterfront of red and white blocks above a rolling sea, its reflections broken into vertical glitches.",
-      "todo": "TODO: confirm title and duration.",
-      "hang": {
-        "wall": "S",
-        "along": 21.0,
-        "y": 1.65,
-        "width": 1.3
-      },
-      "image": "img/r3-tv-sea",
-      "photo": "DSC_0120"
-    },
-    {
-      "id": "r3-river",
-      "room": "r3",
-      "type": "installation",
-      "title": "Untitled (river)",
-      "year": "2024",
-      "medium": "Installation: plastic waste, floor",
-      "caption": "A river of colourful plastic runs across the floor of the dark room, beneath projected trees.",
-      "todo": "TODO: confirm title and materials.",
-      "anchor": {
-        "x": 21.5,
-        "y": 0.1,
-        "z": -2.0
-      },
-      "view": {
-        "x": 17.4,
-        "z": -2.6
-      },
-      "image": "img/r3-river",
-      "photo": "DSC_0113"
-    },
-    {
-      "id": "r3-projection",
-      "room": "r3",
-      "type": "projection",
-      "title": "Artificial Paradise (generative)",
-      "year": "2025",
-      "medium": "Real-time GLSL, audio-reactive. A digital response to the projected forest shown at MAMŰ",
-      "caption": "At MAMŰ, trees were projected onto the end wall of the dark room. Here the wall carries a live shader: foliage that keeps glitching into grids, leaves and tower-block silhouettes, driven by the room's synthesised sound.",
-      "todo": "TODO: add the title of the original projection work.",
-      "anchor": {
-        "x": 25.9,
+        "face": "+x",
+        "at": 0,
+        "along": 5.3,
         "y": 1.45,
-        "z": -2.8
+        "w": 0.36,
+        "h": 0.45
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w04-human-as-error-iii",
+      "no": 4,
+      "room": "r1",
+      "type": "painting",
+      "title": "Human as Error III",
+      "year": "2024",
+      "medium": "Acrylic on canvas",
+      "size": "90 × 120 cm",
+      "caption": "A prefab façade swallowed by a pixel-sharp canopy of green: the windows are still there, the building is disappearing.",
+      "image": "img/w04-human-as-error-iii",
+      "photo": "DSC_0029",
+      "hang": {
+        "face": "-z",
+        "at": 7.37,
+        "along": 1.55,
+        "y": 1.5,
+        "w": 1.2,
+        "h": 0.9
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w05-human-as-error-i",
+      "no": 5,
+      "room": "r1",
+      "type": "painting",
+      "title": "Human as Error I",
+      "year": "2024",
+      "medium": "Acrylic on canvas",
+      "size": "90 × 120 cm",
+      "caption": "Houses on a hillside smeared into a slope of earth and grass, cut off at the bottom by flat violet and green blocks of data.",
+      "image": "img/w05-human-as-error-i",
+      "photo": "DSC_0026",
+      "hang": {
+        "face": "-z",
+        "at": 7.37,
+        "along": 3.95,
+        "y": 1.48,
+        "w": 1.2,
+        "h": 0.9
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w06-artificial-paradise-i",
+      "no": 6,
+      "room": "r2",
+      "type": "video",
+      "title": "Artificial Paradise I",
+      "year": "2025",
+      "medium": "Video, Full HD",
+      "caption": "A split screen of managed nature: orchids under grow lights, glasshouse struts, geodesic domes and artificial trees.",
+      "image": "img/w06-artificial-paradise-i",
+      "photo": "DSC_0053",
+      "hang": {
+        "face": "+x",
+        "at": 5.85,
+        "along": 3.3,
+        "y": 1.55,
+        "w": 0.94,
+        "h": 0.53
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w07-artificial-paradise-ii",
+      "no": 7,
+      "room": "r2",
+      "type": "video",
+      "title": "Artificial Paradise II",
+      "year": "2025",
+      "medium": "Video, Full HD",
+      "caption": "The hexagonal glazing of biodomes, a waterfall, ivy and a leaf beaded with water, cut into a grid.",
+      "image": "img/w07-artificial-paradise-ii",
+      "photo": "DSC_0056",
+      "frames": [
+        "img/w07-artificial-paradise-ii",
+        "img/w07-artificial-paradise-ii-b"
+      ],
+      "hang": {
+        "face": "+z",
+        "at": 1.73,
+        "along": 7.15,
+        "y": 1.5,
+        "w": 0.94,
+        "h": 0.53
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w08-wiena-wrong-landscape-ii",
+      "no": 8,
+      "room": "r3",
+      "type": "video",
+      "title": "Wiena Wrong Landscape II",
+      "year": "2023",
+      "medium": "Video, 4K",
+      "caption": "A skyline rebuilt from corrupted image data: cyan towers, magenta blocks and smeared façades on the grey brick wall.",
+      "image": "img/w08-wiena-wrong-landscape-ii",
+      "photo": "DSC_0089",
+      "hang": {
+        "face": "+z",
+        "at": 1.73,
+        "along": 12.35,
+        "y": 1.6,
+        "w": 1.21,
+        "h": 0.68
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w09-warsaw-g24-i",
+      "no": 9,
+      "room": "r3",
+      "type": "painting",
+      "title": "Wrong Data Landscape Warsaw G24 I",
+      "year": "2024",
+      "medium": "Acrylic on canvas",
+      "size": "75 × 40 cm",
+      "caption": "Pink and teal planes of a Warsaw tower block stacked over a grey, textured strip of vegetation.",
+      "image": "img/w09-warsaw-g24-i",
+      "photo": "DSC_0094",
+      "hang": {
+        "face": "-x",
+        "at": 15.45,
+        "along": 2.36,
+        "y": 1.45,
+        "w": 0.4,
+        "h": 0.75
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w10-warsaw-ii",
+      "no": 10,
+      "room": "r3",
+      "type": "painting",
+      "title": "Wrong Data Landscape Warsaw II",
+      "year": "2023",
+      "medium": "Acrylic on canvas",
+      "size": "80 × 50 cm",
+      "caption": "A violet tower against a dark sky; a white tree and cyan ground break up into pixels at the bottom.",
+      "image": "img/w10-warsaw-ii",
+      "photo": "DSC_0080",
+      "hang": {
+        "face": "+x",
+        "at": 10.05,
+        "along": 5.42,
+        "y": 1.5,
+        "w": 0.5,
+        "h": 0.8,
+        "label": "none"
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w11-artificial-paradise-i-print",
+      "no": 11,
+      "room": "r3",
+      "type": "print",
+      "title": "Artificial Paradise I",
+      "year": "2025",
+      "medium": "Giclée print",
+      "size": "50 × 50 cm",
+      "caption": "Singapore's Supertrees: steel trunks planted with ferns and climbers, a garden built as infrastructure.",
+      "image": "img/w11-artificial-paradise-i-print",
+      "photo": "DSC_0077",
+      "hang": {
+        "face": "-z",
+        "at": 5.94,
+        "along": 10.99,
+        "y": 1.55,
+        "w": 0.5,
+        "h": 0.5
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w12-artificial-paradise-ii-print",
+      "no": 12,
+      "room": "r3",
+      "type": "print",
+      "title": "Artificial Paradise II",
+      "year": "2025",
+      "medium": "Giclée print",
+      "size": "50 × 50 cm",
+      "caption": "Glass towers rising behind manicured hedges, the sky smeared by a glitch.",
+      "image": "img/w12-artificial-paradise-ii-print",
+      "photo": "DSC_0075",
+      "hang": {
+        "face": "-z",
+        "at": 5.94,
+        "along": 11.9,
+        "y": 1.55,
+        "w": 0.5,
+        "h": 0.5
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w13-artificial-paradise-iii-print",
+      "no": 13,
+      "room": "r3",
+      "type": "print",
+      "title": "Artificial Paradise III",
+      "year": "2025",
+      "medium": "Giclée print",
+      "size": "50 × 50 cm",
+      "caption": "A black-and-white sculpture of curling fronds over a wall of planting, cut into blocks.",
+      "image": "img/w13-artificial-paradise-iii-print",
+      "photo": "DSC_0073",
+      "hang": {
+        "face": "-z",
+        "at": 5.94,
+        "along": 12.86,
+        "y": 1.55,
+        "w": 0.5,
+        "h": 0.5
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w14-warsaw-g24-ii",
+      "no": 14,
+      "room": "r3",
+      "type": "painting",
+      "title": "Wrong Data Landscape Warsaw G24 II",
+      "year": "2024",
+      "medium": "Acrylic on canvas",
+      "size": "75 × 40 cm",
+      "caption": "A magenta tower block on pale blue ground, a dark tree pixelating at its foot.",
+      "image": "img/w14-warsaw-g24-ii",
+      "photo": "DSC_0071",
+      "hang": {
+        "face": "-x",
+        "at": 14.35,
+        "along": 5.38,
+        "y": 1.45,
+        "w": 0.4,
+        "h": 0.75
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w15-wiena-wrong-landscape-i",
+      "no": 15,
+      "room": "r4",
+      "type": "video",
+      "title": "Wiena Wrong Landscape I",
+      "year": "2023",
+      "medium": "Video, 4K",
+      "caption": "A city front on open water; buildings slip into red and pastel glitch columns above the waves.",
+      "image": "img/w15-wiena-wrong-landscape-i",
+      "photo": "DSC_0120",
+      "hang": {
+        "face": "-z",
+        "at": 5.94,
+        "along": 18.13,
+        "y": 1.6,
+        "w": 1.21,
+        "h": 0.68
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w16-let-it-flow",
+      "no": 16,
+      "room": "r4",
+      "type": "installation",
+      "title": "Let it Flow",
+      "year": "2024",
+      "medium": "Installation: video projection, plastic waste",
+      "caption": "Trees are projected across the end wall of the dark room. Out of the projected forest a river of crushed plastic (bottles, cups, bags, wrappers) winds across the floor.",
+      "image": "img/w16-let-it-flow",
+      "photo": "DSC_0113",
+      "anchor": {
+        "x": 22.6,
+        "y": 0.4,
+        "z": 3.6
       },
       "view": {
-        "x": 19.5,
-        "z": -2.8
+        "x": 18.4,
+        "z": 4.3
       },
-      "image": "img/r3-projection",
-      "photo": "DSC_0114"
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
+    },
+    {
+      "id": "w17-natural-life",
+      "no": 17,
+      "room": "r4",
+      "type": "video",
+      "title": "Natural Life",
+      "year": "2024",
+      "medium": "Video, Full HD",
+      "caption": "Ferns on a forest slope, filmed close up, on the black brick wall of the projection room.",
+      "image": "img/w17-natural-life",
+      "photo": "DSC_0109",
+      "hang": {
+        "face": "+z",
+        "at": 1.73,
+        "along": 19.35,
+        "y": 1.5,
+        "w": 0.94,
+        "h": 0.53
+      },
+      "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
     }
   ],
-  "tour": [
+  "sheets": [
     {
-      "x": 5.0,
-      "z": 6.35,
-      "look": [
-        0,
-        1.6,
-        3.2
-      ],
-      "text": "Down the stairs into the basement of MAMŰ. Artificial Paradise by KristofLab, 10–31 January 2025.",
-      "dwell": 4
+      "id": "text-r1",
+      "kind": "text",
+      "face": "-x",
+      "at": 5.4,
+      "along": 6.3,
+      "y": 1.58
     },
     {
-      "x": 6.8,
-      "z": 3.4,
-      "look": [
-        9.2,
-        1.3,
-        3.1
-      ],
-      "work": "r1-hydroponics",
-      "dwell": 5
+      "id": "text-r2",
+      "kind": "text",
+      "face": "+z",
+      "at": 1.73,
+      "along": 8.3,
+      "y": 1.5
     },
     {
-      "x": 7.6,
-      "z": 2.4,
-      "look": [
-        10,
-        1.75,
-        1.05
-      ],
-      "work": "r1-screen",
-      "dwell": 4
-    },
-    {
-      "x": 3.2,
-      "z": 4.0,
-      "look": [
-        0,
-        1.55,
-        4.0
-      ],
-      "work": "r1-print-1",
-      "dwell": 5
-    },
-    {
-      "x": 1.4,
-      "z": 3.0,
-      "look": [
-        1.05,
-        1.6,
-        0
-      ],
-      "work": "r1-print-2",
-      "dwell": 5
-    },
-    {
-      "x": 6.4,
-      "z": 3.2,
-      "look": [
-        6.4,
-        1.6,
-        0
-      ],
-      "work": "r1-print-3",
-      "dwell": 5
-    },
-    {
-      "x": 8.4,
-      "z": 3.4,
-      "look": [
-        8.6,
-        1.6,
-        0
-      ],
-      "work": "r1-print-4",
-      "dwell": 5
-    },
-    {
-      "x": 3.0,
-      "z": 1.0,
-      "look": [
-        3.0,
-        1.6,
-        -3
-      ],
-      "dwell": 0.1
-    },
-    {
-      "x": 3.0,
-      "z": -1.6,
-      "look": [
-        0,
-        1.6,
-        -3.3
-      ],
-      "work": "r2-video-1",
-      "dwell": 5
-    },
-    {
-      "x": 2.0,
-      "z": -2.6,
-      "look": [
-        1.6,
-        1.6,
-        -5
-      ],
-      "work": "r2-video-2",
-      "dwell": 5
-    },
-    {
-      "x": 3.6,
-      "z": -3.0,
-      "look": [
-        6.5,
-        1.3,
-        -1.2
-      ],
-      "text": "The bar: during the opening and finissage, drinks were served here between the screens.",
-      "dwell": 4
-    },
-    {
-      "x": 7.6,
-      "z": -3.0,
-      "look": [
-        16,
-        1.6,
-        -2.8
-      ],
-      "dwell": 0.1
-    },
-    {
-      "x": 9.0,
-      "z": -2.2,
-      "look": [
-        6.8,
-        1.6,
-        -1.25
-      ],
-      "work": "r3-print-4",
-      "dwell": 4
-    },
-    {
-      "x": 10.6,
-      "z": -2.6,
-      "look": [
-        10.6,
-        1.6,
-        -5
-      ],
-      "work": "r3-tv-cyan",
-      "dwell": 5
-    },
-    {
-      "x": 11.4,
-      "z": -3.0,
-      "look": [
-        11.4,
-        1.6,
-        -0.6
-      ],
-      "work": "r3-print-3",
-      "dwell": 4
-    },
-    {
-      "x": 12.9,
-      "z": -3.0,
-      "look": [
-        12.9,
-        1.6,
-        -0.6
-      ],
-      "work": "r3-print-2",
-      "dwell": 4
-    },
-    {
-      "x": 14.2,
-      "z": -3.0,
-      "look": [
-        14.4,
-        1.6,
-        -0.6
-      ],
-      "work": "r3-print-1",
-      "dwell": 4
-    },
-    {
-      "x": 13.8,
-      "z": -1.6,
-      "look": [
-        15.6,
-        1.6,
-        -1.4
-      ],
-      "work": "r3-print-5",
-      "dwell": 4
-    },
-    {
-      "x": 13.8,
-      "z": -3.8,
-      "look": [
-        15.6,
-        1.6,
-        -4.2
-      ],
-      "work": "r3-print-6",
-      "dwell": 4
-    },
-    {
-      "x": 15.0,
-      "z": -2.8,
-      "look": [
-        18,
-        1.6,
-        -2.8
-      ],
-      "dwell": 0.1
-    },
-    {
-      "x": 19.4,
-      "z": -3.4,
-      "look": [
-        19.4,
-        1.65,
-        -5
-      ],
-      "work": "r3-tv-fern",
-      "dwell": 5
-    },
-    {
-      "x": 21.0,
-      "z": -2.4,
-      "look": [
-        21.0,
-        1.65,
-        -0.6
-      ],
-      "work": "r3-tv-sea",
-      "dwell": 5
-    },
-    {
-      "x": 18.0,
-      "z": -3.6,
-      "look": [
-        22,
-        0.0,
-        -2.0
-      ],
-      "work": "r3-river",
-      "dwell": 5
-    },
-    {
-      "x": 19.5,
-      "z": -2.8,
-      "look": [
-        26,
-        1.45,
-        -2.8
-      ],
-      "work": "r3-projection",
-      "dwell": 10
+      "id": "roomsheet",
+      "kind": "roomsheet",
+      "face": "-x",
+      "at": 7.42,
+      "along": 5.7,
+      "y": 1.5
     }
-  ]
+  ],
+  "source": "Titles, sizes, media and years from the room sheet displayed in the gallery (photographed in DSC_0049).",
+  "tourIntro": "Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10–31 January 2025."
 }

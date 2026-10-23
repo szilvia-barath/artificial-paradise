@@ -1,10 +1,9 @@
 import * as THREE from 'three';
-import { wallFrame } from './layout.js';
-import sizes from '../data/images.json';
+import { wallFrame, ROOMS } from './layout.js';
 
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as
 // glowing flat screens (with a subtle scanline/glitch shader), installations and the
-// projection as clickable anchors. Fake spotlights = additive light pools on the wall.
+// installations as clickable volumes. Fake spotlights = additive light pools on the wall.
 // Textures load lazily: 512px thumbs first, 1024px versions once you get close.
 
 const BASE = import.meta.env.BASE_URL;
@@ -33,13 +32,14 @@ function labelTexture(work) {
   g.fillStyle = '#f7f6f2';
   g.fillRect(0, 0, 256, 128);
   g.fillStyle = '#111';
-  g.font = '600 22px Helvetica, Arial, sans-serif';
-  g.fillText('KristofLab', 16, 34);
-  g.font = 'italic 20px Helvetica, Arial, sans-serif';
-  g.fillText(work.title.length > 22 ? `${work.title.slice(0, 21)}…` : work.title, 16, 62);
-  g.font = '15px Helvetica, Arial, sans-serif';
+  g.font = '600 20px Helvetica, Arial, sans-serif';
+  g.fillText(`${work.no} · KristofLab`, 16, 32);
+  g.font = 'italic 19px Helvetica, Arial, sans-serif';
+  const title = work.title.replace(' (screen)', '');
+  g.fillText(title.length > 24 ? `${title.slice(0, 23)}…` : title, 16, 60);
+  g.font = '14px Helvetica, Arial, sans-serif';
   g.fillStyle = '#555';
-  g.fillText(`${work.medium.split(',')[0].slice(0, 26)}, ${work.year}`, 16, 90);
+  g.fillText([work.medium.split(':')[0].split(',')[0], work.size, work.year].filter(Boolean).join(', ').slice(0, 34), 16, 88);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   t.anisotropy = 4;
@@ -57,36 +57,103 @@ const screenFrag = /* glsl */ `
   uniform sampler2D map;
   uniform sampler2D mapB;
   uniform float mixB;
-  uniform float time;
-  uniform float seed;
-  uniform float glitch;
   uniform float brightness;
   varying vec2 vUv;
-  float hash(float n) { return fract(sin(n) * 43758.5453); }
   void main() {
-    vec2 uv = vUv;
-    // slow drift, like a camera move in the footage
-    vec2 drift = vec2(sin(time * 0.05 + seed) * 0.012, cos(time * 0.04 + seed * 2.0) * 0.01);
-    uv = (uv - 0.5) * 0.96 + 0.5 + drift;
-    // occasional horizontal slice glitch
-    float slice = floor(uv.y * 24.0);
-    float g = step(0.985 - glitch * 0.25, hash(slice + floor(time * 9.0) + seed * 13.0));
-    uv.x += g * (hash(slice * 3.1 + time) - 0.5) * 0.08;
-    vec3 a = texture2D(map, uv).rgb;
-    vec3 b = texture2D(mapB, uv).rgb;
-    vec3 col = mix(a, b, mixB);
-    // RGB split on glitched slices
-    col.r = mix(col.r, texture2D(map, uv + vec2(0.006, 0.0)).r, g);
-    // scanlines + LCD flicker
-    col *= 0.92 + 0.08 * sin(vUv.y * 900.0);
-    col *= 0.97 + 0.03 * sin(time * 50.0 + seed);
-    // vignette of the panel
+    // The frames are shown as photographed; only a slow crossfade between them.
+    vec3 col = mix(texture2D(map, vUv).rgb, texture2D(mapB, vUv).rgb, mixB);
+    // faint LCD falloff at the panel edges
     vec2 d = abs(vUv - 0.5) * 2.0;
-    col *= 1.0 - 0.18 * pow(max(d.x, d.y), 6.0);
+    col *= 1.0 - 0.1 * pow(max(d.x, d.y), 8.0);
     gl_FragColor = vec4(col * brightness, 1.0);
     #include <colorspace_fragment>
   }
 `;
+
+// Clickable volumes for the installations: [cx, cy, cz, sx, sy, sz]
+const HIT_BOXES = {
+  'w03-paradise-factory': [
+    [2.25, 1.3, 3.6, 0.9, 2.6, 0.9], // plant, tank and LED bars
+    [1.1, 1.15, 3.85, 0.35, 0.6, 2.7], // hydroponic pipe
+  ],
+  'w16-let-it-flow': [
+    [25.6, 1.2, 3.83, 0.12, 2.4, 4.2], // projection on the end wall
+    [22.6, 0.12, 3.6, 6.2, 0.24, 2.4], // plastic river
+  ],
+};
+
+function wrapText(g, text, x, y, maxW, lh) {
+  const words = text.split(' ');
+  let line = '';
+  for (const wd of words) {
+    const test = line ? `${line} ${wd}` : wd;
+    if (g.measureText(test).width > maxW) { g.fillText(line, x, y); y += lh; line = wd; } else line = test;
+  }
+  if (line) { g.fillText(line, x, y); y += lh; }
+  return y;
+}
+
+function textSheetCanvas(data) {
+  const c = document.createElement('canvas');
+  c.width = 512;
+  c.height = 724;
+  const g = c.getContext('2d');
+  g.fillStyle = '#fbfaf7';
+  g.fillRect(0, 0, 512, 724);
+  g.fillStyle = '#111';
+  g.font = '300 40px Helvetica, Arial, sans-serif';
+  g.fillText('ARTIFICIAL', 36, 78);
+  g.fillText('PARADISE', 36, 122);
+  g.font = '15px Helvetica, Arial, sans-serif';
+  g.fillStyle = '#444';
+  g.fillText('KristofLab · MAMŰ Gallery · 10–31.01.2025', 36, 160);
+  g.fillStyle = '#222';
+  g.font = '14px Helvetica, Arial, sans-serif';
+  let y = 200;
+  for (const p of data.text) y = wrapText(g, p, 36, y, 440, 19) + 10;
+  g.fillStyle = '#666';
+  g.font = 'italic 13px Helvetica, Arial, sans-serif';
+  wrapText(g, data.textCredit, 36, y + 4, 440, 17);
+  return c;
+}
+
+// The sheet on the wall by the bar: the plan with numbered spots and the works list.
+function roomSheetCanvas(data) {
+  const c = document.createElement('canvas');
+  c.width = 512;
+  c.height = 724;
+  const g = c.getContext('2d');
+  g.fillStyle = '#f7f6f2';
+  g.fillRect(0, 0, 512, 724);
+  g.fillStyle = '#222';
+  g.font = '22px "Courier New", monospace';
+  g.fillText('|Artificial Paradise|KristofLab|', 28, 52);
+  // plan
+  const ox = 30;
+  const oy = 80;
+  const s = 17;
+  g.strokeStyle = '#333';
+  g.lineWidth = 2;
+  for (const r of ROOMS) g.strokeRect(ox + r.x0 * s, oy + r.z0 * s, (r.x1 - r.x0) * s, (r.z1 - r.z0) * s);
+  g.font = 'bold 11px Helvetica, Arial, sans-serif';
+  g.fillStyle = '#111';
+  for (const w of data.works) {
+    const p = w.hang ? { x: w.hang.face.includes('x') ? w.hang.at : w.hang.along, z: w.hang.face.includes('z') ? w.hang.at : w.hang.along } : w.anchor;
+    if (!p || w.id.endsWith('-screen')) continue;
+    g.fillText(String(w.no), ox + p.x * s - 4, oy + p.z * s + 4);
+  }
+  // list
+  g.font = '12.5px Helvetica, Arial, sans-serif';
+  g.fillStyle = '#222';
+  let y = oy + 7.6 * s + 30;
+  for (const w of data.works) {
+    if (w.id.endsWith('-screen')) continue;
+    const bits = [w.title, w.size, w.medium.split(':')[0].split(',')[0], w.year].filter(Boolean);
+    g.fillText(`${w.no} · ${bits.join(', ')}`, 28, y);
+    y += 21;
+  }
+  return c;
+}
 
 export function buildGallery(data, materials, manager, renderer) {
   const group = new THREE.Group();
@@ -111,60 +178,56 @@ export function buildGallery(data, materials, manager, renderer) {
   };
 
   for (const work of data.works) {
-    const size = sizes[work.id] || [1600, 1200];
-    const aspect = size[0] / size[1];
-
     if (work.hang) {
-      const f = wallFrame(work.room, work.hang.wall, work.hang.along);
-      const w = work.hang.width;
-      const h = w / aspect;
+      const hg = work.hang;
+      const f = wallFrame(hg.face, hg.at, hg.along);
+      const w = hg.w;
+      const h = hg.h;
       const holder = new THREE.Group();
-      holder.position.set(f.x, work.hang.y, f.z);
+      holder.position.set(f.x, hg.y, f.z);
       holder.rotation.y = f.rotY;
       holder.userData.work = work;
       const isScreen = work.type === 'video';
 
       // light pool (fake spotlight wash) — additive, so it brightens the brick behind
       const pool = new THREE.Mesh(
-        new THREE.PlaneGeometry(w * 2.3 + 0.6, h * 2.0 + 0.8),
+        new THREE.PlaneGeometry(w * 2.0 + 0.6, h * 1.7 + 0.8),
         new THREE.MeshBasicMaterial({
           map: poolTex,
           transparent: true,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
-          opacity: isScreen ? 0.0 : 0.32,
-          color: isScreen ? 0x6fb6ff : 0xfff6e8,
+          opacity: isScreen ? 0.0 : 0.26,
+          color: isScreen ? 0xc8d8ee : 0xfff6e8,
           toneMapped: false,
         }),
       );
-      pool.position.set(0, 0.18, 0.004);
+      pool.position.set(0, 0.12, 0.004);
       pool.renderOrder = 1;
       holder.add(pool);
 
       if (isScreen) {
-        const bez = new THREE.Mesh(new THREE.BoxGeometry(w + 0.04, h + 0.04, 0.045), bezelMat);
-        bez.position.z = 0.025;
+        // slim-bezel flat screen
+        const bez = new THREE.Mesh(new THREE.BoxGeometry(w + 0.024, h + 0.024, 0.04), bezelMat);
+        bez.position.z = 0.022;
         holder.add(bez);
         const mat = new THREE.ShaderMaterial({
           uniforms: {
             map: { value: null },
             mapB: { value: null },
             mixB: { value: 0 },
-            time: { value: 0 },
-            seed: { value: Math.random() * 10 },
-            glitch: { value: 0 },
-            brightness: { value: 1.15 },
+            brightness: { value: 1.1 },
           },
           vertexShader: screenVert,
           fragmentShader: screenFrag,
         });
         const screen = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
-        screen.position.z = 0.0485;
+        screen.position.z = 0.0425;
         screen.userData.work = work;
         holder.add(screen);
         hitMeshes.push(screen);
         // screen glow on the wall
-        pool.material.opacity = work.room === 'r3' ? 0.05 : 0.1;
+        pool.material.opacity = work.room === 'r4' ? 0.035 : 0.08;
         const frames = work.frames && work.frames.length ? work.frames : [work.image];
         const entry = { work, mat, frames, textures: [], idx: 0, t: Math.random() * 6 };
         screens.push(entry);
@@ -174,22 +237,23 @@ export function buildGallery(data, materials, manager, renderer) {
             if (i === 0) { mat.uniforms.map.value = t; mat.uniforms.mapB.value = t; }
           });
         });
-        lazy.push({ work, entry, pos: new THREE.Vector3(f.x, work.hang.y, f.z), loaded: false });
+        lazy.push({ work, entry, pos: new THREE.Vector3(f.x, hg.y, f.z), loaded: false });
       } else {
-        // Mounted print: thin panel with white edges, artwork on the front face
-        const front = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.62, metalness: 0, emissive: 0xffffff, emissiveIntensity: 0.18 });
-        const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.025), sideMat);
-        body.position.z = 0.0125;
+        // Canvas on a stretcher (paintings) or a thin mounted print
+        const depth = work.type === 'painting' ? 0.035 : 0.012;
+        const front = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.62, metalness: 0, emissive: 0xffffff, emissiveIntensity: 0.16 });
+        const body = new THREE.Mesh(new THREE.BoxGeometry(w, h, depth), sideMat);
+        body.position.z = depth / 2;
         holder.add(body);
         const panel = new THREE.Mesh(new THREE.PlaneGeometry(w, h), front);
-        panel.position.z = 0.0252;
+        panel.position.z = depth + 0.0005;
         panel.userData.work = work;
         holder.add(panel);
         hitMeshes.push(panel);
         // soft contact shadow
         const sh = new THREE.Mesh(
-          new THREE.PlaneGeometry(w * 1.15 + 0.06, h * 1.12 + 0.08),
-          new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, opacity: 0.55 }),
+          new THREE.PlaneGeometry(w * 1.1 + 0.06, h * 1.08 + 0.08),
+          new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, opacity: 0.5 }),
         );
         sh.position.set(0.015, -0.03, 0.002);
         holder.add(sh);
@@ -199,78 +263,58 @@ export function buildGallery(data, materials, manager, renderer) {
           front.emissiveMap = t;
           front.needsUpdate = true;
         });
-        lazy.push({ work, front, pos: new THREE.Vector3(f.x, work.hang.y, f.z), loaded: false });
+        lazy.push({ work, front, pos: new THREE.Vector3(f.x, hg.y, f.z), loaded: false });
       }
 
-      // Wall label beside the work
-      const label = new THREE.Mesh(
-        new THREE.PlaneGeometry(0.16, 0.08),
-        new THREE.MeshStandardMaterial({ map: labelTexture(work), roughness: 0.8, emissive: 0xffffff, emissiveIntensity: 0.15, emissiveMap: null }),
-      );
-      label.material.emissiveMap = label.material.map;
-      label.position.set(w / 2 + 0.2, -0.32, 0.004);
-      if (work.hang.wall === 'PW' || work.id === 'r3-print-4' || work.id === 'r2-video-3') label.position.x = -(w / 2 + 0.2);
-      label.userData.work = work;
-      holder.add(label);
-      hitMeshes.push(label);
+      // Wall label beside the work, at the usual 1.35 m
+      if (hg.label !== 'none') {
+        const label = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.16, 0.08),
+          new THREE.MeshStandardMaterial({ map: labelTexture(work), roughness: 0.8, emissive: 0xffffff, emissiveIntensity: 0.15 }),
+        );
+        label.material.emissiveMap = label.material.map;
+        const side = hg.label === 'left' ? -1 : 1;
+        label.position.set(side * (w / 2 + 0.2), 1.35 - hg.y, 0.004);
+        label.userData.work = work;
+        holder.add(label);
+        hitMeshes.push(label);
+      }
 
       group.add(holder);
+      const back = Math.max(1.5, Math.max(w, h) * 1.35);
       work._pin = { x: f.x, z: f.z };
-      work._focus = { x: f.x + f.nx * Math.max(1.6, w * 1.5), z: f.z + f.nz * Math.max(1.6, w * 1.5), look: [f.x, work.hang.y, f.z] };
+      work._focus = work.view
+        ? { x: work.view.x, z: work.view.z, look: [f.x, hg.y, f.z] }
+        : { x: f.x + f.nx * back, z: f.z + f.nz * back, look: [f.x, hg.y, f.z] };
     } else if (work.anchor) {
-      // Installation / projection: invisible but clickable volume
+      // Installations: invisible but clickable volumes around the real objects
       const a = work.anchor;
-      const s = work.type === 'projection' ? [0.2, 2.4, 4.2] : work.id === 'r3-river' ? [8.5, 0.25, 2.6] : [1.2, 1.8, 4.6];
-      const hit = new THREE.Mesh(new THREE.BoxGeometry(...s), new THREE.MeshBasicMaterial({ visible: false }));
-      hit.position.set(a.x, a.y, a.z);
-      if (work.id === 'r1-hydroponics') hit.position.set(8.9, 1.3, 3.2);
-      hit.userData.work = work;
-      group.add(hit);
-      hitMeshes.push(hit);
+      for (const [cx, cy, cz, sx, sy, sz] of HIT_BOXES[work.id] || [[a.x, a.y, a.z, 1, 2, 1]]) {
+        const hit = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), new THREE.MeshBasicMaterial({ visible: false }));
+        hit.position.set(cx, cy, cz);
+        hit.userData.work = work;
+        group.add(hit);
+        hitMeshes.push(hit);
+      }
       work._pin = { x: a.x, z: a.z };
       work._focus = { x: work.view.x, z: work.view.z, look: [a.x, a.y, a.z] };
     }
   }
 
-  // Exhibition text panel on Room 1's north wall, next to the doorway
-  {
-    const c = document.createElement('canvas');
-    c.width = 512;
-    c.height = 720;
-    const g = c.getContext('2d');
-    g.fillStyle = '#fbfaf7';
-    g.fillRect(0, 0, 512, 720);
-    g.fillStyle = '#111';
-    g.font = '300 44px Helvetica, Arial, sans-serif';
-    g.fillText('ARTIFICIAL', 36, 82);
-    g.fillText('PARADISE', 36, 130);
-    g.font = '16px Helvetica, Arial, sans-serif';
-    g.fillStyle = '#444';
-    g.fillText('KristofLab · MAMŰ Gallery · 10–31.01.2025', 36, 170);
-    g.fillStyle = '#222';
-    g.font = '15px Helvetica, Arial, sans-serif';
-    let y = 212;
-    const wrap = (text) => {
-      const words = text.split(' ');
-      let line = '';
-      for (const wd of words) {
-        const test = line ? `${line} ${wd}` : wd;
-        if (g.measureText(test).width > 440) { g.fillText(line, 36, y); y += 21; line = wd; } else line = test;
-      }
-      if (line) { g.fillText(line, 36, y); y += 30; }
-    };
-    data.text.forEach(wrap);
+  // Exhibition texts and the room sheet (works list + plan), pinned up as in the photos
+  for (const sh of data.sheets || []) {
+    const c = sh.kind === 'roomsheet' ? roomSheetCanvas(data) : textSheetCanvas(data);
     const t = new THREE.CanvasTexture(c);
     t.colorSpace = THREE.SRGBColorSpace;
     t.anisotropy = aniso;
     const panel = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.42, 0.59),
-      new THREE.MeshStandardMaterial({ map: t, roughness: 0.9, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.2 }),
+      new THREE.PlaneGeometry(0.3, 0.42),
+      new THREE.MeshStandardMaterial({ map: t, roughness: 0.9, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.18 }),
     );
-    const f = wallFrame('r1', 'N', 4.6, 0.01);
-    panel.position.set(f.x, 1.55, f.z);
+    const f = wallFrame(sh.face, sh.at, sh.along, 0.006);
+    panel.position.set(f.x, sh.y, f.z);
     panel.rotation.y = f.rotY;
-    panel.userData.text = true;
+    panel.userData.text = sh.kind;
     group.add(panel);
     hitMeshes.push(panel);
   }
@@ -303,13 +347,11 @@ export function buildGallery(data, materials, manager, renderer) {
   };
 
   let upgradeTimer = 0;
-  const update = (t, dt, camPos, level = 0) => {
+  const update = (t, dt, camPos) => {
     upgradeTimer -= dt;
     if (upgradeTimer <= 0) { upgradeTimer = 0.5; upgrade(camPos); }
     for (const s of screens) {
       const u = s.mat.uniforms;
-      u.time.value = t;
-      u.glitch.value = level;
       if (s.frames.length > 1) {
         s.t += dt;
         const period = 7;

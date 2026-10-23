@@ -229,6 +229,7 @@ body.touch #crosshair { display: none; }
   color: var(--fg);
 }
 #toolbar button:hover, #toolbar button.on { background: rgba(255, 255, 255, 0.1); }
+#toolbar button .ico { white-space: nowrap; }
 #toolbar button.on .ico { color: var(--accent); }
 #toolbar button.muted .ico { color: var(--muted); text-decoration: line-through; }
 .rooms-wrap { position: relative; }
@@ -397,6 +398,16 @@ body.touring #joystick { opacity: 0.25; }
 #panel-body .credits { display: grid; grid-template-columns: 160px 1fr; gap: 8px 16px; font-size: 14px; }
 #panel-body .credits dt { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); padding-top: 2px; }
 #panel-body .credits dd { margin: 0; }
+#panel-body .works-list { list-style: none; margin: 24px 0 0; padding: 0; border-top: 1px solid var(--line); }
+#panel-body .works-list button {
+  display: flex; gap: 16px; align-items: baseline; width: 100%; text-align: left;
+  background: none; border: 0; border-bottom: 1px solid var(--line); color: var(--fg);
+  padding: 12px 4px; cursor: pointer; font: inherit;
+}
+#panel-body .works-list button:hover { background: rgba(255, 255, 255, 0.04); }
+#panel-body .works-list .no { font-family: var(--mono); font-size: 12px; color: var(--accent); min-width: 2ch; }
+#panel-body .works-list em { font-style: normal; font-size: 16px; display: block; }
+#panel-body .works-list small { font-family: var(--mono); font-size: 11px; color: var(--muted); }
 #panel-body a { color: var(--fg); text-decoration-color: var(--accent); text-underline-offset: 3px; }
 #panel-body .stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
 #panel-body .stack span { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); padding: 4px 8px; color: #cfcfcb; }
@@ -410,7 +421,7 @@ body.touring #joystick { opacity: 0.25; }
   .viewer-info h2 { font-size: 24px; }
   #minimap { width: 150px; height: 102px; right: 10px; top: 10px; }
   #toolbar button .lbl { display: none; }
-  #toolbar button { padding: 10px 13px; font-size: 14px; }
+  #toolbar button { padding: 10px 11px; font-size: 14px; }
   #room-label { left: 12px; top: 12px; }
   #room-label .room-name { font-size: 13px; }
   #tour-caption { font-size: 13px; bottom: calc(76px + var(--safe-b)); }

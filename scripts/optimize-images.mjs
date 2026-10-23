@@ -60,7 +60,7 @@ function homography(src, dst) {
 
 async function warp(photoPath, quadN, aspectOverride) {
   const img = sharp(photoPath, { limitInputPixels: false }).rotate();
-  const meta = await sharp(photoPath).metadata();
+  const meta = await sharp(photoPath, { limitInputPixels: false }).metadata();
   const rotated = meta.orientation >= 5;
   const W = rotated ? meta.height : meta.width;
   const H = rotated ? meta.width : meta.height;
@@ -123,11 +123,12 @@ try { manifest = JSON.parse(await fs.readFile(manifestPath, 'utf8')); } catch { 
 
 for (const [id, spec] of Object.entries(crops)) {
   if (only.length && !only.includes(id)) continue;
-  const photoPath = path.join(root, `${spec.photo}.JPG`);
+  let photoPath = path.join(root, `${spec.photo}.JPG`);
+  try { await fs.access(photoPath); } catch { photoPath = path.join(root, `${spec.photo}.jpg`); }
   const t0 = Date.now();
   let base;
   if (spec.full) {
-    base = sharp(photoPath).rotate();
+    base = sharp(photoPath, { limitInputPixels: false }).rotate();
   } else {
     base = await warp(photoPath, spec.quad, spec.aspect);
   }
@@ -142,7 +143,7 @@ for (const [id, spec] of Object.entries(crops)) {
     if (suffix === '') size = [info.width, info.height];
   }
   // In-situ photo (whole frame) for the viewer
-  await sharp(photoPath).rotate()
+  await sharp(photoPath, { limitInputPixels: false }).rotate()
     .resize({ width: 1400, height: 1400, fit: 'inside' })
     .webp({ quality: 74, effort: 5 })
     .toFile(path.join(outDir, `${id}-situ.webp`));

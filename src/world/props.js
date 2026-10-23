@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { OBSTACLES, CEILING, PARTITION } from './layout.js';
+import { OBSTACLES } from './layout.js';
 
-// Furniture, fixtures and installations. Kept low-poly; repeated parts are instanced.
+// Furniture and fixtures, placed from the photos. Kept low-poly; static meshes are
+// merged per material at the end, repeated parts are instanced.
 
 const box = (w, h, d, mat) => new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
 const cyl = (rt, rb, h, mat, seg = 16) => new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), mat);
@@ -17,354 +18,322 @@ function place(obj, x, y, z, ry = 0) {
   return obj;
 }
 
-export function buildProps(materials, stairwell) {
+// Box spanning explicit world bounds.
+function slab(mat, x0, x1, y0, y1, z0, z1) {
+  return place(box(x1 - x0, y1 - y0, z1 - z0, mat), (x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
+}
+
+// Thin cylinder between two points.
+function rod(mat, a, b, r = 0.01, seg = 6) {
+  const d = new THREE.Vector3().subVectors(b, a);
+  const m = cyl(r, r, d.length(), mat, seg);
+  m.position.copy(a).addScaledVector(d, 0.5);
+  m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
+  return m;
+}
+
+// Black wire-mesh grid (the folding chairs' seat and back), alpha-tested.
+function wireGridMaterial() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 64;
+  const g = c.getContext('2d');
+  g.clearRect(0, 0, 64, 64);
+  g.strokeStyle = '#fff';
+  g.lineWidth = 2.2;
+  for (let i = 0; i <= 64; i += 8) {
+    g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 64); g.stroke();
+    g.beginPath(); g.moveTo(0, i); g.lineTo(64, i); g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(4, 4);
+  return new THREE.MeshStandardMaterial({ color: 0x141416, roughness: 0.5, metalness: 0.4, alphaMap: t, alphaTest: 0.5, side: THREE.DoubleSide });
+}
+
+// Folding wire chair as in Room 2 (DSC_0056–0059). Faces +z at ry = 0.
+function wireChair(materials, gridMat, cushion = false) {
+  const c = new THREE.Group();
+  const seat = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.4), gridMat);
+  seat.rotation.x = -Math.PI / 2;
+  seat.position.set(0, 0.45, 0.02);
+  c.add(seat);
+  const back = new THREE.Mesh(new THREE.PlaneGeometry(0.42, 0.3), gridMat);
+  back.position.set(0, 0.74, -0.2);
+  back.rotation.x = -0.12;
+  c.add(back);
+  const V = (x, y, z) => new THREE.Vector3(x, y, z);
+  for (const s of [-1, 1]) {
+    const x = s * 0.21;
+    c.add(rod(materials.black, V(x, 0, 0.2), V(x, 0.9, -0.22), 0.009));
+    c.add(rod(materials.black, V(x, 0, -0.2), V(x, 0.45, 0.2), 0.009));
+    c.add(rod(materials.black, V(x, 0.45, -0.18), V(x, 0.45, 0.22), 0.008));
+  }
+  c.add(rod(materials.black, V(-0.21, 0.89, -0.22), V(0.21, 0.89, -0.22), 0.008));
+  if (cushion) {
+    const k = box(0.4, 0.05, 0.38, new THREE.MeshStandardMaterial({ color: 0xd9cdb3, roughness: 1 }));
+    k.position.set(0, 0.48, 0.02);
+    c.add(k);
+  }
+  return c;
+}
+
+export function buildProps(materials) {
   const g = new THREE.Group();
   g.name = 'props';
-  const anim = []; // per-frame callbacks (t, dt, audio)
+  const anim = []; // per-frame callbacks (t, dt)
+  const gridMat = wireGridMaterial();
 
-  // ---------------- Room 1 ----------------
-  // Stairs along the south wall, rising east into the stairwell.
+  // ================================================================ Room 1
+  // Stairs along the north wall, rising west through the wall into the stair shaft
+  // (DSC_0013–0016, panorama). Treads are dark, the open side is a white brick
+  // stringer with a red-brick coping and a black railing.
   {
-    const steps = 13;
-    const x0 = 5.75; // foot
-    const x1 = 10;
-    const run = (x1 - x0) / steps;
-    const rise = CEILING / (steps - 2.5);
-    const geo = new THREE.BoxGeometry(1, 1, 1);
-    const inst = new THREE.InstancedMesh(geo, materials.stair, steps);
+    const run = 0.27;
+    const rise = 0.18;
+    const foot = 2.85;
+    const steps = 18;
+    const width = 2.1;
+    const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), materials.stair, steps);
     const m = new THREE.Matrix4();
     for (let i = 0; i < steps; i++) {
       const h = rise * (i + 1);
-      m.compose(
-        new THREE.Vector3(x0 + run * (i + 0.5), h / 2, (stairwell.z0 + 0.05 + 7) / 2),
-        new THREE.Quaternion(),
-        new THREE.Vector3(run + 0.002, h, 7 - stairwell.z0 - 0.05),
-      );
+      const x1 = foot - run * i;
+      m.compose(new THREE.Vector3(x1 - run / 2, h / 2, width / 2), new THREE.Quaternion(), new THREE.Vector3(run + 0.002, h, width));
       inst.setMatrixAt(i, m);
     }
     g.add(inst);
-    // Railing: black steel posts + handrail on the open (north) side
-    const railZ = stairwell.z0 + 0.08;
-    const len = Math.hypot(x1 - x0, CEILING + 0.6);
-    const rail = box(len, 0.04, 0.04, materials.black);
-    rail.position.set((x0 + x1) / 2, (CEILING + 0.6) / 2 + 0.95, railZ);
-    rail.rotation.z = Math.atan2(CEILING + 0.6, x1 - x0);
-    g.add(rail);
-    for (let i = 1; i < steps; i += 3) {
-      const h = rise * (i + 1);
-      const post = box(0.03, 0.95, 0.03, materials.black);
-      post.position.set(x0 + run * (i + 0.5), h + 0.47, railZ);
-      g.add(post);
+    // stringer wall: the stair profile extruded 0.15 m on the open (south) side
+    const shape = new THREE.Shape();
+    shape.moveTo(foot, 0);
+    for (let i = 0; i < 10; i++) {
+      shape.lineTo(foot - run * i, rise * (i + 1) + 0.06);
     }
-    obstacle(x0 - 0.05, 10, stairwell.z0, 7);
-    // Stacked chairs on the landing (as in the photos) — simple dark blocks
-    for (let i = 0; i < 3; i++) {
-      const c = box(0.45, 0.9, 0.45, materials.black);
-      c.position.set(9.3 - i * 0.5, rise * 12 + 0.45, 6.4);
-      g.add(c);
+    shape.lineTo(-0.02, rise * 10 + 0.06);
+    shape.lineTo(-0.02, 0);
+    shape.lineTo(foot, 0);
+    const sg = new THREE.ExtrudeGeometry(shape, { depth: 0.15, bevelEnabled: false });
+    const stringer = new THREE.Mesh(sg, materials.whiteBrick);
+    stringer.position.z = width;
+    g.add(stringer);
+    // red brick coping along the top edge
+    const len = Math.hypot(run * 10, rise * 10);
+    const coping = box(len, 0.07, 0.17, materials.stairBrick);
+    coping.position.set(foot - run * 5 + 0.02, rise * 5.5 + 0.1, width + 0.075);
+    coping.rotation.z = -Math.atan2(rise, run);
+    g.add(coping);
+    // railing posts + handrail
+    const railH = 0.9;
+    const top = (x) => (foot - x) / run * rise + rise + 0.06;
+    for (let x = foot - 0.15; x > 0; x -= 0.8) {
+      g.add(rod(materials.black, new THREE.Vector3(x, top(x), width + 0.075), new THREE.Vector3(x, top(x) + railH, width + 0.075), 0.014));
+    }
+    g.add(rod(materials.black, new THREE.Vector3(foot - 0.15, top(foot - 0.15) + railH, width + 0.075), new THREE.Vector3(-0.1, top(-0.1) + railH, width + 0.075), 0.02));
+    obstacle(-0.4, foot + 0.02, 0, width + 0.16);
+    // folding chairs stacked on the steps against the north wall
+    for (let k = 0; k < 2; k++) {
+      for (let j = 0; j < 4; j++) {
+        const x = 1.75 - k * 0.55;
+        const step = Math.floor((foot - x) / run);
+        const ch = wireChair(materials, gridMat);
+        place(ch, x, rise * (step + 1) + j * 0.05, 0.32 + j * 0.035, -Math.PI / 2);
+        ch.rotation.z = 0.04 * j;
+        g.add(ch);
+      }
     }
   }
 
-  // Bench along the north wall (dark grey plinth bench under the prints)
+  // Grey bench along the south wall, turning up the west wall (the L on the plan)
   {
-    const b = box(4.6, 0.45, 0.45, materials.bench);
-    place(b, 7.7, 0.225, 0.225);
-    g.add(b);
-    obstacle(5.4, 10, 0, 0.45);
-    const b2 = box(0.45, 0.45, 2.0, materials.bench);
-    place(b2, 9.775, 0.225, 1.45);
-    g.add(b2);
-    obstacle(9.55, 10, 0.45, 2.45);
+    const H = 0.45;
+    g.add(slab(materials.bench, 0, 5.36, 0, H - 0.03, 6.94, 7.37));
+    g.add(slab(materials.benchTop, 0, 5.38, H - 0.03, H, 6.9, 7.37));
+    g.add(slab(materials.bench, 0, 0.47, 0, H - 0.03, 6.25, 6.94));
+    g.add(slab(materials.benchTop, 0, 0.51, H - 0.03, H, 6.21, 6.94));
+    obstacle(0, 5.4, 6.88, 7.37);
+    obstacle(0, 0.52, 6.2, 6.94);
+    // two white heating pipes on the wall just above the bench
+    for (const y of [0.56, 0.63]) {
+      const p = cyl(0.016, 0.016, 5.4, materials.white, 8);
+      p.rotation.z = Math.PI / 2;
+      g.add(place(p, 2.7, y, 7.34));
+    }
   }
 
-  // Plinths either side of the Room 1 -> Room 2 doorway
-  for (const x of [1.95, 4.05]) {
-    const p = box(0.32, 1.1, 0.32, materials.white);
-    place(p, x, 0.55, 0.3);
-    g.add(p);
-    obstacle(x - 0.16, x + 0.16, 0.14, 0.46);
+  // Plinths: one by Human as Error VI, one under the exhibition text
+  for (const z of [4.3, 5.98]) {
+    g.add(place(box(0.32, 1.15, 0.32, materials.white), 5.22, 0.575, z));
+    obstacle(5.04, 5.4, z - 0.17, z + 0.17);
   }
 
-  // Radiators
-  const radiator = (x, z, ry, w = 1.0) => {
+  // Radiators (aluminium sections)
+  const radiator = (x, z, ry, w = 0.8, h = 0.75) => {
     const r = new THREE.Group();
     const fins = Math.round(w / 0.08);
-    const finGeo = new THREE.BoxGeometry(0.05, 0.6, 0.08);
-    const inst = new THREE.InstancedMesh(finGeo, materials.white, fins);
+    const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(0.07, h, 0.09), materials.white, fins);
     const m = new THREE.Matrix4();
     for (let i = 0; i < fins; i++) {
-      m.makeTranslation(-w / 2 + (i + 0.5) * (w / fins), 0, 0);
+      m.makeTranslation(-w / 2 + (i + 0.5) * (w / fins), h / 2, 0);
       inst.setMatrixAt(i, m);
     }
     r.add(inst);
-    place(r, x, 0.5, z, ry);
+    place(r, x, 0.12, z, ry);
     g.add(r);
   };
-  radiator(5.0, 0.1, 0, 0.9);
-  radiator(9.9, 3.2, Math.PI / 2, 1.1);
-  radiator(9.9, 5.0, Math.PI / 2, 0.9);
+  radiator(0.08, 3.92, Math.PI / 2, 0.88);
+  radiator(0.08, 5.95, Math.PI / 2, 0.5);
+  radiator(5.32, 6.48, -Math.PI / 2, 0.8);
 
-  // High basement windows on the east wall (night: dark glass, faint blue glow)
-  for (const z of [2.2, 4.4]) {
-    const frame = box(0.06, 0.75, 1.2, materials.white);
-    place(frame, 9.97, 2.15, z);
-    g.add(frame);
-    const glass = box(0.02, 0.62, 1.06, materials.windowGlass);
-    place(glass, 9.94, 2.15, z);
-    g.add(glass);
-    for (let k = -1; k <= 1; k++) {
-      const bar = box(0.03, 0.62, 0.025, materials.white);
-      place(bar, 9.93, 2.15, z + k * 0.27);
-      g.add(bar);
-    }
+  // High basement windows on the west wall (night: dark glass, faint street glow)
+  for (const [z, w] of [[3.92, 0.95], [6.05, 0.82]]) {
+    const y0 = 2.18;
+    const y1 = 2.9;
+    g.add(slab(materials.whiteBrick, -0.4, 0.06, y0 - 0.06, y0, z - w / 2 - 0.06, z + w / 2 + 0.06)); // sill
+    g.add(slab(materials.white, -0.05, 0.02, y0, y1, z - w / 2, z + w / 2)); // frame
+    g.add(slab(materials.windowGlass, 0.02, 0.03, y0 + 0.05, y1 - 0.05, z - w / 2 + 0.05, z + w / 2 - 0.05));
+    for (let k = 1; k < 4; k++) g.add(slab(materials.white, 0.03, 0.045, y0 + 0.05, y1 - 0.05, z - w / 2 + (k * w) / 4 - 0.012, z - w / 2 + (k * w) / 4 + 0.012));
+    g.add(slab(materials.white, 0.03, 0.045, (y0 + y1) / 2 - 0.012, (y0 + y1) / 2 + 0.012, z - w / 2 + 0.05, z + w / 2 - 0.05));
   }
 
-  // Hydroponic installation: white pipe with lettuce seedlings under a hanging LED tube,
-  // plus a tall plant on a drip, flanked by vertical LED tubes.
-  {
-    const hydro = new THREE.Group();
-    hydro.name = 'hydroponics';
-    const pipeLen = 4.6;
-    const pipe = cyl(0.075, 0.075, pipeLen, materials.white, 20);
-    pipe.rotation.x = Math.PI / 2;
-    place(pipe, 9.25, 1.15, 3.1);
-    hydro.add(pipe);
-    const ledTube = cyl(0.018, 0.018, pipeLen - 0.2, materials.led, 8);
-    ledTube.rotation.x = Math.PI / 2;
-    place(ledTube, 9.25, 1.42, 3.1);
-    hydro.add(ledTube);
-    // Chains / hangers
-    for (const z of [1.2, 3.1, 5.0]) {
-      const wire = cyl(0.004, 0.004, CEILING - 1.15, materials.steel, 4);
-      place(wire, 9.25, (CEILING + 1.15) / 2, z);
-      hydro.add(wire);
-    }
-    // Seedlings (instanced little leaf clusters)
-    const n = 46;
-    const leafGeo = new THREE.SphereGeometry(0.045, 6, 4);
-    leafGeo.scale(1, 0.55, 1);
-    const leaves = new THREE.InstancedMesh(leafGeo, materials.leaf, n * 2);
-    const m = new THREE.Matrix4();
-    const q = new THREE.Quaternion();
-    const s = new THREE.Vector3();
-    for (let i = 0; i < n * 2; i++) {
-      const z = 0.9 + ((i >> 1) / n) * (pipeLen - 0.4);
-      q.setFromEuler(new THREE.Euler((Math.random() - 0.5) * 0.8, Math.random() * 6, (Math.random() - 0.5) * 0.8));
-      const k = 0.7 + Math.random() * 0.6;
-      s.set(k, k, k);
-      m.compose(new THREE.Vector3(9.25 + (i % 2 ? 0.03 : -0.03), 1.24 + Math.random() * 0.03, z), q, s);
-      leaves.setMatrixAt(i, m);
-    }
-    hydro.add(leaves);
+  // White pipes running up beside the doorway to Room 2 (DSC_0021)
+  for (const z of [5.78, 5.84]) g.add(place(cyl(0.017, 0.017, 2.9, materials.white, 8), 5.37, 1.45, z));
 
-    // Tall plant in a clear tank with a drip bag
-    const tank = box(0.45, 0.35, 0.35, materials.glass);
-    place(tank, 8.3, 0.18, 4.9);
-    hydro.add(tank);
-    const stemMat = new THREE.MeshStandardMaterial({ color: 0x5e8f3a, roughness: 0.7 });
-    for (let i = 0; i < 5; i++) {
-      const h = 0.9 + Math.random() * 0.9;
-      const st = cyl(0.025, 0.035, h, stemMat, 6);
-      st.position.set(8.3 + (Math.random() - 0.5) * 0.18, 0.3 + h / 2, 4.9 + (Math.random() - 0.5) * 0.15);
-      st.rotation.z = (Math.random() - 0.5) * 0.25;
-      st.rotation.x = (Math.random() - 0.5) * 0.25;
-      hydro.add(st);
-    }
-    const bag = box(0.12, 0.2, 0.06, materials.glass);
-    place(bag, 8.3, 2.25, 4.9);
-    hydro.add(bag);
-    const drip = cyl(0.004, 0.004, 1.9, materials.glass, 4);
-    place(drip, 8.32, 1.25, 4.9);
-    hydro.add(drip);
-    for (const dx of [-0.42, 0.42]) {
-      const tube = cyl(0.018, 0.018, CEILING - 0.05, materials.led, 8);
-      place(tube, 8.3 + dx, CEILING / 2, 4.9);
-      hydro.add(tube);
-    }
-    g.add(hydro);
-    obstacle(9.1, 9.4, 0.8, 5.4);
-    obstacle(7.85, 8.75, 4.7, 5.1);
-  }
-
-  // ---------------- Room 2 (bar) ----------------
+  // ================================================================ Room 2
   {
-    // Brick bar counter by the passage to Room 3
-    const counter = box(1.9, 1.02, 0.6, materials.warmBrick);
-    place(counter, 5.55, 0.51, -1.25);
-    g.add(counter);
-    const top = box(2.0, 0.05, 0.7, materials.bench);
-    place(top, 5.55, 1.045, -1.25);
-    g.add(top);
-    obstacle(4.55, 6.5, -1.6, -0.3);
-    // Shelf with glasses on the wall behind
-    const shelf = box(1.6, 0.04, 0.25, materials.wood);
-    place(shelf, 5.55, 1.65, -0.45);
-    g.add(shelf);
-    const glassGeo = new THREE.CylinderGeometry(0.035, 0.03, 0.12, 10);
-    const glasses = new THREE.InstancedMesh(glassGeo, materials.glass, 14);
+    // bar counter tops (dark laminate) over the brick half walls
+    g.add(slab(materials.counterTop, 7.62, 9.72, 1.0, 1.05, 4.78, 5.36));
+    g.add(slab(materials.counterTop, 9.64, 10.14, 1.0, 1.05, 4.18, 4.92));
+    // behind the bar: low cabinets, shelves with glasses, kettle, bottles
+    g.add(slab(materials.white, 7.72, 9.66, 0, 0.88, 5.52, 5.93));
+    g.add(slab(materials.counterTop, 7.7, 9.68, 0.88, 0.92, 5.5, 5.94));
+    for (const y of [1.42, 1.78]) g.add(slab(materials.wood, 7.8, 9.55, y, y + 0.025, 5.7, 5.93));
+    const glassGeo = new THREE.CylinderGeometry(0.035, 0.028, 0.12, 10);
+    const n = 22;
+    const glasses = new THREE.InstancedMesh(glassGeo, materials.glass, n);
     const m = new THREE.Matrix4();
-    for (let i = 0; i < 14; i++) {
-      const onShelf = i < 9;
-      m.makeTranslation(
-        onShelf ? 4.85 + i * 0.17 : 4.9 + (i - 9) * 0.18,
-        onShelf ? 1.73 : 1.13,
-        onShelf ? -0.45 : -1.35 + (i % 2) * 0.1,
-      );
+    for (let i = 0; i < n; i++) {
+      const row = i < 9 ? 0 : i < 18 ? 1 : 2;
+      const k = row === 2 ? i - 18 : i % 9;
+      const x = row === 2 ? 8.6 + k * 0.1 : 7.95 + k * 0.17;
+      const y = row === 0 ? 1.505 : row === 1 ? 1.865 : 1.11;
+      const z = row === 2 ? 5.0 + (k % 2) * 0.08 : 5.81;
+      m.makeTranslation(x, y, z);
       glasses.setMatrixAt(i, m);
     }
     g.add(glasses);
-    // Bottles
-    const bottleMat = new THREE.MeshStandardMaterial({ color: 0x1d3b22, roughness: 0.15, metalness: 0.1 });
-    for (let i = 0; i < 4; i++) {
-      const b = cyl(0.035, 0.035, 0.3, bottleMat, 10);
-      place(b, 5.85 + i * 0.1, 1.22, -1.15 - (i % 2) * 0.08);
-      g.add(b);
-      const neck = cyl(0.012, 0.02, 0.09, bottleMat, 8);
-      place(neck, 5.85 + i * 0.1, 1.41, -1.15 - (i % 2) * 0.08);
-      g.add(neck);
+    const kettle = cyl(0.075, 0.095, 0.22, materials.white, 16);
+    g.add(place(kettle, 8.05, 1.03, 5.7));
+    const bottleMat = new THREE.MeshStandardMaterial({ color: 0x3a1f16, roughness: 0.2, metalness: 0.1 });
+    for (let i = 0; i < 3; i++) {
+      g.add(place(cyl(0.035, 0.035, 0.24, bottleMat, 10), 9.2 + i * 0.09, 1.04, 5.72));
+      g.add(place(cyl(0.012, 0.02, 0.08, bottleMat, 8), 9.2 + i * 0.09, 1.2, 5.72));
     }
-    // Kettle
-    const kettle = cyl(0.08, 0.1, 0.22, materials.white, 16);
-    place(kettle, 4.75, 1.18, -1.2);
-    g.add(kettle);
-    // Bowl of snacks
-    const bowl = cyl(0.12, 0.06, 0.07, materials.black, 16);
-    place(bowl, 5.3, 1.1, -1.3);
-    g.add(bowl);
+    obstacle(7.42, 9.72, 4.78, 5.94);
 
-    // Bistro tables + folding chairs under the screens
-    const table = (x, z) => {
-      const t = new THREE.Group();
-      const topT = cyl(0.33, 0.33, 0.03, materials.black, 24);
-      topT.position.y = 0.74;
-      t.add(topT);
-      const leg = cyl(0.025, 0.025, 0.72, materials.black, 8);
-      leg.position.y = 0.37;
-      t.add(leg);
-      const foot = cyl(0.2, 0.22, 0.02, materials.black, 16);
-      foot.position.y = 0.01;
-      t.add(foot);
-      place(t, x, 0, z);
-      g.add(t);
-      obstacle(x - 0.33, x + 0.33, z - 0.33, z + 0.33);
-    };
-    const chair = (x, z, ry) => {
-      const c = new THREE.Group();
-      const seat = box(0.42, 0.03, 0.42, materials.black);
-      seat.position.y = 0.45;
-      c.add(seat);
-      const back = box(0.42, 0.42, 0.03, materials.black);
-      back.position.set(0, 0.68, -0.2);
-      c.add(back);
-      for (const [lx, lz] of [[-0.19, -0.19], [0.19, -0.19], [-0.19, 0.19], [0.19, 0.19]]) {
-        const l = box(0.02, 0.45, 0.02, materials.black);
-        l.position.set(lx, 0.225, lz);
-        c.add(l);
-      }
-      place(c, x, 0, z, ry);
-      g.add(c);
-      obstacle(x - 0.25, x + 0.25, z - 0.25, z + 0.25);
-    };
-    table(1.25, -3.9);
-    chair(0.6, -4.3, Math.PI * 0.25);
-    chair(1.9, -4.45, -0.2);
-    table(1.2, -1.6);
-    chair(0.55, -1.2, Math.PI * 0.6);
+    // round black café table and the folding wire chairs under Artificial Paradise II
+    const table = new THREE.Group();
+    table.add(place(cyl(0.3, 0.3, 0.025, materials.black, 32), 0, 0.75, 0));
+    table.add(place(cyl(0.03, 0.03, 0.74, materials.black, 10), 0, 0.37, 0));
+    table.add(place(cyl(0.2, 0.22, 0.025, materials.black, 24), 0, 0.012, 0));
+    g.add(place(table, 8.2, 0, 2.3));
+    obstacle(7.9, 8.5, 2.0, 2.6);
+    g.add(place(wireChair(materials, gridMat), 7.12, 0, 2.08, 0.1));
+    obstacle(6.88, 7.36, 1.85, 2.32);
+    g.add(place(wireChair(materials, gridMat, true), 8.85, 0, 2.6, -1.9));
+    obstacle(8.6, 9.1, 2.35, 2.85);
 
-    // Pendant lamps (enamel shades as in the photos)
-    for (const [x, z] of [[2.2, -2.2], [3.9, -3.6]]) {
+    // enamel pendant lamps (DSC_0083)
+    for (const [x, z] of [[7.35, 3.2], [8.5, 3.75]]) {
       const lamp = new THREE.Group();
-      const cord = cyl(0.005, 0.005, 0.6, materials.black, 4);
-      cord.position.y = CEILING - 0.3;
-      lamp.add(cord);
-      const shade = cyl(0.06, 0.2, 0.16, materials.black, 20);
-      shade.position.y = CEILING - 0.68;
-      lamp.add(shade);
-      const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.05, 12, 8), materials.warmBulb);
-      bulb.position.y = CEILING - 0.77;
-      lamp.add(bulb);
-      place(lamp, x, 0, z);
-      g.add(lamp);
+      lamp.add(place(cyl(0.005, 0.005, 0.5, materials.black, 4), 0, 2.5, 0));
+      lamp.add(place(cyl(0.05, 0.19, 0.15, materials.black, 24), 0, 2.2, 0));
+      const inner = cyl(0.045, 0.18, 0.13, materials.white, 24);
+      inner.material = materials.white.clone();
+      inner.material.side = THREE.BackSide;
+      lamp.add(place(inner, 0, 2.2, 0));
+      lamp.add(place(new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 8), materials.warmBulb), 0, 2.13, 0));
+      g.add(place(lamp, x, 0, z));
     }
+
+    // closed door to the toilets
+    g.add(slab(materials.door, 6.08, 6.92, 0, 2.02, 5.9, 5.94));
+    g.add(slab(materials.white, 6.02, 6.08, 0, 2.08, 5.89, 5.94));
+    g.add(slab(materials.white, 6.92, 6.98, 0, 2.08, 5.89, 5.94));
+    g.add(slab(materials.white, 6.02, 6.98, 2.02, 2.08, 5.89, 5.94));
+    g.add(place(box(0.12, 0.02, 0.04, materials.steel), 6.8, 1.02, 5.88));
+
+    // gate in front of the storage alcove (DSC_0058–0060), with lumber stored behind
+    for (let x = 8.7; x < 9.68; x += 0.11) g.add(slab(materials.white, x, x + 0.016, 0.05, 2.08, 1.58, 1.6));
+    for (const y of [0.05, 1.0, 2.06]) g.add(slab(materials.white, 8.66, 9.69, y, y + 0.025, 1.57, 1.61));
+    for (let i = 0; i < 5; i++) {
+      const b = box(0.12, 2.0, 0.025, materials.wood);
+      place(b, 8.8 + i * 0.17, 1.0, 0.25 + i * 0.06);
+      b.rotation.x = -0.12;
+      g.add(b);
+    }
+    obstacle(8.65, 9.7, 1.5, 1.62);
   }
 
-  // ---------------- Room 3 ----------------
+  // ================================================================ Room 4
   {
-    // Exposed pipes along the dark zone's north wall (as in the photos)
-    const pipeMat = new THREE.MeshStandardMaterial({ color: 0x3a3c42, roughness: 0.6 });
-    const p1 = cyl(0.05, 0.05, 10.0, pipeMat, 10);
-    p1.rotation.z = Math.PI / 2;
-    place(p1, 20.9, 0.42, -4.92);
-    g.add(p1);
-    const p2 = cyl(0.09, 0.09, 10.0, pipeMat, 12);
-    p2.rotation.z = Math.PI / 2;
-    place(p2, 20.9, 2.55, -4.88);
-    g.add(p2);
-    for (const x of [17.2, 21.6, 24.4]) {
-      const v = cyl(0.04, 0.04, 2.1, pipeMat, 8);
-      place(v, x, 1.48, -4.93);
-      g.add(v);
-    }
-
-    // Curtain bunched beside the partition doorway
-    const curtainGeo = new THREE.PlaneGeometry(0.5, 2.15, 12, 1);
-    const pos = curtainGeo.attributes.position;
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      pos.setZ(i, Math.sin(x * 40) * 0.05);
-    }
-    curtainGeo.computeVertexNormals();
-    const curtain = new THREE.Mesh(curtainGeo, materials.curtain);
-    curtain.rotation.y = Math.PI / 2;
-    place(curtain, PARTITION.x1 + 0.08, 1.08, PARTITION.gap.to - 0.25, Math.PI / 2);
-    g.add(curtain);
-
-    // Ceiling-mounted projector
+    // ceiling-hung projector for Let it Flow
     const proj = new THREE.Group();
-    const body = box(0.32, 0.12, 0.3, materials.black);
-    body.position.y = CEILING - 0.42;
-    proj.add(body);
-    const mount = cyl(0.015, 0.015, 0.36, materials.steel, 6);
-    mount.position.y = CEILING - 0.18;
-    proj.add(mount);
-    const lens = cyl(0.04, 0.04, 0.04, materials.led, 12);
+    proj.add(place(box(0.36, 0.13, 0.3, materials.black), 0, 2.38, 0));
+    proj.add(place(cyl(0.02, 0.02, 0.45, materials.black, 6), 0, 2.66, 0));
+    const lens = cyl(0.045, 0.045, 0.03, materials.led, 16);
     lens.rotation.z = Math.PI / 2;
-    lens.position.set(0.18, CEILING - 0.42, 0);
-    proj.add(lens);
-    place(proj, 18.2, 0, -2.8);
-    g.add(proj);
+    proj.add(place(lens, 0.19, 2.38, 0));
+    g.add(place(proj, 17.4, 0, 3.83));
+
+    const pipeMat = new THREE.MeshStandardMaterial({ color: 0x55575c, roughness: 0.6 });
+    // low heating pipe along the north wall + big drain pipes coming down (DSC_0104–0109)
+    const low = cyl(0.03, 0.03, 9.9, pipeMat, 8);
+    low.rotation.z = Math.PI / 2;
+    g.add(place(low, 20.7, 0.42, 1.78));
+    for (const [x, y0] of [[19.9, 0.42], [21.4, 1.9], [22.15, 1.9], [24.4, 0.42]]) {
+      const r = x === 21.4 || x === 22.15 ? 0.065 : 0.03;
+      g.add(place(cyl(r, r, 2.9 - y0, pipeMat, 10), x, (2.9 + y0) / 2, 1.73 + r + 0.02));
+    }
+    // gas meter by the partition (DSC_0098–0101)
+    g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.3, 1.62, 1.82));
+    g.add(place(cyl(0.025, 0.025, 0.12, new THREE.MeshStandardMaterial({ color: 0xe6c21e, roughness: 0.5 }), 8), 16.3, 1.83, 1.82));
+    g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.2, 0.72, 1.79));
+
+    // curtain bunched at the south side of the opening between Room 3 and Room 4
+    const cg = new THREE.PlaneGeometry(0.55, 2.42, 18, 1);
+    const pos = cg.attributes.position;
+    for (let i = 0; i < pos.count; i++) pos.setZ(i, Math.sin(pos.getX(i) * 46) * 0.045);
+    cg.computeVertexNormals();
+    const curtain = new THREE.Mesh(cg, materials.curtain);
+    g.add(place(curtain, 15.84, 1.22, 4.5, Math.PI / 2));
+    obstacle(15.78, 15.92, 4.2, 4.82);
   }
 
-  // Track lights (rails + spots with glowing lenses) in Room 1 and Room 3's white zone
+  // ================================================================ track lights
   {
     const rails = [
-      { x0: 1.0, x1: 9.0, z: 1.6 },
-      { x0: 1.0, x1: 9.0, z: 4.6 },
-      { x0: 7.6, x1: 15.0, z: -2.8 },
+      { x0: 0.8, x1: 4.8, z: 3.2, y: 3.0 },
+      { x0: 0.8, x1: 4.8, z: 5.6, y: 3.0 },
+      { x0: 10.3, x1: 15.1, z: 3.83, y: 2.75 },
     ];
-    const spotGeo = new THREE.CylinderGeometry(0.045, 0.06, 0.16, 12);
+    const per = 4;
+    const spotGeo = new THREE.CylinderGeometry(0.04, 0.055, 0.15, 12);
     spotGeo.rotateX(Math.PI / 2);
-    const count = rails.length * 5;
+    const count = rails.length * per;
     const spots = new THREE.InstancedMesh(spotGeo, materials.black, count);
-    const lensGeo = new THREE.CircleGeometry(0.04, 12);
-    const lenses = new THREE.InstancedMesh(lensGeo, materials.led, count);
+    const lenses = new THREE.InstancedMesh(new THREE.CircleGeometry(0.036, 12), materials.led, count);
     const m = new THREE.Matrix4();
     const q = new THREE.Quaternion();
     let k = 0;
     for (const r of rails) {
-      const rail = box(r.x1 - r.x0, 0.03, 0.05, materials.black);
-      place(rail, (r.x0 + r.x1) / 2, CEILING - 0.02, r.z);
-      g.add(rail);
-      for (let i = 0; i < 5; i++) {
-        const x = r.x0 + 0.4 + (i / 4) * (r.x1 - r.x0 - 0.8);
-        // Aim alternately at the two long walls, tilted down
-        const toward = i % 2 ? 1 : -1;
-        q.setFromEuler(new THREE.Euler(0.8, toward > 0 ? 0 : Math.PI, 0, 'YXZ'));
-        const p = new THREE.Vector3(x, CEILING - 0.14, r.z);
+      g.add(place(box(r.x1 - r.x0, 0.03, 0.05, materials.black), (r.x0 + r.x1) / 2, r.y - 0.02, r.z));
+      for (let i = 0; i < per; i++) {
+        const x = r.x0 + 0.4 + (i / (per - 1)) * (r.x1 - r.x0 - 0.8);
+        q.setFromEuler(new THREE.Euler(0.8, i % 2 ? 0 : Math.PI, 0, 'YXZ'));
+        const p = new THREE.Vector3(x, r.y - 0.13, r.z);
         m.compose(p, q, new THREE.Vector3(1, 1, 1));
         spots.setMatrixAt(k, m);
-        const lensPos = new THREE.Vector3(0, 0, 0.081).applyQuaternion(q).add(p);
-        m.compose(lensPos, q, new THREE.Vector3(1, 1, 1));
+        const lp = new THREE.Vector3(0, 0, 0.076).applyQuaternion(q).add(p);
+        m.compose(lp, q, new THREE.Vector3(1, 1, 1));
         lenses.setMatrixAt(k, m);
         k++;
       }
@@ -376,8 +345,8 @@ export function buildProps(materials, stairwell) {
   return { group: g, anim };
 }
 
-// Bake every plain (non-instanced) mesh into one merged mesh per material: ~150 draw
-// calls of furniture become a couple of dozen.
+// Bake every plain (non-instanced) mesh into one merged mesh per material: a few
+// hundred small meshes of furniture become a couple of dozen draw calls.
 function mergeStatic(group) {
   group.updateMatrixWorld(true);
   const byMat = new Map();
@@ -390,13 +359,14 @@ function mergeStatic(group) {
   for (const [mat, meshes] of byMat) {
     if (meshes.length < 2) continue;
     const geos = meshes.map((m) => {
-      const geo = m.geometry.clone();
+      const geo = (m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone());
       geo.applyMatrix4(m.matrixWorld);
       for (const k of Object.keys(geo.attributes)) if (!['position', 'normal', 'uv'].includes(k)) geo.deleteAttribute(k);
+      geo.morphAttributes = {};
+      geo.clearGroups();
       return geo;
     });
-    const allIndexed = geos.every((g) => g.index);
-    const merged = mergeGeometries(allIndexed ? geos : geos.map((g) => (g.index ? g.toNonIndexed() : g)), false);
+    const merged = mergeGeometries(geos, false);
     if (!merged) continue;
     for (const m of meshes) m.parent.remove(m);
     const mesh = new THREE.Mesh(merged, mat);

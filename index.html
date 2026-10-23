@@ -9,10 +9,24 @@
     <meta name="color-scheme" content="light dark" />
     <!-- Styles load from the head (render-blocking) so the title screen never flashes
          unstyled while the 3D engine is still downloading. -->
-    <style>html, body { background: #eceef0; color: #072fcc; }</style>
+    <style>html, body { background: #eceef0; color: #072fcc; } .i18n-wait [data-i18n] { visibility: hidden; }</style>
+    <script>
+      // Pick the language before first paint: ?lang= → saved choice → browser language.
+      (function () {
+        var q = new URLSearchParams(location.search).get('lang');
+        var s = null;
+        try { s = localStorage.getItem('ap-lang'); } catch (e) {}
+        var l = q === 'hu' || q === 'en' ? q : s === 'hu' || s === 'en' ? s : /^hu\b/i.test(navigator.language || '') ? 'hu' : 'en';
+        document.documentElement.lang = l;
+        if (l !== 'en') document.documentElement.classList.add('i18n-wait');
+      })();
+    </script>
     <link rel="preload" as="image" href="./brand/key-visual.webp" media="(min-aspect-ratio: 4/5)" />
     <link rel="preload" as="image" href="./brand/logo-blue.webp" />
     <link rel="stylesheet" href="/src/style.css" />
+    <link rel="alternate" hreflang="en" href="https://szilvia-barath.github.io/artificial-paradise/?lang=en" />
+    <link rel="alternate" hreflang="hu" href="https://szilvia-barath.github.io/artificial-paradise/?lang=hu" />
+    <link rel="alternate" hreflang="x-default" href="https://szilvia-barath.github.io/artificial-paradise/" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
 
@@ -23,6 +37,8 @@
     <meta property="og:image" content="https://szilvia-barath.github.io/artificial-paradise/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:locale:alternate" content="hu_HU" />
     <meta property="og:url" content="https://szilvia-barath.github.io/artificial-paradise/" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Artificial Paradise: Digital Exhibition" />
@@ -30,7 +46,23 @@
     <meta name="twitter:image" content="https://szilvia-barath.github.io/artificial-paradise/og.jpg" />
   </head>
   <body>
-    <canvas id="scene" aria-label="3D exhibition view"></canvas>
+    <canvas id="scene" aria-label="3D exhibition view" data-i18n-attr="aria-label:sceneLabel"></canvas>
+
+    <!-- Navbar: brand, site sections, language switch. Fades out while walking. -->
+    <header id="site-nav">
+      <span class="brand"><b>|Artificial Paradise|</b> <span>KristofLab</span></span>
+      <nav class="nav-links" id="nav-links" aria-label="Main" data-i18n-attr="aria-label:nav.main">
+        <button data-nav="about" data-i18n="nav.about">About</button>
+        <button data-nav="works" data-i18n="nav.works">Works</button>
+        <button data-nav="bts" data-i18n="nav.build">Behind the scenes</button>
+      </nav>
+      <div class="lang-switch" role="group" aria-label="Language" data-i18n-attr="aria-label:nav.language">
+        <button data-lang="en" lang="en" title="English" aria-pressed="true">EN</button>
+        <span aria-hidden="true">/</span>
+        <button data-lang="hu" lang="hu" title="Magyar" aria-pressed="false">HU</button>
+      </div>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Menu" data-i18n-attr="aria-label:nav.menu"><span></span></button>
+    </header>
 
     <!-- Loading / title screen, styled after the exhibition's key visual -->
     <section id="loader" aria-live="polite">
@@ -42,47 +74,53 @@
       <div class="loader-card">
         <h1 class="sr-only">Artificial Paradise · KristofLab · Digital Exhibition</h1>
         <img class="loader-logo" src="./brand/logo-blue.webp" alt="" width="1480" height="816" />
-        <p class="loader-meta">Digital exhibition<br />MAMŰ Gallery, Budapest · 10–31.01.2025</p>
+        <p class="loader-meta"><span data-i18n="loader.meta1">Digital exhibition</span><br /><span data-i18n="loader.meta2">MAMŰ Gallery, Budapest · 10–31.01.2025</span></p>
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="progress-bar"></span></div>
-        <p id="progress-label">Preparing the basement…</p>
-        <button id="enter" class="btn-enter" disabled>|&nbsp;Enter&nbsp;|</button>
-        <p class="hint" id="enter-hint">Sound on · headphones recommended</p>
+        <p id="progress-label" data-i18n="loader.preparing">Preparing the basement…</p>
+        <button id="enter" class="btn-enter" disabled>|&nbsp;<span data-i18n="loader.enter">Enter</span>&nbsp;|</button>
+        <p class="hint" id="enter-hint" data-i18n="loader.hint">Sound on · headphones recommended</p>
         <div class="howto">
-          <span class="desk">WASD / arrows to walk · mouse to look · click a work to view · Shift to run · Esc to release</span>
-          <span class="touch">Left stick to walk · drag to look · tap a work to view</span>
+          <span class="desk" data-i18n="loader.howtoDesk">WASD / arrows to walk · mouse to look · click a work to view · Shift to run · Esc to release</span>
+          <span class="touch" data-i18n="loader.howtoTouch">Left stick to walk · drag to look · tap a work to view</span>
         </div>
       </div>
-      <footer class="loader-foot">Artworks © Kristóf Szabó / KristofLab · Digital exhibition by Szilvia Barath</footer>
     </section>
+
+    <footer id="site-foot">
+      <span data-i18n="footer.rights">Artworks © Kristóf Szabó / KristofLab</span>
+      <span class="sep" aria-hidden="true">·</span>
+      <span data-i18n="footer.digital">Digital exhibition by Szilvia Barath</span>
+      <span class="sep wide" aria-hidden="true">·</span>
+      <span class="wide" data-i18n="footer.venue">MAMŰ Gallery, Budapest, 2025</span>
+      <span class="sep" aria-hidden="true">·</span>
+      <a href="https://www.instagram.com/p/DFH19tjo3ph/" target="_blank" rel="noopener">Instagram ↗</a>
+    </footer>
 
     <!-- In-world HUD -->
     <div id="hud" hidden>
       <div id="crosshair"></div>
       <div id="prompt" class="mono"></div>
       <div id="room-label"><span class="room-name"></span><span class="room-sub mono"></span></div>
-      <canvas id="minimap" width="220" height="150" aria-label="Minimap"></canvas>
-      <nav id="toolbar">
-        <button data-action="tour" title="Guided tour (T)"><span class="ico">▶</span><span class="lbl">Tour</span></button>
+      <canvas id="minimap" width="220" height="150" aria-label="Map" data-i18n-attr="aria-label:hud.minimap;title:hud.minimap"></canvas>
+      <nav id="toolbar" aria-label="Exhibition controls" data-i18n-attr="aria-label:hud.toolbar">
+        <button data-action="tour" title="Guided tour (T)" data-i18n-attr="title:hud.tourTitle"><span class="ico">▶</span><span class="lbl">Tour</span></button>
         <div class="rooms-wrap">
-          <button data-action="rooms" title="Jump to room"><span class="ico">⌖</span><span class="lbl">Rooms</span></button>
+          <button data-action="rooms" title="Jump to room" data-i18n-attr="title:hud.roomsTitle"><span class="ico">⌖</span><span class="lbl" data-i18n="hud.rooms">Rooms</span></button>
           <div id="rooms-menu" hidden></div>
         </div>
-        <button data-action="works" title="List of works"><span class="ico">≡</span><span class="lbl">Works</span></button>
-        <button data-action="about" title="About the exhibition"><span class="ico">i</span><span class="lbl">About</span></button>
-        <button data-action="bts" title="Behind the scenes"><span class="ico">{ }</span><span class="lbl">Build</span></button>
-        <button data-action="sound" title="Sound on/off (M)"><span class="ico">♪</span><span class="lbl">Sound</span></button>
+        <button data-action="sound" title="Sound on/off (M)" data-i18n-attr="title:hud.soundTitle"><span class="ico">♪</span><span class="lbl" data-i18n="hud.sound">Sound</span></button>
       </nav>
       <div id="tour-caption" aria-live="polite"></div>
       <div id="joystick"><div id="joystick-knob"></div></div>
-      <div id="click-to-look" class="mono">Click to look around</div>
+      <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Click to look around</div>
     </div>
 
     <!-- Artwork viewer -->
     <section id="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewer-title">
-      <button class="close" data-close aria-label="Close">×</button>
+      <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
       <div class="viewer-media">
         <img id="viewer-img" alt="" />
-        <div class="viewer-loading mono">loading…</div>
+        <div class="viewer-loading mono" data-i18n="viewer.loading">loading…</div>
       </div>
       <aside class="viewer-info">
         <p class="eyebrow" id="viewer-room"></p>
@@ -90,25 +128,25 @@
         <p class="meta mono" id="viewer-meta"></p>
         <p id="viewer-caption"></p>
         <details>
-          <summary class="mono">Exhibition text</summary>
+          <summary class="mono" data-i18n="viewer.exhibitionText">Exhibition text</summary>
           <div id="viewer-text"></div>
         </details>
         <nav class="viewer-nav">
-          <button id="viewer-prev" aria-label="Previous work">← Prev</button>
+          <button id="viewer-prev" aria-label="Previous work" data-i18n="viewer.prev" data-i18n-attr="aria-label:viewer.prevLabel">← Prev</button>
           <span id="viewer-count" class="mono"></span>
-          <button id="viewer-next" aria-label="Next work">Next →</button>
+          <button id="viewer-next" aria-label="Next work" data-i18n="viewer.next" data-i18n-attr="aria-label:viewer.nextLabel">Next →</button>
         </nav>
-        <button id="viewer-goto" class="link mono">Walk to this work</button>
+        <button id="viewer-goto" class="link mono" data-i18n="viewer.goto">Walk to this work</button>
       </aside>
     </section>
 
     <!-- About / Behind the scenes panel -->
     <section id="panel" hidden role="dialog" aria-modal="true">
-      <button class="close" data-close aria-label="Close">×</button>
+      <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
       <div id="panel-body"></div>
     </section>
 
-    <noscript><p class="noscript">This exhibition needs JavaScript and WebGL.</p></noscript>
-    <script type="module" src="/src/main.js"></script>
+    <noscript><p class="noscript">This exhibition needs JavaScript and WebGL. · A kiállításhoz JavaScript és WebGL szükséges.</p></noscript>
+    <script type="module" src="/src/boot.js"></script>
   </body>
 </html>

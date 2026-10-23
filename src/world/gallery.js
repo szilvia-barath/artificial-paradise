@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { wallFrame, ROOMS } from './layout.js';
 import { PLANT, PIPE } from './paradiseFactory.js';
+import { t } from '../i18n.js';
 
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as
 // glowing flat screens (with a subtle scanline/glitch shader), installations and the
@@ -25,26 +26,43 @@ function radialTexture(inner = 'rgba(255,255,255,1)', outer = 'rgba(255,255,255,
   return t;
 }
 
-function labelTexture(work) {
+// Shortens text with an ellipsis until it fits maxW at the current font.
+function fit(g, text, maxW) {
+  if (g.measureText(text).width <= maxW) return text;
+  let s = text;
+  while (s.length > 1 && g.measureText(`${s}…`).width > maxW) s = s.slice(0, -1);
+  return `${s.trimEnd()}…`;
+}
+
+// The in-world texts are canvases redrawn on a language switch (see relabel()).
+function canvasTexture(w, h, draw, anisotropy) {
   const c = document.createElement('canvas');
-  c.width = 256;
-  c.height = 128;
-  const g = c.getContext('2d');
+  c.width = w;
+  c.height = h;
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = anisotropy;
+  tex.redraw = () => {
+    draw(c.getContext('2d'), c);
+    tex.needsUpdate = true;
+  };
+  tex.redraw();
+  return tex;
+}
+
+// Wall label: number, title (without the "(screen)" suffix), medium, size and year.
+function drawLabel(g, work) {
   g.fillStyle = '#f7f6f2';
   g.fillRect(0, 0, 256, 128);
   g.fillStyle = '#111';
-  g.font = '600 20px Helvetica, Arial, sans-serif';
-  g.fillText(`${work.no} · KristofLab`, 16, 32);
+  g.font = '600 18px Helvetica, Arial, sans-serif';
+  g.fillText(`${work.no} · KristofLab`, 16, 28);
   g.font = 'italic 19px Helvetica, Arial, sans-serif';
-  const title = work.title.replace(' (screen)', '');
-  g.fillText(title.length > 24 ? `${title.slice(0, 23)}…` : title, 16, 60);
+  g.fillText(fit(g, work.title.replace(/\s*\(.*\)$/, ''), 224), 16, 56);
   g.font = '14px Helvetica, Arial, sans-serif';
   g.fillStyle = '#555';
-  g.fillText([work.medium.split(':')[0].split(',')[0], work.size, work.year].filter(Boolean).join(', ').slice(0, 34), 16, 88);
-  const t = new THREE.CanvasTexture(c);
-  t.colorSpace = THREE.SRGBColorSpace;
-  t.anisotropy = 4;
-  return t;
+  g.fillText(fit(g, work.medium.split(':')[0], 224), 16, 84);
+  g.fillText(fit(g, [work.size, work.year].filter(Boolean).join(', '), 224), 16, 106);
 }
 
 const screenVert = /* glsl */ `
@@ -94,11 +112,9 @@ function wrapText(g, text, x, y, maxW, lh) {
   return y;
 }
 
-function textSheetCanvas(data) {
-  const c = document.createElement('canvas');
-  c.width = 512;
-  c.height = 724;
-  const g = c.getContext('2d');
+// The exhibition text sheet. The type shrinks until the text fits the page, since the
+// Hungarian text runs longer than the English.
+function drawTextSheet(g, data) {
   g.fillStyle = '#fbfaf7';
   g.fillRect(0, 0, 512, 724);
   g.fillStyle = '#111';
@@ -107,23 +123,33 @@ function textSheetCanvas(data) {
   g.fillText('PARADISE', 36, 122);
   g.font = '15px Helvetica, Arial, sans-serif';
   g.fillStyle = '#444';
-  g.fillText('KristofLab · MAMŰ Gallery · 10–31.01.2025', 36, 160);
+  g.fillText(t('wall.sheetMeta'), 36, 160);
+  let size = 14;
+  const lines = (sz) => {
+    g.font = `${sz}px Helvetica, Arial, sans-serif`;
+    let n = 0;
+    for (const p of data.text) {
+      let line = '';
+      for (const wd of p.split(' ')) {
+        const test = line ? `${line} ${wd}` : wd;
+        if (g.measureText(test).width > 440) { n++; line = wd; } else line = test;
+      }
+      n++;
+    }
+    return 200 + n * sz * 1.36 + data.text.length * 10 + 60;
+  };
+  while (size > 10 && lines(size) > 712) size -= 0.5;
   g.fillStyle = '#222';
-  g.font = '14px Helvetica, Arial, sans-serif';
+  g.font = `${size}px Helvetica, Arial, sans-serif`;
   let y = 200;
-  for (const p of data.text) y = wrapText(g, p, 36, y, 440, 19) + 10;
+  for (const p of data.text) y = wrapText(g, p, 36, y, 440, size * 1.36) + 10;
   g.fillStyle = '#666';
-  g.font = 'italic 13px Helvetica, Arial, sans-serif';
-  wrapText(g, data.textCredit, 36, y + 4, 440, 17);
-  return c;
+  g.font = `italic ${size - 1}px Helvetica, Arial, sans-serif`;
+  wrapText(g, data.textCredit, 36, y + 4, 440, (size - 1) * 1.3);
 }
 
 // The sheet on the wall by the bar: the plan with numbered spots and the works list.
-function roomSheetCanvas(data) {
-  const c = document.createElement('canvas');
-  c.width = 512;
-  c.height = 724;
-  const g = c.getContext('2d');
+function drawRoomSheet(g, data) {
   g.fillStyle = '#f7f6f2';
   g.fillRect(0, 0, 512, 724);
   g.fillStyle = '#222';
@@ -149,11 +175,10 @@ function roomSheetCanvas(data) {
   let y = oy + 7.6 * s + 30;
   for (const w of data.works) {
     if (w.id.endsWith('-screen')) continue;
-    const bits = [w.title, w.size, w.medium.split(':')[0].split(',')[0], w.year].filter(Boolean);
-    g.fillText(`${w.no} · ${bits.join(', ')}`, 28, y);
+    const bits = [w.title, w.size, w.medium.split(':')[0], w.year].filter(Boolean);
+    g.fillText(fit(g, `${w.no} · ${bits.join(', ')}`, 456), 28, y);
     y += 21;
   }
-  return c;
 }
 
 export function buildGallery(data, materials, manager, renderer) {
@@ -168,6 +193,12 @@ export function buildGallery(data, materials, manager, renderer) {
   const poolTex = radialTexture('rgba(255,250,240,1)');
   const shadowTex = radialTexture('rgba(0,0,0,0.85)', 'rgba(0,0,0,0)');
   const sideMat = new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.6 });
+  const wallTexts = [];
+  const wallText = (w, h, draw, anisotropy) => {
+    const tex = canvasTexture(w, h, draw, anisotropy);
+    wallTexts.push(tex);
+    return tex;
+  };
   const bezelMat = new THREE.MeshStandardMaterial({ color: 0x0a0a0b, roughness: 0.35, metalness: 0.4 });
 
   const prepTex = (t) => {
@@ -271,7 +302,7 @@ export function buildGallery(data, materials, manager, renderer) {
       if (hg.label !== 'none') {
         const label = new THREE.Mesh(
           new THREE.PlaneGeometry(0.16, 0.08),
-          new THREE.MeshStandardMaterial({ map: labelTexture(work), roughness: 0.8, emissive: 0xffffff, emissiveIntensity: 0.15 }),
+          new THREE.MeshStandardMaterial({ map: wallText(256, 128, (g) => drawLabel(g, work), 4), roughness: 0.8, emissive: 0xffffff, emissiveIntensity: 0.15 }),
         );
         label.material.emissiveMap = label.material.map;
         const side = hg.label === 'left' ? -1 : 1;
@@ -304,13 +335,10 @@ export function buildGallery(data, materials, manager, renderer) {
 
   // Exhibition texts and the room sheet (works list + plan), pinned up as in the photos
   for (const sh of data.sheets || []) {
-    const c = sh.kind === 'roomsheet' ? roomSheetCanvas(data) : textSheetCanvas(data);
-    const t = new THREE.CanvasTexture(c);
-    t.colorSpace = THREE.SRGBColorSpace;
-    t.anisotropy = aniso;
+    const tex = wallText(512, 724, (g) => (sh.kind === 'roomsheet' ? drawRoomSheet(g, data) : drawTextSheet(g, data)), aniso);
     const panel = new THREE.Mesh(
       new THREE.PlaneGeometry(0.3, 0.42),
-      new THREE.MeshStandardMaterial({ map: t, roughness: 0.9, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.18 }),
+      new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.18 }),
     );
     const f = wallFrame(sh.face, sh.at, sh.along, 0.006);
     panel.position.set(f.x, sh.y, f.z);
@@ -370,5 +398,10 @@ export function buildGallery(data, materials, manager, renderer) {
     }
   };
 
-  return { group, hitMeshes, update };
+  // Redraw the wall labels and sheets in the current language.
+  const relabel = () => {
+    for (const tex of wallTexts) tex.redraw();
+  };
+
+  return { group, hitMeshes, update, relabel };
 }

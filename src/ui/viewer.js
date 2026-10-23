@@ -1,3 +1,5 @@
+import { t } from '../i18n.js';
+
 // Artwork overlay: large image, caption, exhibition text, prev/next, "in situ" photo,
 // and a "walk to this work" shortcut.
 
@@ -18,13 +20,26 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
   let index = -1;
   let situ = false;
 
-  text.innerHTML = data.text.map((p) => `<p>${esc(p)}</p>`).join('') + `<p class="mono" style="color:#8a8a88;font-size:11px">${esc(data.textCredit)}</p>`;
+  const renderText = () => {
+    text.innerHTML = data.text.map((p) => `<p>${esc(p)}</p>`).join('') + `<p class="mono" style="color:#8a8a88;font-size:11px">${esc(data.textCredit)}</p>`;
+  };
+  renderText();
 
   // In-situ toggle (adds a small button under the caption)
   const situBtn = document.createElement('button');
   situBtn.className = 'link mono';
   situBtn.style.marginTop = '0';
   caption.after(situBtn);
+
+  const renderInfo = () => {
+    const w = works[index];
+    img.alt = `${w.title}, ${w.medium}`;
+    room.textContent = `${data.rooms[w.room].name} · ${t('viewer.no', { no: w.no })}`;
+    title.textContent = w.title;
+    meta.innerHTML = `${esc(data.meta.artist)}<br />${esc([w.medium, w.size, w.year].filter(Boolean).join(', '))}`;
+    caption.textContent = w.caption;
+    situBtn.textContent = t(situ ? 'viewer.work' : 'viewer.situ');
+  };
 
   const show = () => {
     const w = works[index];
@@ -33,12 +48,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
     loading.hidden = false;
     img.onload = () => { img.classList.add('ready'); loading.hidden = true; };
     img.src = src;
-    img.alt = `${w.title}, ${w.medium}`;
-    room.textContent = `${data.rooms[w.room].name} · No. ${w.no}`;
-    title.textContent = w.title;
-    meta.innerHTML = `${esc(data.meta.artist)}<br />${esc([w.medium, w.size, w.year].filter(Boolean).join(', '))}`;
-    caption.textContent = w.caption;
-    situBtn.textContent = situ ? 'View the work' : 'View in situ (installation photo)';
+    renderInfo();
     count.textContent = `${index + 1} / ${works.length}`;
     // Preload neighbours
     for (const k of [index + 1, index - 1]) {
@@ -93,5 +103,11 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
     sx = null;
   });
 
-  return { open, close, isOpen: () => !el.hidden };
+  // After a language switch: re-render the texts without reloading the image.
+  const refresh = () => {
+    renderText();
+    if (!el.hidden) renderInfo();
+  };
+
+  return { open, close, refresh, isOpen: () => !el.hidden };
 }

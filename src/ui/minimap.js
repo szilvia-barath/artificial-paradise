@@ -1,4 +1,5 @@
 import { ROOMS } from '../world/layout.js';
+import { t } from '../i18n.js';
 
 // Corner minimap: walls (from the collision segments), works, current room highlight
 // and the visitor as a view cone. Click a room on the map to jump there.
@@ -40,7 +41,7 @@ export function setupMinimap(canvas, segments, works, onJump) {
     if (room) onJump(room.id);
   });
 
-  return (px, pz, yaw, roomId, t) => {
+  return (px, pz, yaw, roomId, time) => {
     // The HUD starts hidden, so measure lazily once it is on screen.
     if (W < 10 || canvas.getBoundingClientRect().width !== W) resize();
     if (W < 10 || s <= 0) return;
@@ -79,7 +80,7 @@ export function setupMinimap(canvas, segments, works, onJump) {
       ctx.lineTo(cx + NORTH[0] * 8, cy + NORTH[1] * 8);
       ctx.stroke();
       ctx.font = '8px ui-monospace, Menlo, monospace';
-      ctx.fillText('N', cx + NORTH[0] * 11 - 3, cy + NORTH[1] * 11 + 3);
+      ctx.fillText(t('hud.north'), cx + NORTH[0] * 11 - 3, cy + NORTH[1] * 11 + 3);
     }
     // visitor view cone
     const fx = -Math.sin(yaw);
@@ -102,7 +103,7 @@ export function setupMinimap(canvas, segments, works, onJump) {
     ctx.fill();
     ctx.fillStyle = '#9dff6a';
     ctx.beginPath();
-    ctx.arc(X(px), Y(pz), 2.6 + Math.sin(t * 4) * 0.4, 0, Math.PI * 2);
+    ctx.arc(X(px), Y(pz), 2.6 + Math.sin(time * 4) * 0.4, 0, Math.PI * 2);
     ctx.fill();
   };
 }

@@ -5,6 +5,7 @@ import { EYE } from './world/layout.js';
 // between positions and turning to face each work while its caption fades in.
 
 const SPEED = 1.15; // m/s
+const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 export class Tour {
   constructor(data, controls, captionEl) {
@@ -46,12 +47,20 @@ export class Tour {
     this.t = 0;
     this.shown = false;
     this.caption.classList.remove('show');
+    this.text = this._text(s);
+  }
+
+  _text(s) {
     const w = s.work ? this.byId[s.work] : null;
-    this.text = w
-      ? `<span class="t">${w.no} · ${w.title} · ${[w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', ')}</span>${w.caption}`
-      : s.text
-        ? `<span class="t">Artificial Paradise</span>${s.text}`
-        : '';
+    if (w) return `<span class="t">${esc(w.no)} · ${esc(w.title)} · ${esc([w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', '))}</span>${esc(w.caption)}`;
+    return s.intro ? `<span class="t">Artificial Paradise</span>${esc(this.data.tourIntro)}` : '';
+  }
+
+  // After a language switch: re-render the caption on screen.
+  refresh() {
+    if (!this.active) return;
+    this.text = this._text(this.data.tour[this.i]);
+    if (this.shown) this.caption.innerHTML = this.text;
   }
 
   update(dt) {

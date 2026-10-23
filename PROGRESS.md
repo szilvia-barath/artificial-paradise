@@ -14,11 +14,12 @@
 - [ ] **M4 Polish**:
   - [x] Loading page redesigned in the exhibition's key-visual style: the Supertree collage as background (poster logotype removed so it never shows behind the panel; portrait crop for phones), film grain, a white panel with the blue `|Artificial| |Paradise| KristofLab` logotype, blue monospace text and an outlined `| Enter |` button. Assets in `public/brand/`.
   - [x] OG image (`public/og.jpg`) from the key visual.
+  - [x] Hungarian version: all texts in `src/i18n/en.json` / `hu.json`, language switch in a slim navbar (About · Works · Behind the scenes · EN/HU) that also works on the title screen, and a slim footer (credits, Instagram). Both fade out while walking. The switch is live: panels, viewer, tour captions, room labels and the in-world wall labels and sheets re-render. A small boot chunk translates the title screen before the 3D engine loads.
   - [ ] Phone performance pass.
 
 ## Next
 1. Real video files for #3 (screen), 6, 7, 8, 15, 16, 17 would replace the stills (put them in `public/video/` and point `frames`/a new `video` field at them).
-2. Owner to confirm/replace the visual captions in `src/data/exhibition.json` (`note` field marks them).
+2. Owner's English and Hungarian texts → `src/i18n/en.json` / `hu.json`. Until then the Hungarian is a draft translation of the English, and the work captions in both are visual descriptions written for the digital exhibition.
 3. Room 1 tape measurements from the owner → set `R1.W` / `R1.D` in `src/world/layout.js`, then the Room 1 `hang` values in `exhibition.json` (#3 screen on the street wall, #4/#5 on the bench wall).
 
 ## Known issues / assumptions
@@ -29,5 +30,5 @@
 - **GitHub Pages is currently publishing `main` (raw source), which cannot run.** Settings → Pages → Build and deployment → Source "Deploy from a branch" → Branch `gh-pages` / `(root)` → Save. The workflow already builds into `gh-pages` on every push.
 
 ## How to continue
-`npm install && npm run dev` → http://localhost:5173. Floor plan + walls: `src/world/layout.js`. Content: `src/data/exhibition.json`. Furniture: `src/world/props.js`. Installations: `src/world/paradiseFactory.js`, `src/world/letItFlow.js`.
+`npm install && npm run dev` → http://localhost:5173. Floor plan + walls: `src/world/layout.js`. Texts (EN/HU): `src/i18n/*.json`. Works data and hang: `src/data/exhibition.json`. Furniture: `src/world/props.js`. Installations: `src/world/paradiseFactory.js`, `src/world/letItFlow.js`.
 Regenerate crops: `npm run images` (needs the original DSC_*.JPG in the repo root). Regenerate wall textures: `npm run textures` (Python 3 + Pillow + NumPy).

@@ -15,10 +15,15 @@ npm run preview    # serve dist/
 
 ## Edit the content
 
-- `src/data/exhibition.json`: titles, captions, sizes and the position of every work (`hang.face/at/along/y/w/h`, in metres).
+- `src/i18n/en.json` and `src/i18n/hu.json`: every text a visitor reads, in English and Hungarian. `ui` holds the interface (navbar, buttons, hints); the rest is the exhibition text, credits, room names and the media and caption of each work (matched by id). A key missing from `hu.json` falls back to English.
+- `src/data/exhibition.json`: official titles, sizes, years, images and the position of every work (`hang.face/at/along/y/w/h`, in metres).
 - `src/world/layout.js`: floor plan (wall blocks, doorways, ceilings).
 - `npm run images` re-cuts the artwork crops listed in `scripts/crops.json` from the original photos (DSC_*.JPG must be in the repo root).
 - `npm run textures` re-cuts the brick wall textures from the photos (Python 3 with Pillow and NumPy).
+
+## Languages
+
+English and Hungarian, switched from the navbar without reloading (the in-world wall labels and text sheets are redrawn too). The first visit follows the browser language; `?lang=en` / `?lang=hu` links open a given language, and a choice made in the navbar is remembered.
 
 ## Deploy
 

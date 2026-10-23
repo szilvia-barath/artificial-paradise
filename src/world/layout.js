@@ -30,8 +30,6 @@ R1.west = R1.east - R1.W;
 export const ROOMS = [
   {
     id: 'r1',
-    name: 'Room 1',
-    subtitle: 'Paintings · Paradise Factory',
     x0: R1.west, x1: R1.east, z0: 0, z1: R1.D,
     ceiling: 3.0,
     // Foot of the stairs, facing the way you walk off them: Human as Error VI ahead,
@@ -40,24 +38,18 @@ export const ROOMS = [
   },
   {
     id: 'r2',
-    name: 'Room 2',
-    subtitle: 'Video · bar',
     x0: 5.85, x1: 9.7, z0: 1.73, z1: 5.94,
     ceiling: 2.75,
     spawn: { x: 6.6, z: 4.25, look: { x: 8.2, z: 1.73 } },
   },
   {
     id: 'r3',
-    name: 'Room 3',
-    subtitle: 'Paintings · prints · video',
     x0: 10.05, x1: 15.45, z0: 1.73, z1: 5.94,
     ceiling: 2.75,
     spawn: { x: 10.7, z: 3.4, look: { x: 15.4, z: 3.9 } },
   },
   {
     id: 'r4',
-    name: 'Room 4',
-    subtitle: 'Let it Flow · video',
     x0: 15.75, x1: 25.67, z0: 1.73, z1: 5.94,
     ceiling: 2.9,
     spawn: { x: 16.6, z: 3.9, look: { x: 25.67, z: 3.8 } },

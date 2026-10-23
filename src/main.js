@@ -15,22 +15,13 @@ import { Tour } from './tour.js';
 import { setupPanels } from './ui/panels.js';
 import { setupViewer } from './ui/viewer.js';
 import { setupMinimap } from './ui/minimap.js';
+import { localize, onLangChange, setText } from './i18n.js';
+
+localize(data);
 
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 const lowPower = isTouch || (navigator.hardwareConcurrency || 8) <= 4;
 document.body.classList.toggle('touch', isTouch);
-
-// If the scene can't start (no WebGL, very old browser), say so on the title screen
-// instead of leaving it on "Preparing the basement…" for ever.
-let started = false;
-function showFailure() {
-  if (started) return;
-  const label = document.getElementById('progress-label');
-  label.textContent = 'This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari.';
-  label.classList.add('error');
-}
-window.addEventListener('error', showFailure);
-window.addEventListener('unhandledrejection', showFailure);
 
 // ---------------------------------------------------------------- renderer
 const canvas = document.getElementById('scene');
@@ -64,7 +55,7 @@ manager.onProgress = (_url, loaded, total) => {
   // Late files after the 12 s safety net must not overwrite "Ready".
   if (worldReady) return;
   progressBar.style.width = `${Math.round(p * 100)}%`;
-  progressLabel.textContent = `Hanging the works… ${loaded}/${total}`;
+  setText(progressLabel, 'loader.loading', { loaded, total });
 };
 
 // ---------------------------------------------------------------- world
@@ -93,6 +84,7 @@ let entered = false;
 const blockers = { panel: false, viewer: false };
 const syncEnabled = () => {
   controls.enabled = entered && !blockers.panel && !blockers.viewer && !tour.active;
+  document.body.classList.toggle('overlay', blockers.panel || blockers.viewer);
 };
 
 const ui = setupPanels(data, {
@@ -116,7 +108,7 @@ const DOORS = {
 };
 function buildTourStops() {
   const r1 = roomById('r1');
-  const stops = [{ x: r1.spawn.x, z: r1.spawn.z, look: [r1.spawn.look.x, 1.5, r1.spawn.look.z], text: data.tourIntro, dwell: 4 }];
+  const stops = [{ x: r1.spawn.x, z: r1.spawn.z, look: [r1.spawn.look.x, 1.5, r1.spawn.look.z], intro: true, dwell: 4 }];
   let room = 'r1';
   for (const w of data.works) {
     if (!w._focus) continue;
@@ -131,11 +123,15 @@ function buildTourStops() {
 data.tour = buildTourStops();
 const tour = new Tour(data, controls, document.getElementById('tour-caption'));
 const tourBtn = document.querySelector('[data-action="tour"]');
+const syncTourBtn = () => {
+  tourBtn.classList.toggle('on', tour.active);
+  setText(tourBtn.querySelector('.lbl'), tour.active ? 'hud.stop' : 'hud.tour');
+  tourBtn.querySelector('.ico').textContent = tour.active ? '■' : '▶';
+};
+syncTourBtn();
 tour.onEnd = () => {
   document.body.classList.remove('touring');
-  tourBtn.classList.remove('on');
-  tourBtn.querySelector('.lbl').textContent = 'Tour';
-  tourBtn.querySelector('.ico').textContent = '▶';
+  syncTourBtn();
   syncEnabled();
 };
 function toggleTour() {
@@ -144,10 +140,8 @@ function toggleTour() {
   ui.close();
   controls.unlock();
   document.body.classList.add('touring');
-  tourBtn.classList.add('on');
-  tourBtn.querySelector('.lbl').textContent = 'Stop';
-  tourBtn.querySelector('.ico').textContent = '■';
   tour.start();
+  syncTourBtn();
   syncEnabled();
 }
 
@@ -172,6 +166,7 @@ function jumpToRoom(id) {
 function gotoWork(w) {
   const f = w._focus;
   if (!f) return;
+  if (!entered && worldReady) enter();
   const d = Math.hypot(f.look[0] - f.x, f.look[2] - f.z);
   teleport(f.x, f.z, f.look[0], f.look[2], Math.atan2(f.look[1] - EYE, d) * 0.8);
 }
@@ -180,12 +175,14 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   const b = e.target.closest('button[data-action]');
   if (!b) return;
   const a = b.dataset.action;
-  if (a === 'about') ui.about();
-  else if (a === 'works') ui.works();
-  else if (a === 'bts') ui.bts();
-  else if (a === 'rooms') ui.toggleRooms();
+  if (a === 'rooms') ui.toggleRooms();
   else if (a === 'tour') toggleTour();
   else if (a === 'sound') toggleSound();
+});
+// Navbar sections open as panels, on the title screen as well as in the exhibition.
+document.getElementById('site-nav').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-nav]');
+  if (b) ui.show(b.dataset.nav);
 });
 window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen()) return;
@@ -230,9 +227,9 @@ function updateHover() {
     crosshair.classList.toggle('active', !!hovered);
     promptEl.classList.toggle('show', !!hovered);
     canvas.style.cursor = hovered && !controls.locked ? 'pointer' : '';
-    if (hovered === 'text') promptEl.textContent = 'Click to read the exhibition text';
-    else if (hovered === 'roomsheet') promptEl.textContent = 'Click to read the list of works';
-    else if (hovered) promptEl.textContent = `Click to view · ${hovered.no} ${hovered.title}`;
+    if (hovered === 'text') setText(promptEl, 'hud.promptText');
+    else if (hovered === 'roomsheet') setText(promptEl, 'hud.promptSheet');
+    else if (hovered) setText(promptEl, 'hud.promptWork', { no: hovered.no, title: hovered.title });
   }
 }
 function activate(ud) {
@@ -272,8 +269,8 @@ function updateRoom() {
     const first = currentRoom === null;
     currentRoom = key;
     currentRoomId = r.id;
-    roomName.textContent = r.name;
-    roomSub.textContent = r.subtitle;
+    setText(roomName, `rooms.${r.id}.name`);
+    setText(roomSub, `rooms.${r.id}.subtitle`);
     if (!first) {
       post.trigger(0.75);
       audio.glitchBurst();
@@ -282,15 +279,17 @@ function updateRoom() {
 }
 
 // ---------------------------------------------------------------- enter
-enterBtn.addEventListener('click', () => {
+function enter() {
   entered = true;
+  document.body.classList.add('entered');
   document.getElementById('loader').classList.add('gone');
   document.getElementById('hud').hidden = false;
   audio.start();
   syncEnabled();
   if (!isTouch) controls.lock();
   post.trigger(1);
-});
+}
+enterBtn.addEventListener('click', enter);
 controls.onLockChange = (locked) => document.body.classList.toggle('locked', locked);
 
 // ---------------------------------------------------------------- resize
@@ -355,16 +354,27 @@ renderer.setAnimationLoop(frame);
 function markReady() {
   if (worldReady) return;
   worldReady = true;
-  started = true;
+  document.body.dataset.state = 'ready';
   progressLabel.classList.remove('error');
   progressBar.style.width = '100%';
-  progressLabel.textContent = 'Ready';
+  setText(progressLabel, 'loader.ready');
   enterBtn.disabled = false;
   enterBtn.focus({ preventScroll: true });
 }
 manager.onLoad = markReady;
 // Safety net: never block the Enter button for more than 12 s on a slow network.
 setTimeout(markReady, 12000);
+
+// ---------------------------------------------------------------- language
+// Static markup is re-translated by i18n.js; here everything built from the data.
+onLangChange(() => {
+  localize(data);
+  ui.refresh();
+  viewer.refresh();
+  tour.refresh();
+  gallery.relabel();
+  hovered = null;
+});
 
 // Debug handle for screenshots / tinkering in the console.
 window.__ap = { scene, camera, controls, renderer, lights, jumpToRoom, gotoWork, ROOMS, ui, viewer, tour, post, audio, data };

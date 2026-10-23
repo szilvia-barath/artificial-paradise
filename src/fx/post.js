@@ -9,13 +9,16 @@ import {
   ChromaticAberrationEffect,
   ToneMappingEffect,
   ToneMappingMode,
+  FXAAEffect,
   BlendFunction,
   Effect,
 } from 'postprocessing';
 
-// Post chain: bloom + ACES tone mapping + vignette + film grain + a custom glitch pulse
-// (blocky band displacement and colour tear, fired when you cross between rooms),
-// then a separate pass for chromatic aberration (it samples at offset UVs).
+// Post chain: bloom + neutral tone mapping (Khronos PBR Neutral keeps the artworks'
+// colours true, where ACES shifts hues) + vignette + light film grain + a custom glitch
+// pulse (blocky band displacement and colour tear, fired when you cross between rooms),
+// then FXAA on low-power devices (no MSAA there) and chromatic aberration, each in its
+// own pass since they sample at offset UVs.
 
 const glitchFrag = /* glsl */ `
   uniform float pulse;
@@ -56,6 +59,9 @@ class GlitchPulseEffect extends Effect {
 
 export function createPost(renderer, scene, camera, { lowPower }) {
   renderer.toneMapping = THREE.NoToneMapping;
+  // Read by the tone-mapping effect: Neutral is linear in the mid-tones where ACES (as
+  // tuned before) brightened them, so lift the exposure to keep the rooms as bright.
+  renderer.toneMappingExposure = 1.35;
   const composer = new EffectComposer(renderer, {
     frameBufferType: THREE.HalfFloatType,
     multisampling: lowPower ? 0 : Math.min(4, renderer.capabilities.maxSamples),
@@ -64,27 +70,28 @@ export function createPost(renderer, scene, camera, { lowPower }) {
 
   const bloom = new BloomEffect({
     mipmapBlur: true,
-    luminanceThreshold: 0.82,
-    luminanceSmoothing: 0.25,
+    luminanceThreshold: 0.92,
+    luminanceSmoothing: 0.2,
     intensity: 0.85,
     radius: 0.72,
   });
-  const tone = new ToneMappingEffect({ mode: ToneMappingMode.ACES_FILMIC });
+  const tone = new ToneMappingEffect({ mode: ToneMappingMode.NEUTRAL });
   const vignette = new VignetteEffect({ offset: 0.32, darkness: 0.62 });
   const noise = new NoiseEffect({ premultiply: true, blendFunction: BlendFunction.SCREEN });
-  noise.blendMode.opacity.value = 0.22;
+  noise.blendMode.opacity.value = 0.12;
   const glitch = new GlitchPulseEffect();
   composer.addPass(new EffectPass(camera, bloom, glitch, tone, vignette, noise));
+  if (lowPower) composer.addPass(new EffectPass(camera, new FXAAEffect()));
 
   const ca = new ChromaticAberrationEffect({
-    offset: new THREE.Vector2(0.0006, 0.0004),
+    offset: new THREE.Vector2(0.00035, 0.00025),
     radialModulation: true,
     modulationOffset: 0.25,
   });
   composer.addPass(new EffectPass(camera, ca));
 
   let pulse = 0;
-  const baseCA = new THREE.Vector2(0.0006, 0.0004);
+  const baseCA = new THREE.Vector2(0.00035, 0.00025);
   return {
     composer,
     bloom,

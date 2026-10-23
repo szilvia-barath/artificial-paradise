@@ -8,6 +8,7 @@ import { buildLights } from './world/lights.js';
 import { buildGallery } from './world/gallery.js';
 import { buildParadiseFactory } from './world/paradiseFactory.js';
 import { buildLetItFlow } from './world/letItFlow.js';
+import { applyPlanAO } from './world/ao.js';
 import { createPost } from './fx/post.js';
 import { Ambience } from './audio/ambience.js';
 import { FirstPersonControls } from './controls.js';
@@ -33,7 +34,8 @@ const renderer = new THREE.WebGLRenderer({
   stencil: false,
   depth: false,
 });
-const MAX_DPR = isTouch ? 1.5 : 1.75;
+// Full resolution up to 2x on desktop; adapt() steps it down if frames get slow.
+const MAX_DPR = isTouch ? 1.5 : 2;
 let dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
 renderer.setPixelRatio(dpr);
 renderer.setSize(window.innerWidth, window.innerHeight, false);
@@ -60,14 +62,15 @@ manager.onProgress = (_url, loaded, total) => {
 };
 
 // ---------------------------------------------------------------- world
-const materials = createMaterials(renderer, manager);
+const materials = createMaterials(renderer, manager, { lowPower });
 const arch = buildArchitecture(materials);
 scene.add(arch.group);
 const props = buildProps(materials);
 scene.add(props.group);
 scene.add(buildParadiseFactory(materials));
+applyPlanAO(materials, arch.segments); // after props and installations add their footprints
 const lights = buildLights(scene);
-const gallery = buildGallery(data, materials, manager, renderer);
+const gallery = buildGallery(data, materials, manager, renderer, { hdBudget: lowPower ? 3 : 8 });
 scene.add(gallery.group);
 const letItFlow = buildLetItFlow(manager);
 scene.add(letItFlow.group);
@@ -85,6 +88,7 @@ let entered = false;
 const blockers = { panel: false, viewer: false };
 const syncEnabled = () => {
   controls.enabled = entered && !blockers.panel && !blockers.viewer && !tour.active;
+  controls.zoomEnabled = entered && !blockers.panel && !blockers.viewer;
   document.body.classList.toggle('overlay', blockers.panel || blockers.viewer);
 };
 
@@ -154,6 +158,7 @@ function toggleSound() {
 
 function teleport(x, z, lookX, lookZ, pitch = 0) {
   if (tour.active) tour.stop();
+  controls.resetZoom(true);
   controls.setPose(x, z, 0);
   controls.lookAt(lookX, lookZ);
   controls.pitch = pitch;
@@ -194,7 +199,25 @@ window.addEventListener('keydown', (e) => {
 // Touching the joystick ends the tour on mobile; the wheel or an on-screen key on desktop
 document.getElementById('joystick').addEventListener('touchstart', () => tour.stop(), { passive: true });
 controls.onManualMove = () => tour.stop();
-const updateKeypad = setupKeypad(document.getElementById('keypad'), controls);
+const updateKeypad = setupKeypad(document.getElementById('hud'), controls);
+
+// Zoom readout: shows the magnification while zoomed in; click (or 0) to reset.
+const zoomLevel = document.getElementById('zoom-level');
+zoomLevel.addEventListener('click', () => controls.resetZoom());
+let shownZoom = 1;
+function updateZoom() {
+  const fov = baseFov / controls.zoom;
+  if (camera.fov !== fov) {
+    camera.fov = fov;
+    camera.updateProjectionMatrix();
+  }
+  const z = Math.round(controls.zoomTarget * 10) / 10;
+  if (z !== shownZoom) {
+    shownZoom = z;
+    zoomLevel.hidden = z <= 1;
+    zoomLevel.firstElementChild.textContent = `${z.toFixed(1)}×`;
+  }
+}
 
 const minimap = setupMinimap(document.getElementById('minimap'), arch.segments, data.works, (id) => jumpToRoom(id));
 
@@ -214,6 +237,7 @@ canvas.addEventListener('mousemove', (e) => {
 canvas.addEventListener('mouseleave', () => { mouseInside = false; });
 
 function pick(x, y) {
+  raycaster.far = 7.5 * controls.zoom; // zoomed in, works further away can be opened
   raycaster.setFromCamera(tmpV2.set(x, y), camera);
   const hit = raycaster.intersectObjects(gallery.hitMeshes, false)[0];
   return hit ? hit.object.userData : null;
@@ -296,11 +320,14 @@ enterBtn.addEventListener('click', enter);
 controls.onLockChange = (locked) => document.body.classList.toggle('locked', locked);
 
 // ---------------------------------------------------------------- resize
+// Field of view before zoom (updateZoom divides it by the magnification).
+let baseFov = 66;
 function resize() {
   const w = window.innerWidth;
   const h = window.innerHeight;
   camera.aspect = w / h;
-  camera.fov = w < h ? 78 : isTouch ? 72 : 66;
+  baseFov = w < h ? 78 : isTouch ? 72 : 66;
+  camera.fov = baseFov / controls.zoom;
   camera.updateProjectionMatrix();
   renderer.setSize(w, h, false);
   post.setSize(w, h);
@@ -339,10 +366,11 @@ function frame() {
   const t = timer.getElapsed();
   if (tour.active) tour.update(dt);
   controls.update(dt);
+  updateZoom();
   updateRoom();
   const bands = audio.update(controls.pos.x, controls.pos.y, controls.yaw, dt, t);
   for (const fn of props.anim) fn(t, dt);
-  gallery.update(t, dt, camera.position);
+  gallery.update(t, dt, camera, controls.zoom);
   letItFlow.update(t, lights.proj);
   updateHover();
   if (entered) {

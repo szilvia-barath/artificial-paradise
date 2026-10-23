@@ -20,8 +20,8 @@
       "ready": "Ready",
       "enter": "Enter",
       "hint": "Sound on · headphones recommended",
-      "howtoDesk": "WASD / arrows or the scroll wheel to walk · mouse to look · click a work to view · Shift to run · Esc to release",
-      "howtoTouch": "Left stick to walk · drag to look · tap a work to view",
+      "howtoDesk": "↑↓ or the scroll wheel to walk · ←→ to turn · mouse to look · +/− to zoom · click a work to view · Shift to run · Esc to release",
+      "howtoTouch": "Left stick to walk · drag to look · pinch to zoom · tap a work to view",
       "failure": "This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari."
     },
     "footer": {
@@ -46,12 +46,16 @@
       "north": "N",
       "keys": {
         "group": "Movement keys",
-        "forward": "Forward (W / ↑)",
-        "back": "Back (S / ↓)",
-        "left": "Step left (A / ←)",
-        "right": "Step right (D / →)",
+        "forward": "Forward (↑ / W)",
+        "back": "Back (↓ / S)",
+        "left": "Turn left (←)",
+        "right": "Turn right (→)",
         "run": "Run (Shift): click to switch on or off",
-        "wheel": "scroll to walk"
+        "wheel": "scroll to walk",
+        "zoom": "Zoom",
+        "zoomIn": "Zoom in (+)",
+        "zoomOut": "Zoom out (−)",
+        "zoomReset": "Reset zoom (0)"
       }
     },
     "viewer": {
@@ -80,8 +84,8 @@
       "btsEyebrow": "Behind the scenes",
       "btsTitle": "How it's built",
       "controls": "Controls",
-      "controlsDesk": "Desktop: WASD / arrows to walk (or hold the keys on screen), scroll wheel to walk forward and back, mouse to look, Shift to run, click a work to open it, T for the tour, M to mute.",
-      "controlsTouch": "Touch: left stick to walk, drag to look, tap a work."
+      "controlsDesk": "Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E to open it, T for the tour, M to mute. The keys on screen do the same when held with the mouse.",
+      "controlsTouch": "Touch: left stick to walk, drag to look, pinch to zoom, tap a work."
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Gallery · 10–31.01.2025"

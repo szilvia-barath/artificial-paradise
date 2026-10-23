@@ -6,7 +6,8 @@ import { t } from '../i18n.js';
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as
 // glowing flat screens (with a subtle scanline/glitch shader), installations and the
 // installations as clickable volumes. Fake spotlights = additive light pools on the wall.
-// Textures load lazily: 512px thumbs first, 1024px versions once you get close.
+// Textures load lazily: 512px thumbs first, 1024px versions once you get close, and the
+// 1600px detail image for the paintings and prints you stand at or zoom in on.
 
 const BASE = import.meta.env.BASE_URL;
 const url = (p) => `${BASE}${p}`;
@@ -181,7 +182,7 @@ function drawRoomSheet(g, data) {
   }
 }
 
-export function buildGallery(data, materials, manager, renderer) {
+export function buildGallery(data, materials, manager, renderer, { hdBudget = 6 } = {}) {
   const group = new THREE.Group();
   group.name = 'gallery';
   const hitMeshes = [];
@@ -189,7 +190,7 @@ export function buildGallery(data, materials, manager, renderer) {
   const lazy = []; // { work, material(s), loaded, pos }
   const loader = new THREE.TextureLoader(manager);
   const lazyLoader = new THREE.TextureLoader();
-  const aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  const aniso = Math.min(16, renderer.capabilities.getMaxAnisotropy());
   const poolTex = radialTexture('rgba(255,250,240,1)');
   const shadowTex = radialTexture('rgba(0,0,0,0.85)', 'rgba(0,0,0,0)');
   const sideMat = new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.6 });
@@ -348,18 +349,37 @@ export function buildGallery(data, materials, manager, renderer) {
     hitMeshes.push(panel);
   }
 
-  // Progressive upgrade to 1024 px textures for works near the visitor.
-  const upgrade = (camPos) => {
+  const setMap = (mat, t) => {
+    mat.map = t;
+    mat.emissiveMap = t;
+    mat.needsUpdate = true;
+  };
+  const fwd = new THREE.Vector3();
+  const toWork = new THREE.Vector3();
+
+  // Progressive upgrade to 1024 px textures for works near the visitor (or near the view
+  // when zoomed in), then to the 1600 px detail image for the nearest few paintings and
+  // prints you stand at or zoom in on. Detail images beyond the budget are released.
+  const upgrade = (camera, zoom) => {
+    const camPos = camera.position;
+    camera.getWorldDirection(fwd);
+    const cosView = Math.cos(THREE.MathUtils.degToRad(camera.fov * 0.7));
     for (const l of lazy) {
-      if (l.loaded || l.pos.distanceTo(camPos) > 7.5) continue;
+      l.dist = l.pos.distanceTo(camPos);
+      if (l.front) {
+        toWork.copy(l.pos).sub(camPos).normalize();
+        const inView = toWork.dot(fwd) > cosView;
+        const near = l.hd ? 3.6 : 2.8; // hysteresis so it doesn't flip at the edge
+        l.wantHD = !!l.texMap && (l.dist < near || (zoom > 1.4 && inView && l.dist < near * zoom));
+      }
+      if (l.loaded || l.dist > 7.5 * zoom) continue;
       l.loaded = true;
       if (l.front) {
         lazyLoader.load(url(`${l.work.image}-tex.webp`), (t) => {
           prepTex(t);
           const old = l.front.map;
-          l.front.map = t;
-          l.front.emissiveMap = t;
-          l.front.needsUpdate = true;
+          l.texMap = t;
+          if (!l.hd) setMap(l.front, t);
           if (old) old.dispose();
         });
       } else if (l.entry) {
@@ -373,12 +393,31 @@ export function buildGallery(data, materials, manager, renderer) {
         });
       }
     }
+    const hd = lazy.filter((l) => l.wantHD).sort((a, b) => a.dist - b.dist).slice(0, hdBudget);
+    for (const l of lazy) {
+      if (!l.front) continue;
+      const want = hd.includes(l);
+      if (want && !l.hd && !l.hdLoading) {
+        l.hdLoading = true;
+        lazyLoader.load(url(`${l.work.image}.webp`), (t) => {
+          l.hdLoading = false;
+          prepTex(t);
+          if (!l.wantHD) { t.dispose(); return; }
+          l.hd = t;
+          setMap(l.front, t);
+        }, undefined, () => { l.hdLoading = false; });
+      } else if (!want && l.hd) {
+        setMap(l.front, l.texMap);
+        l.hd.dispose();
+        l.hd = null;
+      }
+    }
   };
 
   let upgradeTimer = 0;
-  const update = (t, dt, camPos) => {
+  const update = (t, dt, camera, zoom = 1) => {
     upgradeTimer -= dt;
-    if (upgradeTimer <= 0) { upgradeTimer = 0.5; upgrade(camPos); }
+    if (upgradeTimer <= 0) { upgradeTimer = 0.4; upgrade(camera, zoom); }
     for (const s of screens) {
       const u = s.mat.uniforms;
       if (s.frames.length > 1) {

@@ -103,8 +103,9 @@ function planksCanvas(seed = 5) {
 
 const BASE = import.meta.env.BASE_URL;
 
-export function createMaterials(renderer, manager) {
-  const aniso = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+export function createMaterials(renderer, manager, { lowPower = false } = {}) {
+  // Strong anisotropic filtering keeps floor tiles and brick sharp at grazing angles.
+  const aniso = Math.min(lowPower ? 4 : 16, renderer.capabilities.getMaxAnisotropy());
   const loader = new THREE.TextureLoader(manager);
   // Brick textures cut from the photos by scripts/make_textures.py; the json gives the
   // real size in metres of one tile so the courses come out at 7.7 cm.
@@ -159,7 +160,8 @@ export function createMaterials(renderer, manager) {
     floorDark: new THREE.MeshStandardMaterial({ color: 0x6f6a63, map: tileAlbedo, bumpMap: tileBump, bumpScale: 0.6, roughness: 0.45 }),
     darkFloor: new THREE.MeshStandardMaterial({ color: 0x1b1a19, roughness: 0.9 }),
     ceiling: new THREE.MeshStandardMaterial({ color: 0xf1f0ec, map: concrete, roughness: 1, emissive: 0x2a2a2a }),
-    planks: new THREE.MeshStandardMaterial({ color: 0xe9e6df, map: planks, roughness: 0.95, emissive: 0x1e1c18 }),
+    // (lit only by bounce: the pendants shine down)
+    planks: new THREE.MeshStandardMaterial({ color: 0xe9e6df, map: planks, roughness: 0.95, emissive: 0x3a362f }),
     darkCeiling: new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 1 }),
     beam: new THREE.MeshStandardMaterial({ color: 0x2f3033, roughness: 0.6, metalness: 0.4 }),
     // furniture & fixtures

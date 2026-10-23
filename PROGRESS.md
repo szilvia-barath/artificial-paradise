@@ -1,7 +1,7 @@
 # PROGRESS: Artificial Paradise, Digital Exhibition
 
 ## Status
-- [x] **M1 Skeleton + deploy**: Vite + Three.js, first-person controls (pointer lock + WASD / arrows, on-screen keycaps you can hold with the mouse and that light up with the real keys, scroll wheel to walk forward and back, Shift or the on-screen ⇧ to run; touch joystick + drag look), wall collision, loader + Enter, GitHub Pages workflow.
+- [x] **M1 Skeleton + deploy**: Vite + Three.js, first-person controls (pointer lock + mouse look; ↑/↓ or W/S or the scroll wheel to walk, ←/→ to turn, A/D to step sideways, Shift or the on-screen ⇧ to run; on-screen keycaps you can hold with the mouse, lit by the real keys; zoom up to 4× with +/−, Ctrl+scroll / trackpad pinch, the on-screen magnifiers or a two-finger pinch on phones, 0 or the readout resets; touch joystick + drag look), wall collision, loader + Enter, GitHub Pages workflow.
 - [x] **M2 The art** (redone as a reconstruction):
   - Room 1 is parametric (`R1` in `src/world/layout.js`; walls, stairs, bench, radiators, windows, Paradise Factory, lights and the Room 1 hangs all follow it). The 360° panorama solve gave 4.5 × 6.55 m, but the owner reports the real room is larger (little space between the last stair and the first painting), so it is **provisionally 5.0 × 7.0 m** until the owner's tape measurements arrive. The Room 2 doorway sits in a 55 cm recess between two thick piers (z 3.70–4.55), plinths either side. Street wall, south → north: bench L, small radiator + window, screen (#3), big radiator + round-vent window, stair opening. Plant at (1.85, 3.35), hydroponic pipe along x 1.27. Spawn faces Human as Error VI (what you see coming down the stairs).
   - Scale confirmed by the OpenStreetMap outline of Damjanich utca 39 (corner building; its Murányi utca wing is 26.5 m deep, the reconstructed basement is 26.1 m outer length). Minimap shows true north (rooms run towards bearing 146° from the Damjanich utca front).
@@ -15,7 +15,8 @@
   - [x] Loading page redesigned in the exhibition's key-visual style: the Supertree collage as background (poster logotype removed so it never shows behind the panel; portrait crop for phones), film grain, a white panel with the blue `|Artificial| |Paradise| KristofLab` logotype, blue monospace text and an outlined `| Enter |` button. Assets in `public/brand/`.
   - [x] OG image (`public/og.jpg`) from the key visual.
   - [x] Hungarian version: all texts in `src/i18n/en.json` / `hu.json`, language switch in a slim navbar (About · Works · Behind the scenes · EN/HU) that also works on the title screen, and a slim footer (credits, Instagram). Both fade out while walking. The switch is live: panels, viewer, tour captions, room labels and the in-world wall labels and sheets re-render. A small boot chunk translates the title screen before the 3D engine loads.
-  - [ ] Phone performance pass.
+  - [x] Render quality: baked ambient occlusion from the floor plan (`src/world/ao.js`: floors darken along walls and furniture, walls towards floor and ceiling; one texture fetch), Khronos PBR Neutral tone mapping so the artworks keep their colours, lighter grain and chromatic aberration, 16× anisotropic filtering on desktop, track lights lowered and the Room 2 pendant made a downward spot (no ceiling hotspots), 1600 px detail images streamed in for the paintings and prints you stand at or zoom in on (at most 8 at a time on desktop, 3 on phones), up to 2× pixel ratio on desktop with the adaptive resolution stepping down when frames slow, FXAA on phones.
+  - [ ] Phone performance pass on real devices.
 
 ## Next
 1. Real video files for #3 (screen), 6, 7, 8, 15, 16, 17 would replace the stills (put them in `public/video/` and point `frames`/a new `video` field at them).

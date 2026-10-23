@@ -1,6 +1,7 @@
-// On-screen movement keys (desktop). Holding a keycap with the mouse walks like the
-// real key; the real keys light the keycaps up, so the cluster doubles as a legend.
-// The Shift keycap toggles running, since a mouse can't hold two keycaps at once.
+// On-screen keys: walk, turn and zoom (desktop), zoom only on touch. Holding a keycap
+// works like holding the real key; the real keys light the keycaps up, so the cluster
+// doubles as a legend. The Shift keycap toggles running, since a mouse can't hold two
+// keycaps at once.
 
 export function setupKeypad(el, controls) {
   const caps = [...el.querySelectorAll('[data-keys]')].map((cap) => ({ cap, codes: cap.dataset.keys.split(' ') }));
@@ -27,10 +28,16 @@ export function setupKeypad(el, controls) {
     cap.addEventListener('lostpointercapture', up);
   }
 
+  const lit = (code) => {
+    if (code === 'ZoomIn') return controls.zoomDir() > 0;
+    if (code === 'ZoomOut') return controls.zoomDir() < 0;
+    return controls.isDown(code);
+  };
+
   // Called every frame: light the keycaps whose keys are down.
   return () => {
     for (const { cap, codes } of caps) {
-      const on = codes.some((c) => controls.isDown(c)) || (cap.hasAttribute('data-toggle') && controls.runLock);
+      const on = codes.some(lit) || (cap.hasAttribute('data-toggle') && controls.runLock);
       cap.classList.toggle('pressed', on);
     }
   };

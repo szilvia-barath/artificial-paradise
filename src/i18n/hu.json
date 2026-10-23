@@ -20,8 +20,8 @@
       "ready": "Kész",
       "enter": "Belépés",
       "hint": "Hanggal · fejhallgató ajánlott",
-      "howtoDesk": "WASD / nyilak vagy görgő: séta · egér: körülnézés · kattintás egy műre: megtekintés · Shift: futás · Esc: kilépés",
-      "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · koppintás egy műre: megtekintés",
+      "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · egér: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás · Esc: kilépés",
+      "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · csippentés: nagyítás · koppintás egy műre: megtekintés",
       "failure": "Ez a böngésző nem tudta elindítani a 3D kiállítást (WebGL szükséges). Próbáld meg egy friss Chrome, Firefox vagy Safari böngészővel."
     },
     "footer": {
@@ -46,12 +46,16 @@
       "north": "É",
       "keys": {
         "group": "Mozgásbillentyűk",
-        "forward": "Előre (W / ↑)",
-        "back": "Hátra (S / ↓)",
-        "left": "Lépés balra (A / ←)",
-        "right": "Lépés jobbra (D / →)",
+        "forward": "Előre (↑ / W)",
+        "back": "Hátra (↓ / S)",
+        "left": "Fordulás balra (←)",
+        "right": "Fordulás jobbra (→)",
         "run": "Futás (Shift): kattintásra be/ki",
-        "wheel": "görgess a sétához"
+        "wheel": "görgess a sétához",
+        "zoom": "Nagyítás",
+        "zoomIn": "Nagyítás (+)",
+        "zoomOut": "Kicsinyítés (−)",
+        "zoomReset": "Nagyítás visszaállítása (0)"
       }
     },
     "viewer": {
@@ -80,8 +84,8 @@
       "btsEyebrow": "Kulisszák mögött",
       "btsTitle": "Hogyan készült",
       "controls": "Irányítás",
-      "controlsDesk": "Asztali gépen: WASD / nyilak: séta (vagy tartsd lenyomva a képernyőn látható billentyűket), görgő: előre-hátra, egér: körülnézés, Shift: futás, kattintás egy műre: megnyitás, T: tárlatvezetés, M: némítás.",
-      "controlsTouch": "Érintőképernyőn: bal oldali kar: séta, húzás: körülnézés, koppintás egy műre: megnyitás."
+      "controlsDesk": "Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, egér: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre vagy E: megnyitás, T: tárlatvezetés, M: némítás. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek.",
+      "controlsTouch": "Érintőképernyőn: bal oldali kar: séta, húzás: körülnézés, csippentés: nagyítás, koppintás egy műre: megnyitás."
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. 01. 10–31."

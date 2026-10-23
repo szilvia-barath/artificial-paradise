@@ -1,14 +1,17 @@
 import * as THREE from 'three';
 import { EYE, OBSTACLES } from './world/layout.js';
 
-// First-person controls: pointer-lock mouse look + WASD on desktop (also held through
-// the on-screen keys), the scroll wheel to glide forward and back, virtual joystick +
-// drag-to-look on touch devices. Collision is resolved in 2D against wall segments and
-// furniture boxes (circle vs. segment).
+// First-person controls: pointer-lock mouse look on desktop; W/S or ↑/↓ to walk, ←/→ to
+// turn (so the keyboard alone is enough), A/D to step sideways (also held through the on-screen keys); the scroll
+// wheel glides forward and back; +/− (Ctrl+wheel, trackpad or two-finger pinch) zoom.
+// Virtual joystick + drag-to-look on touch devices. Collision is resolved in 2D against
+// wall segments and furniture boxes (circle vs. segment).
 
 const RADIUS = 0.28;
 const WALK = 1.9;
 const RUN = 3.6;
+const TURN = 1.75; // rad/s at full key turn (~100°/s)
+export const MAX_ZOOM = 4;
 
 export class FirstPersonControls {
   constructor(camera, dom, segments) {
@@ -23,6 +26,12 @@ export class FirstPersonControls {
     this.held = new Set(); // on-screen keys (see press/release)
     this.runLock = false; // the on-screen Shift toggles running
     this.glide = 0; // m/s along the view, from the scroll wheel; decays
+    this.turn = 0; // current key-turn rate, eased
+    this.zoom = 1; // camera magnification (main.js divides the field of view by it)
+    this.zoomTarget = 1;
+    this.zoomEnabled = false; // zoom also works during the tour, unlike walking
+    this.zoomHeld = 0; // seconds a zoom key has been held
+    this.zoomKeys = new Map(); // key code -> +1 / -1, from e.key so any layout works
     this.joy = new THREE.Vector2(0, 0);
     this.locked = false;
     this.bob = 0;
@@ -70,7 +79,8 @@ export class FirstPersonControls {
 
   press(code) {
     this.held.add(code);
-    if (this.onManualMove) this.onManualMove();
+    if (code === 'ZoomIn' || code === 'ZoomOut') this.zoomBy(code === 'ZoomIn' ? 1.25 : 0.8);
+    else if (this.onManualMove) this.onManualMove();
   }
 
   release(code) {
@@ -81,6 +91,24 @@ export class FirstPersonControls {
     return this.keys.has(code) || this.held.has(code);
   }
 
+  zoomBy(f) {
+    if (!this.zoomEnabled) return;
+    this.zoomTarget = Math.max(1, Math.min(MAX_ZOOM, this.zoomTarget * f));
+  }
+
+  resetZoom(now = false) {
+    this.zoomTarget = 1;
+    if (now) this.zoom = 1;
+  }
+
+  zoomDir() {
+    let d = 0;
+    for (const v of this.zoomKeys.values()) d += v;
+    if (this.held.has('ZoomIn')) d += 1;
+    if (this.held.has('ZoomOut')) d -= 1;
+    return Math.sign(d);
+  }
+
   _bindDesktop() {
     document.addEventListener('pointerlockchange', () => {
       this.locked = document.pointerLockElement === this.dom;
@@ -88,8 +116,8 @@ export class FirstPersonControls {
     });
     document.addEventListener('mousemove', (e) => {
       if (!this.locked || !this.enabled) return;
-      this.yaw -= e.movementX * 0.0022;
-      this.pitch -= e.movementY * 0.0022;
+      this.yaw -= (e.movementX * 0.0022) / this.zoom;
+      this.pitch -= (e.movementY * 0.0022) / this.zoom;
       this.pitch = Math.max(-1.25, Math.min(1.25, this.pitch));
     });
     // Unlocked desktop fallback: drag to look
@@ -109,8 +137,8 @@ export class FirstPersonControls {
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       moved += Math.abs(dx) + Math.abs(dy);
-      this.yaw -= dx * 0.004;
-      this.pitch = Math.max(-1.25, Math.min(1.25, this.pitch - dy * 0.004));
+      this.yaw -= (dx * 0.004) / this.zoom;
+      this.pitch = Math.max(-1.25, Math.min(1.25, this.pitch - (dy * 0.004) / this.zoom));
       lastX = e.clientX;
       lastY = e.clientY;
     });
@@ -121,18 +149,32 @@ export class FirstPersonControls {
     });
     window.addEventListener('keydown', (e) => {
       if (e.target && (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA')) return;
+      if (e.ctrlKey || e.metaKey || e.altKey) return; // leave browser shortcuts (Ctrl +/−) alone
       this.keys.add(e.code);
+      const z = e.key === '+' || e.key === '=' ? 1 : e.key === '-' || e.key === '_' ? -1 : 0;
+      if (z) {
+        if (!e.repeat) this.zoomBy(z > 0 ? 1.25 : 0.8);
+        this.zoomKeys.set(e.code, z);
+      } else if (e.key === '0' && this.zoomEnabled) this.resetZoom();
     });
-    window.addEventListener('keyup', (e) => this.keys.delete(e.code));
+    window.addEventListener('keyup', (e) => {
+      this.keys.delete(e.code);
+      this.zoomKeys.delete(e.code);
+    });
     window.addEventListener('blur', () => {
       this.keys.clear();
       this.held.clear();
+      this.zoomKeys.clear();
     });
     // Scroll wheel: rolling it away from you walks forward, towards you walks back. Each
     // notch is a short glide; a trackpad's stream of small deltas adds up to a steady one.
     this.dom.addEventListener('wheel', (e) => {
-      if (e.ctrlKey) return; // pinch-zoom
       e.preventDefault();
+      // Ctrl+wheel, and a trackpad pinch (which browsers report as Ctrl+wheel), zoom.
+      if (e.ctrlKey) {
+        this.zoomBy(Math.exp(Math.max(-0.25, Math.min(0.25, -e.deltaY * 0.01))));
+        return;
+      }
       if (this.onManualMove) this.onManualMove();
       if (!this.enabled) return;
       const px = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY;
@@ -177,16 +219,32 @@ export class FirstPersonControls {
         looks.set(t.identifier, { x: t.clientX, y: t.clientY, sx: t.clientX, sy: t.clientY, t0: performance.now() });
       }
     }, { passive: true });
+    // Two fingers on the view pinch to zoom instead of looking.
+    let pinch = null;
+    const spread = () => {
+      const [a, b] = [...looks.values()];
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    };
     window.addEventListener('touchmove', (e) => {
       for (const t of e.changedTouches) {
         if (t.identifier === joyId) { moveJoy(t); continue; }
         const l = looks.get(t.identifier);
-        if (!l || !this.enabled) continue;
-        this.yaw -= (t.clientX - l.x) * 0.0055;
-        this.pitch = Math.max(-1.2, Math.min(1.2, this.pitch - (t.clientY - l.y) * 0.0045));
+        if (!l) continue;
+        if (this.enabled && looks.size === 1) {
+          this.yaw -= ((t.clientX - l.x) * 0.0055) / this.zoom;
+          this.pitch = Math.max(-1.2, Math.min(1.2, this.pitch - ((t.clientY - l.y) * 0.0045) / this.zoom));
+        }
         l.x = t.clientX;
         l.y = t.clientY;
       }
+      if (looks.size === 2 && this.zoomEnabled) {
+        if (!pinch) pinch = { d0: spread(), z0: this.zoomTarget };
+        else {
+          this.zoomTarget = Math.max(1, Math.min(MAX_ZOOM, (pinch.z0 * spread()) / Math.max(1, pinch.d0)));
+          this.zoom = this.zoomTarget;
+        }
+        for (const l of looks.values()) l.pinched = true;
+      } else pinch = null;
       if (joyId !== null) e.preventDefault();
     }, { passive: false });
     const end = (e) => {
@@ -195,7 +253,7 @@ export class FirstPersonControls {
         const l = looks.get(t.identifier);
         if (l) {
           const dist = Math.hypot(t.clientX - l.sx, t.clientY - l.sy);
-          if (dist < 10 && performance.now() - l.t0 < 350 && this.enabled && this.onTap) {
+          if (!l.pinched && dist < 10 && performance.now() - l.t0 < 350 && this.enabled && this.onTap) {
             this.onTap(t.clientX, t.clientY, true);
           }
           looks.delete(t.identifier);
@@ -212,14 +270,17 @@ export class FirstPersonControls {
     let s = 0;
     if (k('KeyW') || k('ArrowUp')) f += 1;
     if (k('KeyS') || k('ArrowDown')) f -= 1;
-    if (k('KeyD') || k('ArrowRight')) s += 1;
-    if (k('KeyA') || k('ArrowLeft')) s -= 1;
+    if (k('KeyD')) s += 1;
+    if (k('KeyA')) s -= 1;
+    let turn = 0;
+    if (k('ArrowLeft')) turn += 1;
+    if (k('ArrowRight')) turn -= 1;
     f -= this.joy.y;
     s += this.joy.x;
     const len = Math.hypot(f, s);
     if (len > 1) { f /= len; s /= len; }
     const run = this.runLock || k('ShiftLeft') || k('ShiftRight') || Math.hypot(this.joy.x, this.joy.y) > 0.92;
-    return { f, s, speed: run ? RUN : WALK };
+    return { f, s, turn, speed: run ? RUN : WALK, run };
   }
 
   _collide() {
@@ -252,8 +313,19 @@ export class FirstPersonControls {
   }
 
   update(dt) {
+    // Zoom: hold a zoom key (after the first step) to keep zooming; ease towards target.
+    const zd = this.zoomEnabled ? this.zoomDir() : 0;
+    this.zoomHeld = zd ? this.zoomHeld + dt : 0;
+    if (zd && this.zoomHeld > 0.3) this.zoomTarget = Math.max(1, Math.min(MAX_ZOOM, this.zoomTarget * Math.exp(zd * dt * 1.4)));
+    this.zoom = Math.exp(Math.log(this.zoom) + (Math.log(this.zoomTarget) - Math.log(this.zoom)) * (1 - Math.exp(-dt * 10)));
+    if (Math.abs(this.zoom - this.zoomTarget) < 0.002) this.zoom = this.zoomTarget;
+
     if (this.enabled) {
-      const { f, s, speed } = this._input();
+      const { f, s, turn, speed, run } = this._input();
+      // Key turning eases in and out; slower when zoomed in, like the mouse.
+      const tr = (turn * TURN * (run ? 1.5 : 1)) / this.zoom;
+      this.turn += (tr - this.turn) * (1 - Math.exp(-dt * 8));
+      this.yaw += this.turn * dt;
       const sin = Math.sin(this.yaw);
       const cos = Math.cos(this.yaw);
       // forward = (-sin, -cos), right = (cos, -sin)
@@ -273,6 +345,7 @@ export class FirstPersonControls {
       }
     } else {
       this.glide = 0;
+      this.turn = 0;
     }
     this._apply(dt);
   }

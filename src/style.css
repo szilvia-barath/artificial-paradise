@@ -507,6 +507,7 @@ body.locked #keypad { opacity: 0.5; pointer-events: none; }
   transform: translateY(1px);
 }
 .cap.pressed i { color: var(--accent); }
+.cap svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .k-w { grid-column: 3; grid-row: 1; }
 .k-shift { grid-column: 1; grid-row: 2; font-size: 14px; }
 .k-a { grid-column: 2; grid-row: 2; }
@@ -529,6 +530,36 @@ body.locked #keypad { opacity: 0.5; pointer-events: none; }
   color: #c9c9c6;
 }
 .wheel b { color: var(--fg); }
+/* Zoom keys: beside the keypad on desktop, on the right above the toolbar on touch */
+#zoompad {
+  position: absolute;
+  left: calc(18px + 188px + 12px);
+  bottom: calc(var(--foot-h) + 8px + var(--safe-b) + 30px);
+  display: grid;
+  grid-template-rows: 40px 40px;
+  gap: 4px;
+  width: 40px;
+  pointer-events: auto;
+  transition: opacity 0.4s ease;
+}
+body.locked #zoompad { opacity: 0.5; pointer-events: none; }
+body.touch #zoompad { left: auto; right: 14px; bottom: calc(84px + var(--safe-b)); grid-template-rows: 46px 46px; width: 46px; }
+#zoom-level {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--nav-h) + 12px);
+  transform: translateX(-50%);
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  background: var(--glass);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--fg);
+  pointer-events: auto;
+}
+#zoom-level span { color: var(--accent); }
+body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bottom: calc(84px + 108px + var(--safe-b)); }
+
 /* a small mouse with its wheel rolling */
 .wheel b {
   position: relative;

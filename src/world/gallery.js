@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { wallFrame, ROOMS } from './layout.js';
+import { PLANT, PIPE } from './paradiseFactory.js';
 
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as
 // glowing flat screens (with a subtle scanline/glitch shader), installations and the
@@ -73,8 +74,8 @@ const screenFrag = /* glsl */ `
 // Clickable volumes for the installations: [cx, cy, cz, sx, sy, sz]
 const HIT_BOXES = {
   'w03-paradise-factory': [
-    [1.85, 1.3, 3.35, 0.9, 2.6, 0.9], // plant, tank and LED bars
-    [1.27, 1.1, 3.35, 0.35, 0.6, 2.45], // hydroponic pipe
+    [PLANT.x, 1.3, PLANT.z, 0.9, 2.6, 0.9], // plant, tank and LED bars
+    [PIPE.x, 1.1, (PIPE.z0 + PIPE.z1) / 2, 0.35, 0.6, PIPE.z1 - PIPE.z0], // hydroponic pipe
   ],
   'w16-let-it-flow': [
     [25.6, 1.2, 3.83, 0.12, 2.4, 4.2], // projection on the end wall

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { OBSTACLES } from './layout.js';
+import { OBSTACLES, R1 } from './layout.js';
 
 // Furniture and fixtures, placed from the photos. Kept low-poly; static meshes are
 // merged per material at the end, repeated parts are instanced.
@@ -86,10 +86,10 @@ export function buildProps(materials) {
   // ================================================================ Room 1
   // Positions measured in the 360° panorama (see layout.js). WX: west wall face,
   // EX: face of the two piers on the Room 2 side, RX: back of the doorway recess.
-  const WX = 0.35;
-  const EX = 4.85;
-  const RX = 5.4;
-  const SZ = 6.55;
+  const WX = R1.west;
+  const EX = R1.east;
+  const RX = R1.recess;
+  const SZ = R1.D;
 
   // Stairs along the north wall, rising west through the wall into the stair shaft
   // (DSC_0013–0016, panorama). Treads are dark, the open side is a white brick
@@ -97,7 +97,7 @@ export function buildProps(materials) {
   {
     const run = 0.26;
     const rise = 0.19;
-    const foot = 2.69;
+    const foot = EX - 2.54; // last step ends ~50 cm before Wrong Data Landscape Dresden
     const steps = 17;
     const width = 1.95;
     const inRoom = Math.round((foot - WX) / run);
@@ -138,7 +138,7 @@ export function buildProps(materials) {
     // folding chairs stacked on the steps against the north wall
     for (let k = 0; k < 2; k++) {
       for (let j = 0; j < 4; j++) {
-        const x = 2.05 - k * 0.55;
+        const x = foot - 0.65 - k * 0.55;
         const step = Math.floor((foot - x) / run);
         const ch = wireChair(materials, gridMat);
         place(ch, x, rise * (step + 1) + j * 0.05, 0.32 + j * 0.035, -Math.PI / 2);
@@ -153,10 +153,10 @@ export function buildProps(materials) {
     const H = 0.45;
     g.add(slab(materials.bench, WX, EX - 0.02, 0, H - 0.03, SZ - 0.43, SZ));
     g.add(slab(materials.benchTop, WX, EX, H - 0.03, H, SZ - 0.47, SZ));
-    g.add(slab(materials.bench, WX, WX + 0.47, 0, H - 0.03, 5.68, SZ - 0.43));
-    g.add(slab(materials.benchTop, WX, WX + 0.51, H - 0.03, H, 5.64, SZ - 0.43));
+    g.add(slab(materials.bench, WX, WX + 0.47, 0, H - 0.03, SZ - 0.87, SZ - 0.43));
+    g.add(slab(materials.benchTop, WX, WX + 0.51, H - 0.03, H, SZ - 0.91, SZ - 0.43));
     obstacle(WX, EX, SZ - 0.49, SZ);
-    obstacle(WX, WX + 0.52, 5.62, SZ - 0.43);
+    obstacle(WX, WX + 0.52, SZ - 0.93, SZ - 0.43);
     // two white heating pipes on the wall just above the bench
     for (const y of [0.56, 0.63]) {
       const p = cyl(0.016, 0.016, EX - WX, materials.white, 8);
@@ -188,12 +188,12 @@ export function buildProps(materials) {
     g.add(r);
   };
   radiator(WX + 0.08, 3.5, Math.PI / 2, 0.94);
-  radiator(WX + 0.08, 5.46, Math.PI / 2, 0.42);
+  radiator(WX + 0.08, SZ - 1.09, Math.PI / 2, 0.42);
   radiator(EX - 0.08, 5.59, -Math.PI / 2, 0.94);
 
   // High basement windows on the street wall (night: dark glass): the one with the
   // round vent beside the stairs, the other above the small radiator by the bench
-  for (const [z, w] of [[3.69, 0.81], [5.49, 0.75]]) {
+  for (const [z, w] of [[3.69, 0.81], [SZ - 1.06, 0.75]]) {
     const y0 = 1.78;
     const y1 = 2.56;
     g.add(slab(materials.whiteBrick, WX - 0.4, WX + 0.06, y0 - 0.06, y0, z - w / 2 - 0.06, z + w / 2 + 0.06)); // sill
@@ -304,8 +304,7 @@ export function buildProps(materials) {
     const low = cyl(0.03, 0.03, 9.9, pipeMat, 8);
     low.rotation.z = Math.PI / 2;
     g.add(place(low, 20.7, 0.42, 1.78));
-    for (const [x, y0] of [[19.9, 0.42], [21.4, 1.9], [22.15, 1.9], [24.4, 0.42]]) {
-      const r = x === 21.4 || x === 22.15 ? 0.065 : 0.03;
+    for (const [x, y0, r] of [[18.9, 0.42, 0.03], [20.35, 1.9, 0.065], [21.05, 1.9, 0.065], [24.4, 0.42, 0.03]]) {
       g.add(place(cyl(r, r, 2.9 - y0, pipeMat, 10), x, (2.9 + y0) / 2, 1.73 + r + 0.02));
     }
     // gas meter by the partition (DSC_0098–0101)
@@ -326,8 +325,8 @@ export function buildProps(materials) {
   // ================================================================ track lights
   {
     const rails = [
-      { x0: 0.9, x1: 4.4, z: 2.9, y: 3.0 },
-      { x0: 0.9, x1: 4.4, z: 5.0, y: 3.0 },
+      { x0: R1.west + 0.6, x1: R1.east - 0.45, z: 2.9, y: 3.0 },
+      { x0: R1.west + 0.6, x1: R1.east - 0.45, z: R1.D * 0.74, y: 3.0 },
       { x0: 10.3, x1: 15.1, z: 3.83, y: 2.75 },
     ];
     const per = 4;

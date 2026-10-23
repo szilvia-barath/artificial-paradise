@@ -4,7 +4,7 @@
 // (camera solved from the corner bearings), brick courses, floor tiles and the
 // canvas sizes on the works list. Cross-check with OpenStreetMap: the gallery is in
 // the basement of Damjanich utca 39, a corner building whose wing along Murányi utca
-// is 26.5 m from the street front to the back; this basement measures 26.1 m from
+// is 26.5 m from the street front to the back; this basement measures about 26.5 m from
 // the outer face of Room 1's west wall to the outer face of Room 4's end wall.
 // +x (Room 1 -> Room 4) points to bearing 146° (south-east); Room 1's window wall
 // faces Damjanich utca.
@@ -21,16 +21,22 @@
 
 export const EYE = 1.62;
 
+// Room 1's size is PROVISIONAL until the owner's tape measurements arrive: change W and D
+// here and the walls, stairs, bench, windows and Paradise Factory follow. The panorama
+// measurement gave 4.5 x 6.55 m; the owner remembers the room larger.
+export const R1 = { W: 5.0, D: 7.0, east: 4.85, recess: 5.4 };
+R1.west = R1.east - R1.W;
+
 export const ROOMS = [
   {
     id: 'r1',
     name: 'Room 1',
     subtitle: 'Paintings · Paradise Factory',
-    x0: 0.35, x1: 4.85, z0: 0, z1: 6.55,
+    x0: R1.west, x1: R1.east, z0: 0, z1: R1.D,
     ceiling: 3.0,
     // Foot of the stairs, facing the way you walk off them: Human as Error VI ahead,
     // Wrong Data Landscape Dresden on the left.
-    spawn: { x: 3.05, z: 1.0, look: { x: 4.85, z: 2.3 } },
+    spawn: { x: R1.east - 2.2, z: 1.0, look: { x: R1.east, z: 2.3 } },
   },
   {
     id: 'r2',
@@ -72,24 +78,23 @@ const T = 0.4; // outer wall thickness
 
 export const BLOCKS = [
   // ---------- Room 1 ----------
-  // Measured from the 360° panorama (camera solved from the corners, the four canvases
-  // of known size and the floor line), not scaled from the room sheet, which draws this
-  // room too large: 4.5 x 6.55 m inside, 2.96 m high.
+  // Layout from the 360° panorama (camera solved from the corners, the four canvases of
+  // known size and the floor line); overall size from R1 above.
   // west wall (street side), with the opening the stairs climb through
-  { x0: -0.05, x1: 0.35, z0: 1.95, z1: 6.55 + T, y1: 3.0, mat: 'whiteBrick' },
-  { x0: -0.05, x1: 0.35, z0: -T, z1: 0, y1: 3.0, mat: 'whiteBrick' },
+  { x0: R1.west - T, x1: R1.west, z0: 1.95, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick' },
+  { x0: R1.west - T, x1: R1.west, z0: -T, z1: 0, y1: 3.0, mat: 'whiteBrick' },
   // north wall
-  { x0: -0.05, x1: 4.85, z0: -T, z1: 0, y1: 3.0, mat: 'whiteBrick' },
+  { x0: R1.west - T, x1: R1.east, z0: -T, z1: 0, y1: 3.0, mat: 'whiteBrick' },
   // south wall
-  { x0: -0.05, x1: 4.85, z0: 6.55, z1: 6.55 + T, y1: 3.0, mat: 'whiteBrick' },
+  { x0: R1.west - T, x1: R1.east, z0: R1.D, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick' },
   // Room 1 | Room 2 wall: 1 m thick piers north (Human as Error VI) and south (text,
   // radiator); between them a 55 cm recess holding the doorway and two plinths
   // (DSC_0019–0023 and the panorama), doorway z 3.70–4.55
-  { x0: 4.85, x1: 5.85, z0: -T, z1: 3.2, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
-  { x0: 5.4, x1: 5.85, z0: 3.2, z1: 3.7, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
-  { x0: 5.4, x1: 5.85, z0: 3.7, z1: 4.55, y0: DOOR, y1: 3.0, mat: 'whiteBrick', reveal: 'warmBrick' },
-  { x0: 5.4, x1: 5.85, z0: 4.55, z1: 5.0, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
-  { x0: 4.85, x1: 5.85, z0: 5.0, z1: 6.55 + T, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
+  { x0: R1.east, x1: 5.85, z0: -T, z1: 3.2, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
+  { x0: R1.recess, x1: 5.85, z0: 3.2, z1: 3.7, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
+  { x0: R1.recess, x1: 5.85, z0: 3.7, z1: 4.55, y0: DOOR, y1: 3.0, mat: 'whiteBrick', reveal: 'warmBrick' },
+  { x0: R1.recess, x1: 5.85, z0: 4.55, z1: 5.0, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
+  { x0: R1.east, x1: 5.85, z0: 5.0, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
 
   // ---------- Room 2 ----------
   // north: wall in front of the storage alcove (not accessible), gated opening x 8.65–9.70
@@ -134,18 +139,18 @@ export const BLOCKS = [
 
 // Floors and ceilings (rectangles); doorway soffits come from the lintel blocks.
 // Room 1's ceiling has the stairwell opening.
-export const STAIRWELL = { x0: 0.35, x1: 1.75, z0: 0, z1: 1.95 };
-export const R1_WEST_OUTER = -0.05; // outer face of Room 1's west wall (the stair shaft starts here)
+export const STAIRWELL = { x0: R1.west, x1: R1.west + 1.4, z0: 0, z1: 1.95 };
+export const R1_WEST_OUTER = R1.west - T; // outer face of Room 1's west wall (the stair shaft starts here)
 export const FLOORS = [
-  { x0: 0.25, x1: 5.6, z0: -0.1, z1: 6.65, mat: 'floor' },
+  { x0: R1.west - 0.1, x1: 5.6, z0: -0.1, z1: R1.D + 0.1, mat: 'floor' },
   { x0: 5.4, x1: 9.85, z0: 1.6, z1: 6.0, mat: 'floor' },
   { x0: 9.7, x1: 15.6, z0: 1.6, z1: 6.0, mat: 'floor' },
   { x0: 15.6, x1: 25.7, z0: 1.6, z1: 6.0, mat: 'floorDark' },
   { x0: 5.85, x1: 9.7, z0: 0, z1: 1.5, mat: 'darkFloor', y: 0.002 },
 ];
 export const CEILINGS = [
-  { x0: 0.35, x1: 4.85, z0: 0, z1: 6.55, y: 3.0, mat: 'ceiling', hole: STAIRWELL },
-  { x0: 4.85, x1: 5.4, z0: 3.2, z1: 5.0, y: 3.0, mat: 'ceiling' },
+  { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: 3.0, mat: 'ceiling', hole: STAIRWELL },
+  { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: 3.0, mat: 'ceiling' },
   { x0: 5.85, x1: 9.7, z0: 1.73, z1: 5.94, y: 2.75, mat: 'planks' },
   { x0: 5.85, x1: 9.7, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling' },
   { x0: 10.05, x1: 15.45, z0: 1.73, z1: 5.94, y: 2.75, mat: 'ceiling' },

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { OBSTACLES } from './layout.js';
+import { OBSTACLES, R1 } from './layout.js';
 
 // #3 Paradise Factory (2024), modelled from the Room 1 panorama and DSC_0011–0015:
 //  - a white PVC pipe of lettuce seedlings hanging on chains under an LED tube,
@@ -9,8 +9,11 @@ import { OBSTACLES } from './layout.js';
 //    by a hanging bottle, between two floor-to-ceiling LED bars.
 // Positions come from the panorama (camera solved from the corners and the canvases).
 
-const PIPE = { x: 1.27, z0: 2.14, z1: 4.55, y: 1.0 };
-export const PLANT = { x: 1.85, z: 3.35 };
+// panorama positions (4.5 x 6.55 m room) scaled to the current room size
+const sx = R1.W / 4.5;
+const sz = R1.D / 6.55;
+export const PIPE = { x: R1.west + 0.92 * sx, z0: 2.14, z1: R1.D - 2.0, y: 1.0 };
+export const PLANT = { x: R1.west + 1.5 * sx, z: 3.35 * sz };
 const CEIL = 3.0;
 
 function rng(seed) {

@@ -132,13 +132,13 @@
       "image": "img/w03-paradise-factory",
       "photo": "_01_panorama",
       "anchor": {
-        "x": 1.85,
+        "x": 1.52,
         "y": 1.2,
-        "z": 3.35
+        "z": 3.58
       },
       "view": {
-        "x": 3.4,
-        "z": 4.6
+        "x": 3.2,
+        "z": 4.9
       },
       "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
     },
@@ -160,8 +160,8 @@
       ],
       "hang": {
         "face": "+x",
-        "at": 0.35,
-        "along": 4.84,
+        "at": -0.15,
+        "along": 5.29,
         "y": 1.35,
         "w": 0.32,
         "h": 0.4
@@ -182,8 +182,8 @@
       "photo": "DSC_0029",
       "hang": {
         "face": "-z",
-        "at": 6.55,
-        "along": 1.69,
+        "at": 7.0,
+        "along": 1.34,
         "y": 1.4,
         "w": 1.2,
         "h": 0.9
@@ -204,8 +204,8 @@
       "photo": "DSC_0026",
       "hang": {
         "face": "-z",
-        "at": 6.55,
-        "along": 3.7,
+        "at": 7.0,
+        "along": 3.57,
         "y": 1.38,
         "w": 1.2,
         "h": 0.9
@@ -426,7 +426,7 @@
       "hang": {
         "face": "-z",
         "at": 5.94,
-        "along": 18.13,
+        "along": 18.6,
         "y": 1.6,
         "w": 1.21,
         "h": 0.68
@@ -469,7 +469,7 @@
       "hang": {
         "face": "+z",
         "at": 1.73,
-        "along": 19.35,
+        "along": 22.2,
         "y": 1.5,
         "w": 0.94,
         "h": 0.53

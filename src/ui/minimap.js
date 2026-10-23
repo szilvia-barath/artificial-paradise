@@ -8,7 +8,7 @@ const NORTH = [-0.829, -0.56];
 
 export function setupMinimap(canvas, segments, works, onJump) {
   const ctx = canvas.getContext('2d');
-  const bounds = { x0: -0.6, x1: 26.2, z0: -0.6, z1: 7.9 };
+  const bounds = { x0: -1.0, x1: 26.2, z0: -0.6, z1: 7.6 };
   let W = 0;
   let H = 0;
   let s = 1;

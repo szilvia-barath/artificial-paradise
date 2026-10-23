@@ -108,7 +108,7 @@ const viewer = setupViewer(data, {
 
 // Guided tour: the works in catalogue order, routed through the doorways.
 const DOORS = {
-  'r1>r2': [[4.95, 5.24], [6.35, 5.24]],
+  'r1>r2': [[4.95, 4.12], [6.35, 4.12]],
   'r2>r3': [[9.25, 3.4], [10.5, 3.4]],
   'r3>r4': [[15.05, 3.9], [16.15, 3.9]],
 };

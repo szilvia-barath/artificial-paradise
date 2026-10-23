@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, ROOMS } from './layout.js';
+import { BLOCKS, FLOORS, CEILINGS, STAIRWELL, R1_WEST_OUTER, ROOMS } from './layout.js';
 
 // Builds the basement from the solid wall blocks, floors and ceilings in layout.js,
 // plus Room 4's brick vaults and the stair shaft. UVs are world metres (u along the
@@ -149,15 +149,16 @@ export function buildArchitecture(materials) {
   {
     const s = STAIRWELL;
     const top = 5.6;
-    const west = -2.3;
+    const out = R1_WEST_OUTER;
+    const west = out - 2.0;
     wallQuad('shaft', '+z', s.z0, west, s.x1, 3.0, top);
-    wallQuad('shaft', '+z', s.z0, west, -0.4, 0, 3.0);
+    wallQuad('shaft', '+z', s.z0, west, out, 0, 3.0);
     wallQuad('shaft', '-z', s.z1, west, s.x1, 3.0, top);
-    wallQuad('shaft', '-z', s.z1, west, -0.4, 0, 3.0);
+    wallQuad('shaft', '-z', s.z1, west, out, 0, 3.0);
     wallQuad('shaft', '-x', s.x1, s.z0, s.z1, 3.0, top);
     wallQuad('shaft', '+x', west, s.z0, s.z1, 0, top);
     flat('darkCeiling', { x0: west, x1: s.x1, z0: s.z0, z1: s.z1 }, top, false);
-    flat('darkFloor', { x0: west, x1: -0.4, z0: s.z0, z1: s.z1 }, 0, true);
+    flat('darkFloor', { x0: west, x1: out, z0: s.z0, z1: s.z1 }, 0, true);
   }
 
   for (const [key, geos] of buckets) {

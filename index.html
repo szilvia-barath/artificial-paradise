@@ -6,6 +6,11 @@
     <title>Artificial Paradise: Digital Exhibition</title>
     <meta name="description" content="Walk through KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser." />
     <meta name="theme-color" content="#0b0c0e" />
+    <meta name="color-scheme" content="dark" />
+    <!-- Styles load from the head (render-blocking) so the title screen never flashes
+         unstyled while the 3D engine is still downloading. -->
+    <style>html, body { background: #0b0c0e; color: #f2f1ed; }</style>
+    <link rel="stylesheet" href="/src/style.css" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
 
@@ -96,6 +101,7 @@
       <div id="panel-body"></div>
     </section>
 
+    <noscript><p class="noscript">This exhibition needs JavaScript and WebGL.</p></noscript>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

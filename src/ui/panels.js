@@ -18,6 +18,8 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
       ${data.credits.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}
     </dl>
     <h3>The real exhibition</h3>
+    <p>MAMŰ Galéria, ${esc(m.address)} (basement) ·
+      <a href="${esc(m.links.map)}" target="_blank" rel="noopener">map</a></p>
     <p>
       <a href="${esc(m.links.exhibition)}" target="_blank" rel="noopener">Artkartell: KristofLab, Artificial Paradise</a><br />
       <a href="${esc(m.links.gallery)}" target="_blank" rel="noopener">MAMŰ Gallery</a><br />

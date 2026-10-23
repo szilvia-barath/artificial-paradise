@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import './style.css';
 import data from './data/exhibition.json';
 import { ROOMS, EYE, roomAt, roomById } from './world/layout.js';
 import { createMaterials } from './world/materials.js';
@@ -20,6 +19,18 @@ import { setupMinimap } from './ui/minimap.js';
 const isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
 const lowPower = isTouch || (navigator.hardwareConcurrency || 8) <= 4;
 document.body.classList.toggle('touch', isTouch);
+
+// If the scene can't start (no WebGL, very old browser), say so on the title screen
+// instead of leaving it on "Preparing the basement…" for ever.
+let started = false;
+function showFailure() {
+  if (started) return;
+  const label = document.getElementById('progress-label');
+  label.textContent = 'This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari.';
+  label.classList.add('error');
+}
+window.addEventListener('error', showFailure);
+window.addEventListener('unhandledrejection', showFailure);
 
 // ---------------------------------------------------------------- renderer
 const canvas = document.getElementById('scene');
@@ -342,6 +353,8 @@ renderer.setAnimationLoop(frame);
 function markReady() {
   if (worldReady) return;
   worldReady = true;
+  started = true;
+  progressLabel.classList.remove('error');
   progressBar.style.width = '100%';
   progressLabel.textContent = 'Ready';
   enterBtn.disabled = false;

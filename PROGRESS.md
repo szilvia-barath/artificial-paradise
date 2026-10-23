@@ -3,7 +3,8 @@
 ## Status
 - [x] **M1 Skeleton + deploy**: Vite + Three.js, first-person controls (pointer lock + WASD, touch joystick + drag look), wall collision, loader + Enter, GitHub Pages workflow.
 - [x] **M2 The art** (redone as a reconstruction):
-  - Scale confirmed by the OpenStreetMap outline of Damjanich utca 39 (corner building; its Murányi utca wing is 26.5 m deep, the reconstructed basement is 26.47 m outer length). Minimap shows true north (rooms run towards bearing 146° from the Damjanich utca front).
+  - Room 1 re-measured from the 360° panorama (camera solved from the corners + the four canvases of known size + the floor line; bearings fit to ±1.5°): 4.5 × 6.55 m inside, 2.96 m high, smaller than the room sheet draws it. The Room 2 doorway sits in a 55 cm recess between two thick piers (z 3.70–4.55), plinths either side. Street wall, south → north: bench L, small radiator + window, screen (#3), big radiator + round-vent window, stair opening. Plant at (1.85, 3.35), hydroponic pipe along x 1.27. Spawn faces Human as Error VI (what you see coming down the stairs).
+  - Scale confirmed by the OpenStreetMap outline of Damjanich utca 39 (corner building; its Murányi utca wing is 26.5 m deep, the reconstructed basement is 26.1 m outer length). Minimap shows true north (rooms run towards bearing 146° from the Damjanich utca front).
   - Floor plan traced from the gallery's own room sheet (the plan + works list photographed in DSC_0049, also supplied by the owner) at 0.026 m per plan pixel, cross-checked with the Room 1 panorama (camera solved from corner bearings), brick courses (7.7 cm) and floor tiles (30 cm). Rooms run west → east: Room 1 (stairs, bench) → Room 2 (narrow: videos, table + chairs, bar; storage alcove and toilets not walkable) → Room 3 | Room 4, one long room split only by two wall stubs and a curtain.
   - All 17 works from the room sheet, with real titles, media, sizes and years, at their numbered spots; paintings at their canvas sizes; crops forced to the canvas proportions (`scripts/crops.json`).
   - Paradise Factory (#3) modelled in the middle of Room 1 (hydroponic pipe, ZZ plant on a drip, LED bars); position triangulated from the panorama.
@@ -22,7 +23,7 @@
 - Painting hanging heights come from the panorama and photos (±10 cm).
 - Outer walls are modelled 40 cm thick. If the real façade walls are thicker (old Budapest basements are often 60–90 cm), the rooms would be up to ~3% shorter than modelled.
 - The stair top continues into an invented dark shaft (not photographed).
-- GitHub Pages must be switched on once: Settings → Pages → Source "Deploy from a branch" → `gh-pages` / `(root)`.
+- **GitHub Pages is currently publishing `main` (raw source), which cannot run.** Settings → Pages → Build and deployment → Source "Deploy from a branch" → Branch `gh-pages` / `(root)` → Save. The workflow already builds into `gh-pages` on every push.
 
 ## How to continue
 `npm install && npm run dev` → http://localhost:5173. Floor plan + walls: `src/world/layout.js`. Content: `src/data/exhibition.json`. Furniture: `src/world/props.js`. Installations: `src/world/paradiseFactory.js`, `src/world/letItFlow.js`.

@@ -7,10 +7,10 @@ import { OBSTACLES } from './layout.js';
 //    parallel to the west wall;
 //  - in the middle of the room, a ZZ plant (Zamioculcas) in a clear plastic tank fed
 //    by a hanging bottle, between two floor-to-ceiling LED bars.
-// Positions come from triangulating the panorama (camera solved from the corners).
+// Positions come from the panorama (camera solved from the corners and the canvases).
 
-const PIPE = { x: 1.1, z0: 2.55, z1: 5.05, y: 1.05 };
-export const PLANT = { x: 2.28, z: 3.56 };
+const PIPE = { x: 1.27, z0: 2.14, z1: 4.55, y: 1.0 };
+export const PLANT = { x: 1.85, z: 3.35 };
 const CEIL = 3.0;
 
 function rng(seed) {
@@ -201,15 +201,15 @@ export function buildParadiseFactory(materials) {
     // clear supply hose across the floor to the hydroponic pipe
     const hose = new THREE.CatmullRomCurve3([
       new THREE.Vector3(x - 0.2, 0.02, z + 0.05),
-      new THREE.Vector3(1.8, 0.01, 4.2),
-      new THREE.Vector3(1.25, 0.01, 4.8),
+      new THREE.Vector3(1.6, 0.01, 3.95),
+      new THREE.Vector3(1.4, 0.01, 4.45),
       new THREE.Vector3(PIPE.x, 0.3, PIPE.z1 - 0.1),
       new THREE.Vector3(PIPE.x, PIPE.y - 0.05, PIPE.z1 - 0.05),
     ]);
     g.add(new THREE.Mesh(new THREE.TubeGeometry(hose, 40, 0.006, 5, false), materials.clearPlastic));
 
     // the two vertical LED bars, floor to ceiling, either side of the plant
-    for (const [px, pz] of [[x - 0.2, z + 0.2], [x + 0.2, z - 0.2]]) {
+    for (const [px, pz] of [[x - 0.15, z + 0.17], [x + 0.15, z - 0.17]]) {
       const bar = new THREE.Mesh(new THREE.BoxGeometry(0.03, CEIL - 0.02, 0.03), materials.black);
       bar.position.set(px, CEIL / 2, pz);
       g.add(bar);

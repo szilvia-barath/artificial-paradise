@@ -84,15 +84,23 @@ export function buildProps(materials) {
   const gridMat = wireGridMaterial();
 
   // ================================================================ Room 1
+  // Positions measured in the 360° panorama (see layout.js). WX: west wall face,
+  // EX: face of the two piers on the Room 2 side, RX: back of the doorway recess.
+  const WX = 0.35;
+  const EX = 4.85;
+  const RX = 5.4;
+  const SZ = 6.55;
+
   // Stairs along the north wall, rising west through the wall into the stair shaft
   // (DSC_0013–0016, panorama). Treads are dark, the open side is a white brick
   // stringer with a red-brick coping and a black railing.
   {
-    const run = 0.27;
-    const rise = 0.18;
-    const foot = 2.85;
-    const steps = 18;
-    const width = 2.1;
+    const run = 0.26;
+    const rise = 0.19;
+    const foot = 2.69;
+    const steps = 17;
+    const width = 1.95;
+    const inRoom = Math.round((foot - WX) / run);
     const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), materials.stair, steps);
     const m = new THREE.Matrix4();
     for (let i = 0; i < steps; i++) {
@@ -105,34 +113,32 @@ export function buildProps(materials) {
     // stringer wall: the stair profile extruded 0.15 m on the open (south) side
     const shape = new THREE.Shape();
     shape.moveTo(foot, 0);
-    for (let i = 0; i < 10; i++) {
-      shape.lineTo(foot - run * i, rise * (i + 1) + 0.06);
-    }
-    shape.lineTo(-0.02, rise * 10 + 0.06);
-    shape.lineTo(-0.02, 0);
+    for (let i = 0; i < inRoom; i++) shape.lineTo(foot - run * i, rise * (i + 1) + 0.06);
+    shape.lineTo(WX - 0.02, rise * inRoom + 0.06);
+    shape.lineTo(WX - 0.02, 0);
     shape.lineTo(foot, 0);
     const sg = new THREE.ExtrudeGeometry(shape, { depth: 0.15, bevelEnabled: false });
     const stringer = new THREE.Mesh(sg, materials.whiteBrick);
     stringer.position.z = width;
     g.add(stringer);
     // red brick coping along the top edge
-    const len = Math.hypot(run * 10, rise * 10);
+    const len = Math.hypot(run * inRoom, rise * inRoom);
     const coping = box(len, 0.07, 0.17, materials.stairBrick);
-    coping.position.set(foot - run * 5 + 0.02, rise * 5.5 + 0.1, width + 0.075);
+    coping.position.set(foot - (run * inRoom) / 2 + 0.02, (rise * inRoom) / 2 + rise / 2 + 0.1, width + 0.075);
     coping.rotation.z = -Math.atan2(rise, run);
     g.add(coping);
     // railing posts + handrail
     const railH = 0.9;
-    const top = (x) => (foot - x) / run * rise + rise + 0.06;
-    for (let x = foot - 0.15; x > 0; x -= 0.8) {
+    const top = (x) => ((foot - x) / run) * rise + rise + 0.06;
+    for (let x = foot - 0.15; x > WX; x -= 0.75) {
       g.add(rod(materials.black, new THREE.Vector3(x, top(x), width + 0.075), new THREE.Vector3(x, top(x) + railH, width + 0.075), 0.014));
     }
-    g.add(rod(materials.black, new THREE.Vector3(foot - 0.15, top(foot - 0.15) + railH, width + 0.075), new THREE.Vector3(-0.1, top(-0.1) + railH, width + 0.075), 0.02));
-    obstacle(-0.4, foot + 0.02, 0, width + 0.16);
+    g.add(rod(materials.black, new THREE.Vector3(foot - 0.15, top(foot - 0.15) + railH, width + 0.075), new THREE.Vector3(WX - 0.1, top(WX - 0.1) + railH, width + 0.075), 0.02));
+    obstacle(WX - 0.4, foot + 0.02, 0, width + 0.16);
     // folding chairs stacked on the steps against the north wall
     for (let k = 0; k < 2; k++) {
       for (let j = 0; j < 4; j++) {
-        const x = 1.75 - k * 0.55;
+        const x = 2.05 - k * 0.55;
         const step = Math.floor((foot - x) / run);
         const ch = wireChair(materials, gridMat);
         place(ch, x, rise * (step + 1) + j * 0.05, 0.32 + j * 0.035, -Math.PI / 2);
@@ -145,28 +151,30 @@ export function buildProps(materials) {
   // Grey bench along the south wall, turning up the west wall (the L on the plan)
   {
     const H = 0.45;
-    g.add(slab(materials.bench, 0, 5.36, 0, H - 0.03, 6.94, 7.37));
-    g.add(slab(materials.benchTop, 0, 5.38, H - 0.03, H, 6.9, 7.37));
-    g.add(slab(materials.bench, 0, 0.47, 0, H - 0.03, 6.25, 6.94));
-    g.add(slab(materials.benchTop, 0, 0.51, H - 0.03, H, 6.21, 6.94));
-    obstacle(0, 5.4, 6.88, 7.37);
-    obstacle(0, 0.52, 6.2, 6.94);
+    g.add(slab(materials.bench, WX, EX - 0.02, 0, H - 0.03, SZ - 0.43, SZ));
+    g.add(slab(materials.benchTop, WX, EX, H - 0.03, H, SZ - 0.47, SZ));
+    g.add(slab(materials.bench, WX, WX + 0.47, 0, H - 0.03, 5.68, SZ - 0.43));
+    g.add(slab(materials.benchTop, WX, WX + 0.51, H - 0.03, H, 5.64, SZ - 0.43));
+    obstacle(WX, EX, SZ - 0.49, SZ);
+    obstacle(WX, WX + 0.52, 5.62, SZ - 0.43);
     // two white heating pipes on the wall just above the bench
     for (const y of [0.56, 0.63]) {
-      const p = cyl(0.016, 0.016, 5.4, materials.white, 8);
+      const p = cyl(0.016, 0.016, EX - WX, materials.white, 8);
       p.rotation.z = Math.PI / 2;
-      g.add(place(p, 2.7, y, 7.34));
+      g.add(place(p, (WX + EX) / 2, y, SZ - 0.03));
     }
   }
 
-  // Plinths: one by Human as Error VI, one under the exhibition text
-  for (const z of [4.3, 5.98]) {
-    g.add(place(box(0.32, 1.15, 0.32, materials.white), 5.22, 0.575, z));
-    obstacle(5.04, 5.4, z - 0.17, z + 0.17);
+  // Plinths either side of the doorway, standing in the recess
+  for (const z of [3.42, 4.82]) {
+    g.add(place(box(0.32, 1.15, 0.32, materials.white), RX - 0.18, 0.575, z));
+    obstacle(RX - 0.36, RX, z - 0.17, z + 0.17);
   }
+  // electric box and cables left of the doorway (DSC_0020)
+  g.add(place(box(0.03, 0.16, 0.13, materials.white), RX - 0.015, 1.62, 3.48));
 
   // Radiators (aluminium sections)
-  const radiator = (x, z, ry, w = 0.8, h = 0.75) => {
+  const radiator = (x, z, ry, w = 0.8, h = 0.85) => {
     const r = new THREE.Group();
     const fins = Math.round(w / 0.08);
     const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(0.07, h, 0.09), materials.white, fins);
@@ -176,26 +184,33 @@ export function buildProps(materials) {
       inst.setMatrixAt(i, m);
     }
     r.add(inst);
-    place(r, x, 0.12, z, ry);
+    place(r, x, 0.1, z, ry);
     g.add(r);
   };
-  radiator(0.08, 3.92, Math.PI / 2, 0.88);
-  radiator(0.08, 5.95, Math.PI / 2, 0.5);
-  radiator(5.32, 6.48, -Math.PI / 2, 0.8);
+  radiator(WX + 0.08, 3.5, Math.PI / 2, 0.94);
+  radiator(WX + 0.08, 5.46, Math.PI / 2, 0.42);
+  radiator(EX - 0.08, 5.59, -Math.PI / 2, 0.94);
 
-  // High basement windows on the west wall (night: dark glass, faint street glow)
-  for (const [z, w] of [[3.92, 0.95], [6.05, 0.82]]) {
-    const y0 = 2.18;
-    const y1 = 2.9;
-    g.add(slab(materials.whiteBrick, -0.4, 0.06, y0 - 0.06, y0, z - w / 2 - 0.06, z + w / 2 + 0.06)); // sill
-    g.add(slab(materials.white, -0.05, 0.02, y0, y1, z - w / 2, z + w / 2)); // frame
-    g.add(slab(materials.windowGlass, 0.02, 0.03, y0 + 0.05, y1 - 0.05, z - w / 2 + 0.05, z + w / 2 - 0.05));
-    for (let k = 1; k < 4; k++) g.add(slab(materials.white, 0.03, 0.045, y0 + 0.05, y1 - 0.05, z - w / 2 + (k * w) / 4 - 0.012, z - w / 2 + (k * w) / 4 + 0.012));
-    g.add(slab(materials.white, 0.03, 0.045, (y0 + y1) / 2 - 0.012, (y0 + y1) / 2 + 0.012, z - w / 2 + 0.05, z + w / 2 - 0.05));
+  // High basement windows on the street wall (night: dark glass): the one with the
+  // round vent beside the stairs, the other above the small radiator by the bench
+  for (const [z, w] of [[3.69, 0.81], [5.49, 0.75]]) {
+    const y0 = 1.78;
+    const y1 = 2.56;
+    g.add(slab(materials.whiteBrick, WX - 0.4, WX + 0.06, y0 - 0.06, y0, z - w / 2 - 0.06, z + w / 2 + 0.06)); // sill
+    g.add(slab(materials.white, WX - 0.05, WX + 0.02, y0, y1, z - w / 2, z + w / 2)); // frame
+    g.add(slab(materials.windowGlass, WX + 0.02, WX + 0.03, y0 + 0.05, y1 - 0.05, z - w / 2 + 0.05, z + w / 2 - 0.05));
+    for (let k = 1; k < 4; k++) g.add(slab(materials.white, WX + 0.03, WX + 0.045, y0 + 0.05, y1 - 0.05, z - w / 2 + (k * w) / 4 - 0.012, z - w / 2 + (k * w) / 4 + 0.012));
+    g.add(slab(materials.white, WX + 0.03, WX + 0.045, (y0 + y1) / 2 - 0.012, (y0 + y1) / 2 + 0.012, z - w / 2 + 0.05, z + w / 2 - 0.05));
+  }
+  // the round vent in the first window
+  {
+    const vent = cyl(0.075, 0.075, 0.02, new THREE.MeshStandardMaterial({ color: 0x2a3550, roughness: 0.4 }), 20);
+    vent.rotation.z = Math.PI / 2;
+    g.add(place(vent, WX + 0.05, 2.36, 3.62));
   }
 
   // White pipes running up beside the doorway to Room 2 (DSC_0021)
-  for (const z of [5.78, 5.84]) g.add(place(cyl(0.017, 0.017, 2.9, materials.white, 8), 5.37, 1.45, z));
+  for (const z of [4.6, 4.66]) g.add(place(cyl(0.017, 0.017, 2.9, materials.white, 8), RX - 0.03, 1.45, z));
 
   // ================================================================ Room 2
   {
@@ -311,8 +326,8 @@ export function buildProps(materials) {
   // ================================================================ track lights
   {
     const rails = [
-      { x0: 0.8, x1: 4.8, z: 3.2, y: 3.0 },
-      { x0: 0.8, x1: 4.8, z: 5.6, y: 3.0 },
+      { x0: 0.9, x1: 4.4, z: 2.9, y: 3.0 },
+      { x0: 0.9, x1: 4.4, z: 5.0, y: 3.0 },
       { x0: 10.3, x1: 15.1, z: 3.83, y: 2.75 },
     ];
     const per = 4;

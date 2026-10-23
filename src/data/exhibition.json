@@ -52,7 +52,7 @@
       "© OpenStreetMap contributors (ODbL)"
     ]
   ],
-  "behindTheScenes": "A reconstruction, not an invention. The floor plan is traced from the gallery's own room sheet, photographed on the wall by the bar. It is checked twice: against a 360° panorama of Room 1, where the camera position solved from the corner bearings agrees with the plan's scale, and against the building's OpenStreetMap outline, whose 26.5 m wing on Murányi utca matches the length of the basement. Every painting hangs at its listed canvas size and at the height measured in the photos. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops, and the screens show the frames caught on camera. Paradise Factory and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
+  "behindTheScenes": "A reconstruction, not an invention. The floor plan is traced from the gallery's own room sheet, photographed on the wall by the bar, and its overall length matches the building's outline on OpenStreetMap. Room 1 is measured from a 360° panorama: solving the camera position from the corners and the four canvases of known size gives the room's real size, the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops, and the screens show the frames caught on camera. Paradise Factory and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
   "rooms": {
     "r1": {
       "name": "Room 1",
@@ -87,8 +87,8 @@
       "hang": {
         "face": "+z",
         "at": 0,
-        "along": 4.1,
-        "y": 1.39,
+        "along": 3.59,
+        "y": 1.33,
         "w": 1.6,
         "h": 1.4
       },
@@ -108,16 +108,16 @@
       "photo": "DSC_0018",
       "hang": {
         "face": "-x",
-        "at": 5.4,
-        "along": 2.1,
-        "y": 1.32,
+        "at": 4.85,
+        "along": 1.64,
+        "y": 1.15,
         "w": 1.5,
         "h": 1.9
       },
       "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one.",
       "view": {
-        "x": 3.15,
-        "z": 2.75
+        "x": 3.1,
+        "z": 2.2
       }
     },
     {
@@ -132,13 +132,13 @@
       "image": "img/w03-paradise-factory",
       "photo": "_01_panorama",
       "anchor": {
-        "x": 2.25,
+        "x": 1.85,
         "y": 1.2,
-        "z": 3.6
+        "z": 3.35
       },
       "view": {
-        "x": 3.9,
-        "z": 4.7
+        "x": 3.4,
+        "z": 4.6
       },
       "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
     },
@@ -160,11 +160,11 @@
       ],
       "hang": {
         "face": "+x",
-        "at": 0,
-        "along": 5.3,
-        "y": 1.45,
-        "w": 0.36,
-        "h": 0.45
+        "at": 0.35,
+        "along": 4.84,
+        "y": 1.35,
+        "w": 0.32,
+        "h": 0.4
       },
       "note": "Caption is a visual description written for the digital exhibition; replace it with the artist's text if there is one."
     },
@@ -182,9 +182,9 @@
       "photo": "DSC_0029",
       "hang": {
         "face": "-z",
-        "at": 7.37,
-        "along": 1.55,
-        "y": 1.5,
+        "at": 6.55,
+        "along": 1.69,
+        "y": 1.4,
         "w": 1.2,
         "h": 0.9
       },
@@ -204,9 +204,9 @@
       "photo": "DSC_0026",
       "hang": {
         "face": "-z",
-        "at": 7.37,
-        "along": 3.95,
-        "y": 1.48,
+        "at": 6.55,
+        "along": 3.7,
+        "y": 1.38,
         "w": 1.2,
         "h": 0.9
       },
@@ -226,7 +226,7 @@
       "hang": {
         "face": "+x",
         "at": 5.85,
-        "along": 3.3,
+        "along": 2.85,
         "y": 1.55,
         "w": 0.94,
         "h": 0.53
@@ -482,9 +482,9 @@
       "id": "text-r1",
       "kind": "text",
       "face": "-x",
-      "at": 5.4,
-      "along": 6.3,
-      "y": 1.58
+      "at": 4.85,
+      "along": 5.48,
+      "y": 1.38
     },
     {
       "id": "text-r2",

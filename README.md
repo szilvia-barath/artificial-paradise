@@ -17,7 +17,7 @@ npm run preview    # serve dist/
 
 - `src/i18n/en.json` and `src/i18n/hu.json`: every text a visitor reads, in English and Hungarian. `ui` holds the interface (navbar, buttons, hints); the rest is the exhibition text, credits, room names and the media and caption of each work (matched by id). A key missing from `hu.json` falls back to English.
 - `src/data/exhibition.json`: official titles, sizes, years, images and the position of every work (`hang.face/at/along/y/w/h`, in metres).
-- `public/video/`: short silent loops of the artist's videos played on the screens (`scripts/make_videos.sh`); the full videos stay on Google Drive and play in the artwork viewer (`video.full` in `exhibition.json`).
+- `public/video/`: short loops of the artist's videos played on the screens, with the videos' own sound where they have one, played from the screen's place in the rooms (`scripts/make_videos.sh`, `src/audio/ambience.js`); the full videos stay on Google Drive and play in the artwork viewer (`video.full` in `exhibition.json`).
 - `scripts/make_river.py`: rebuilds the melted plastic river of Let it Flow from the artist's top-down image.
 - `src/world/layout.js`: floor plan (wall blocks, doorways, ceilings).
 - `npm run images` re-cuts the artwork crops listed in `scripts/crops.json` from the original photos (DSC_*.JPG must be in the repo root).

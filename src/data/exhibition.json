@@ -168,7 +168,8 @@
             "drive": "1HnBVZR0aTIM-EsjxCZsk0q-MmbJH68Gd",
             "label": "full"
           }
-        ]
+        ],
+        "sound": true
       }
     },
     {
@@ -199,7 +200,8 @@
             "drive": "1ZtXyfb9kdgpmvFMggiM9p0MeKkwqzpdO",
             "label": "full"
           }
-        ]
+        ],
+        "sound": true
       }
     },
     {
@@ -400,7 +402,8 @@
             "drive": "15j1HRd1x63S_KsRATcps3rH1rsY_9fWv",
             "label": "floor"
           }
-        ]
+        ],
+        "sound": true
       }
     },
     {
@@ -427,7 +430,8 @@
             "drive": "1YfdR_rzjFrcy0gD05rfuaarCUWwrYNU-",
             "label": "full"
           }
-        ]
+        ],
+        "sound": true
       }
     }
   ],

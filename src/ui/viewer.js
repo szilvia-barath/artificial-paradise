@@ -1,12 +1,14 @@
 import { t } from '../i18n.js';
 
-// Artwork overlay: large image (for the video works, the silent loop, and on request the
-// full video with sound from Google Drive), caption, exhibition text, prev/next, "in situ"
+// Artwork overlay: large image (for the video works, the loop with its sound, and on
+// request the full video from Google Drive), caption, exhibition text, prev/next, "in situ"
 // photo, and a "walk to this work" shortcut.
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-export function setupViewer(data, { onOpen, onClose, onGoto }) {
+// onMedia(isVideo) tells the sound mix whether a video (with its own sound) is showing;
+// isMuted() is the site's sound switch.
+export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted }) {
   const el = document.getElementById('viewer');
   const img = document.getElementById('viewer-img');
   const video = document.getElementById('viewer-video');
@@ -66,6 +68,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
         video.poster = `${base}${w.image}.webp`;
         video.src = `${base}${vids.loop}`;
       }
+      video.muted = !!(isMuted && isMuted());
       video.play().catch(() => {});
     } else {
       video.pause();
@@ -74,6 +77,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
     }
     img.hidden = !!vids;
     loading.hidden = !!vids;
+    if (onMedia) onMedia(!!vids);
   };
 
   const show = () => {

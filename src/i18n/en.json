@@ -20,7 +20,7 @@
       "ready": "Ready",
       "enter": "Enter",
       "hint": "Sound on · headphones recommended",
-      "howtoDesk": "↑↓ or the scroll wheel to walk · ←→ to turn · mouse to look · +/− to zoom · click a work to view · Shift to run · Esc to release",
+      "howtoDesk": "↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run",
       "howtoTouch": "Left stick to walk · drag to look · pinch to zoom · tap a work to view",
       "failure": "This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari."
     },
@@ -38,7 +38,7 @@
       "sound": "Sound",
       "soundTitle": "Sound on/off (M)",
       "toolbar": "Exhibition controls",
-      "clickToLook": "Click to look around",
+      "clickToLook": "Drag to look around",
       "promptText": "Click to read the exhibition text",
       "promptSheet": "Click to read the list of works",
       "promptWork": "Click to view · {no} {title}",
@@ -82,14 +82,14 @@
       "address": "{venue}, {address} (basement)",
       "map": "map",
       "linkExhibition": "Artkartell: KristofLab, Artificial Paradise",
-      "linkGallery": "MAMŰ Gallery (mamu.hu)",
+      "linkGallery": "MAMŰ Gallery",
       "linkInstagram": "Instagram post from the exhibition",
       "rights": "All artworks were created by Kristóf Szabó / KristofLab, reproduced from installation photographs for documentation purposes. The rooms are reconstructed from the same photographs and the gallery's floor plan.",
       "worksTitle": "List of works",
       "btsEyebrow": "Behind the scenes",
       "btsTitle": "How it's built",
       "controls": "Controls",
-      "controlsDesk": "Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E to open it, T for the tour, M to mute. The keys on screen do the same when held with the mouse.",
+      "controlsDesk": "Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, drag with the mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E to open it, T for the tour, M to mute. The keys on screen do the same when held with the mouse.",
       "controlsTouch": "Touch: left stick to walk, drag to look, pinch to zoom, tap a work.",
       "linkFacebook": "MAMŰ on Facebook",
       "linkMamuInstagram": "MAMŰ on Instagram",
@@ -151,7 +151,7 @@
       "© OpenStreetMap contributors (ODbL)"
     ]
   ],
-  "behindTheScenes": "The floor plan follows the gallery's measured plan (Room 1 is 5 × 7 m, Rooms 3 and 4 are 5.4 and 9.5 m long and 4 m wide) and its overall length matches the building's outline on OpenStreetMap. Rooms are measured from 360° panorama photos: solving the camera position from the corners and the four canvases of known size gives the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops, and the screens play the artist's videos. Paradise Factory is modelled from the photos, and the melted plastic river of Let it Flow from a top-down photograph of it. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
+  "behindTheScenes": "The floor plan is traced from the gallery's own room sheet and its overall length matches the building's outline on OpenStreetMap. Rooms are measured from 360° panorama photos: solving the camera position from the corners and the four canvases of known size gives the room's real size, the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops, and the screens play the artist's videos with their own sound. Paradise Factory and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
   "rooms": {
     "r1": {
       "name": "Room 1",
@@ -248,7 +248,7 @@
       "caption": "Ferns on a forest slope, filmed close up, on the black brick wall of the projection room."
     }
   },
-  "source": "Titles, sizes, media and years from the room sheet displayed in the gallery.",
+  "source": "Titles, sizes, media and years from the room sheet displayed in the gallery",
   "tourIntro": "Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10-31 January 2025.",
   "openingSpeech": {
     "author": "Barnabás Zemlényi-Kovács",

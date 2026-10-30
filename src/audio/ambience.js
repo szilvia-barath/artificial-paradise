@@ -1,10 +1,14 @@
-// Generative ambience, synthesised live with the Web Audio API (no samples, no music):
+// The sound of the walk. The artworks' own sound comes first: the videos with a sound
+// track play it from their screen (attachVideos), louder the closer you stand and quieter
+// from the next room, and the rest steps back while one is near. Under it, a generative
+// ambience synthesised live with the Web Audio API (no samples, no music):
 //  - a slow, detuned drone whose chord drifts every ~20 s
 //  - filtered room tone (air handling / basement hum)
 //  - a bar murmur near Room 2: formant-filtered noise "voices" + glass clinks
 //  - the projector's fan in Room 4
 // An AnalyserNode on the master bus exposes bass/mid/high/level for the visuals.
-// None of it is part of the artworks: the videos' own soundtracks are not reproduced.
+
+import { roomAt } from '../world/layout.js';
 
 const BAR = { x: 8.707, z: 4.457 };
 const PROJ = { x: 17.48, z: 3.725 };
@@ -34,6 +38,13 @@ export class Ambience {
     this.muted = false;
     this.bands = { bass: 0, mid: 0, high: 0, level: 0, glitch: 0 };
     this._glitch = 0;
+    this.focus = 1; // the whole mix steps back while the artwork viewer is open
+    this.videos = []; // { v, gain, pan, room } per video with sound
+    this.spotlight = null; // id of the work the guided tour is showing
+  }
+
+  _master() {
+    return this.muted ? 0 : 0.9 * this.focus;
   }
 
   start() {
@@ -49,7 +60,7 @@ export class Ambience {
 
     this.master = ctx.createGain();
     this.master.gain.setValueAtTime(0, now);
-    this.master.gain.linearRampToValueAtTime(0.9, now + 4);
+    this.master.gain.linearRampToValueAtTime(this._master(), now + 4);
     const comp = ctx.createDynamicsCompressor();
     comp.threshold.value = -18;
     comp.ratio.value = 3;
@@ -99,6 +110,7 @@ export class Ambience {
     lp.connect(bus);
     bus.connect(this.master);
     bus.connect(this.space);
+    this.droneBus = bus;
     this.droneOsc = [];
     const base = [55, 82.41, 110.0, 164.81];
     base.forEach((f, i) => {
@@ -268,12 +280,43 @@ export class Ambience {
     src.start(t);
   }
 
-  setMuted(m) {
-    this.muted = m;
+  // Routes the in-world videos with a sound track through the mix (once, after start()).
+  attachVideos(videos) {
+    if (!this.ctx) return false;
+    const ctx = this.ctx;
+    for (const v of videos) {
+      if (!v.sound || !v.pos || this.videos.some((e) => e.v === v)) continue;
+      const src = ctx.createMediaElementSource(v.el);
+      const gain = ctx.createGain();
+      gain.gain.value = 0;
+      const pan = ctx.createStereoPanner();
+      const send = ctx.createGain();
+      send.gain.value = 0.25; // a little of the basement's echo
+      src.connect(gain).connect(pan).connect(this.master);
+      pan.connect(send).connect(this.space);
+      const room = roomAt(v.pos.x, v.pos.z);
+      this.videos.push({ v, gain, pan, room: room && room.id });
+    }
+    return true;
+  }
+
+  _applyMaster(tc = 0.25) {
     if (!this.ctx) return;
     const t = this.ctx.currentTime;
     this.master.gain.cancelScheduledValues(t);
-    this.master.gain.setTargetAtTime(m ? 0 : 0.9, t, 0.25);
+    this.master.gain.setTargetAtTime(this._master(), t, tc);
+  }
+
+  setMuted(m) {
+    this.muted = m;
+    this._applyMaster();
+  }
+
+  // 1 = the walk's own mix; less while a work is open in the viewer (0 for a video, whose
+  // sound the viewer plays itself).
+  setFocus(f) {
+    this.focus = f;
+    this._applyMaster(0.15);
   }
 
   // Called every frame with the listener position (x, z) and yaw.
@@ -293,13 +336,39 @@ export class Ambience {
     // distance-based mixes
     const dBar = Math.hypot(x - BAR.x, z - BAR.z);
     const barLevel = Math.max(0, 1 - dBar / 9) ** 1.6;
-    this.barGain.gain.setTargetAtTime(barLevel * 0.55, ct, 0.3);
     const ang = Math.atan2(-(BAR.x - x), -(BAR.z - z)) - yaw;
     this.barPan.pan.setTargetAtTime(Math.max(-0.8, Math.min(0.8, -Math.sin(ang))), ct, 0.2);
     const dProj = Math.hypot(x - PROJ.x, z - PROJ.z);
     const projLevel = Math.max(0, 1 - dProj / 7);
     this.projGain.gain.setTargetAtTime(projLevel * 0.9, ct, 0.4);
-    this.roomGain.gain.setTargetAtTime(x > 15.6 ? 0.1 : 0.16, ct, 0.5);
+
+    // The videos' sound: full within `near` (1.2 m for a screen), then falling with
+    // distance and gone 7.8 m further (by 9 m from a screen, where it stops playing);
+    // through a doorway it is quieter still. The one
+    // you face leads (Artificial Paradise I and II share a corner), and on the tour the
+    // video of the current stop does.
+    const here = roomAt(x, z);
+    const lead = this.spotlight && this.videos.some((s) => s.v.work === this.spotlight) ? this.spotlight : null;
+    let near = 0;
+    for (const s of this.videos) {
+      const { v } = s;
+      let level = 0;
+      if (v.wanted && !v.el.paused && !v.el.muted) {
+        const d = Math.hypot(x - v.pos.x, z - v.pos.z);
+        level = Math.min(1, (v.near / Math.max(d, 0.01)) ** 1.4) * Math.min(1, Math.max(0, (v.near + 7.8 - d) / 2.5));
+        if (here && s.room && here.id !== s.room) level *= 0.3;
+        const a = Math.atan2(-(v.pos.x - x), -(v.pos.z - z)) - yaw;
+        if (lead) level *= v.work === lead ? 1 : 0.2;
+        else level *= 0.3 + 0.7 * Math.max(0, Math.cos(a));
+        s.pan.pan.setTargetAtTime(Math.max(-0.7, Math.min(0.7, -Math.sin(a))) * Math.min(1, d / 1.5), ct, 0.15);
+      }
+      s.gain.gain.setTargetAtTime(level * 1.2, ct, 0.3);
+      near = Math.max(near, level);
+    }
+    // ...and the synthesised layers make room for it
+    this.droneBus.gain.setTargetAtTime(0.11 * (1 - 0.8 * near), ct, 0.6);
+    this.barGain.gain.setTargetAtTime(barLevel * 0.55 * (1 - 0.6 * near), ct, 0.3);
+    this.roomGain.gain.setTargetAtTime((x > 15.6 ? 0.1 : 0.16) * (1 - 0.5 * near), ct, 0.5);
 
     // spectrum -> bands
     this.analyser.getByteFrequencyData(this.freq);

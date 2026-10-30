@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import { EYE, OBSTACLES } from './world/layout.js';
 
-// First-person controls: pointer-lock mouse look on desktop; W/S or ↑/↓ to walk, ←/→ to
+// First-person controls: drag with the mouse to look on desktop (the cursor stays free for
+// the menus and other tabs, nothing to escape from); W/S or ↑/↓ to walk, ←/→ to
 // turn (so the keyboard alone is enough), A/D to step sideways (also held through the on-screen keys); the scroll
 // wheel glides forward and back; +/− (Ctrl+wheel, trackpad or two-finger pinch) zoom.
 // Virtual joystick + drag-to-look on touch devices. Collision is resolved in 2D against
@@ -33,11 +34,10 @@ export class FirstPersonControls {
     this.zoomHeld = 0; // seconds a zoom key has been held
     this.zoomKeys = new Map(); // key code -> +1 / -1, from e.key so any layout works
     this.joy = new THREE.Vector2(0, 0);
-    this.locked = false;
     this.bob = 0;
     this.isTouch = matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
     this.onTap = null; // (clientX, clientY) => void
-    this.onLockChange = null;
+    this.onLook = null; // first drag-to-look on desktop (to retire the hint)
     this.onManualMove = null; // wheel / on-screen key used (e.g. to end the tour)
 
     this.segments = segments.slice();
@@ -62,19 +62,6 @@ export class FirstPersonControls {
 
   lookAt(x, z) {
     this.yaw = Math.atan2(-(x - this.pos.x), -(z - this.pos.y));
-  }
-
-  lock() {
-    if (!this.isTouch && this.dom.requestPointerLock) {
-      try {
-        const p = this.dom.requestPointerLock();
-        if (p && p.catch) p.catch(() => {});
-      } catch (e) { /* ignore */ }
-    }
-  }
-
-  unlock() {
-    if (document.pointerLockElement) document.exitPointerLock();
   }
 
   press(code) {
@@ -110,33 +97,29 @@ export class FirstPersonControls {
   }
 
   _bindDesktop() {
-    document.addEventListener('pointerlockchange', () => {
-      this.locked = document.pointerLockElement === this.dom;
-      if (this.onLockChange) this.onLockChange(this.locked);
-    });
-    document.addEventListener('mousemove', (e) => {
-      if (!this.locked || !this.enabled) return;
-      this.yaw -= (e.movementX * 0.0022) / this.zoom;
-      this.pitch -= (e.movementY * 0.0022) / this.zoom;
-      this.pitch = Math.max(-1.25, Math.min(1.25, this.pitch));
-    });
-    // Unlocked desktop fallback: drag to look
+    // Drag to look; a click without dragging is a tap (opens the work under the cursor)
     let dragging = false;
     let lastX = 0;
     let lastY = 0;
     let moved = 0;
     this.dom.addEventListener('mousedown', (e) => {
-      if (this.locked || this.isTouch) return;
+      if (this.isTouch || e.button !== 0) return;
+      e.preventDefault(); // no text selection while dragging...
+      document.activeElement?.blur?.(); // ...but still take focus off the last button pressed
       dragging = true;
       moved = 0;
       lastX = e.clientX;
       lastY = e.clientY;
     });
     window.addEventListener('mousemove', (e) => {
-      if (!dragging || this.locked || !this.enabled) return;
+      if (!dragging || !this.enabled) return;
       const dx = e.clientX - lastX;
       const dy = e.clientY - lastY;
       moved += Math.abs(dx) + Math.abs(dy);
+      if (moved >= 6) {
+        document.body.classList.add('dragging');
+        if (this.onLook) this.onLook();
+      }
       this.yaw -= (dx * 0.004) / this.zoom;
       this.pitch = Math.max(-1.25, Math.min(1.25, this.pitch - (dy * 0.004) / this.zoom));
       lastX = e.clientX;
@@ -145,6 +128,7 @@ export class FirstPersonControls {
     window.addEventListener('mouseup', (e) => {
       if (!dragging) return;
       dragging = false;
+      document.body.classList.remove('dragging');
       if (moved < 6 && this.enabled && this.onTap) this.onTap(e.clientX, e.clientY, false);
     });
     window.addEventListener('keydown', (e) => {

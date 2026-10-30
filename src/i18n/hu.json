@@ -20,7 +20,7 @@
       "ready": "Kész",
       "enter": "Belépés",
       "hint": "Hanggal · fejhallgatóval izgalmasabb",
-      "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · egér: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás · Esc: kilépés",
+      "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · húzás egérrel: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás",
       "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · csippentés: nagyítás · koppintás egy műre: megtekintés",
       "failure": "Ez a böngésző nem tudta elindítani a 3D kiállítást (WebGL szükséges). Próbáld meg egy friss Chrome, Firefox vagy Safari böngészővel."
     },
@@ -38,7 +38,7 @@
       "sound": "Hang",
       "soundTitle": "Hang be/ki (M)",
       "toolbar": "Kiállítás vezérlői",
-      "clickToLook": "Kattints a körülnézéshez",
+      "clickToLook": "Húzd az egeret a körülnézéshez",
       "promptText": "Kattints a kiállítási szöveg elolvasásához",
       "promptSheet": "Kattints a műlista megnyitásához",
       "promptWork": "Kattints a megtekintéshez · {no} {title}",
@@ -82,14 +82,14 @@
       "address": "{venue}, {address} (pince)",
       "map": "térkép",
       "linkExhibition": "Artkartell: KristofLab, Artificial Paradise",
-      "linkGallery": "MAMŰ Galéria (mamu.hu)",
+      "linkGallery": "MAMŰ Galéria",
       "linkInstagram": "Instagram-poszt a kiállításról",
       "rights": "Minden műalkotás Szabó Kristóf / KristofLab munkája; a reprodukciók installációs fotókról, dokumentációs céllal készültek. A termek rekonstrukciója ugyanezeken a fotókon és a galéria alaprajzán alapul.",
       "worksTitle": "Műlista",
       "btsEyebrow": "Kulisszák mögött",
       "btsTitle": "Hogyan készült",
       "controls": "Irányítás",
-      "controlsDesk": "Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, egér: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre vagy E: megnyitás, T: tárlatvezetés, M: némítás. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek.",
+      "controlsDesk": "Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, húzás egérrel: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre vagy E: megnyitás, T: tárlatvezetés, M: némítás. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek.",
       "controlsTouch": "Érintőképernyőn: bal oldali kar: séta, húzás: körülnézés, csippentés: nagyítás, koppintás egy műre: megnyitás.",
       "linkFacebook": "A MAMŰ a Facebookon",
       "linkMamuInstagram": "A MAMŰ az Instagramon",
@@ -149,7 +149,7 @@
       "© OpenStreetMap-közreműködők (ODbL)"
     ]
   ],
-  "behindTheScenes": "Az alaprajz a galéria felmért alaprajzát követi (az 1. terem 5 × 7 m-es, a 3. és a 4. terem 5,4 és 9,5 m hosszú és 4 m széles), teljes hossza egyezik az épület OpenStreetMap-körvonalával. A termek 360°-os panorámafotók alapján vannak felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falak téglái a fotókból vannak kivágva: egy szkript a 7,7 cm-es téglasorokból számolja ki a méretarányt, kiszűri a galéria világítását, és a fugák mentén illeszti a foltokat, hogy hézagmentesen ismétlődjenek. A műalkotások perspektívakorrigált kivágások, a képernyőkön a művész videói futnak. A Paradise Factory a fotók alapján készült modell, a Let it Flow megolvasztott műanyag folyója pedig egy felülnézeti fénykép alapján. Three.js és Vite, backend nélkül; a terem alapzaját Web Audio szintetizálja.",
+  "behindTheScenes": "Az alaprajz a galéria saját teremlapja alapján készült, teljes hossza egyezik az épület OpenStreetMap-körvonalával. A termek 360°-os panorámafotók alapján vannak felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik a terem mérete, az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falak téglái a fotókból vannak kivágva: egy szkript a 7,7 cm-es téglasorokból számolja ki a méretarányt, kiszűri a galéria világítását, és a fugák mentén illeszti a foltokat, hogy hézagmentesen ismétlődjenek. A műalkotások perspektívakorrigált kivágások, a képernyőkön a művész videói futnak, a saját hangjukkal. A Paradise Factory és a Let it Flow műanyag folyója a fotók alapján készült modell. Three.js és Vite, backend nélkül; a terem alapzaját Web Audio szintetizálja.",
   "rooms": {
     "r1": {
       "name": "1. terem",
@@ -247,7 +247,7 @@
       "caption": "Páfrányok egy erdei lejtőn, közelről filmezve, a vetítőterem fekete téglafalán."
     }
   },
-  "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról származnak.",
+  "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról származnak",
   "tourIntro": "Le a lépcsőn, a MAMŰ pincéjébe: KristofLab Artificial Paradise című kiállítása, 2025. január 10-31.",
   "openingSpeech": {
     "author": "Zemlényi-Kovács Barnabás",

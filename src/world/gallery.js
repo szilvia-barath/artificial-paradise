@@ -5,8 +5,8 @@ import { t } from '../i18n.js';
 import { createVideo, scheduleVideos } from './video.js';
 
 // Hangs the works from exhibition.json: prints as thin mounted panels, videos as flat
-// screens playing the artist's videos (short silent loops; the photographed frames
-// stand in until a loop has loaded), installations as clickable volumes. Fake spotlights = additive light pools on the wall.
+// screens playing the artist's videos (short loops, with the videos' sound where they
+// have one; the photographed frames stand in until a loop has loaded), installations as clickable volumes. Fake spotlights = additive light pools on the wall.
 // Textures load lazily: 512px thumbs first, 1024px versions once you get close, and the
 // 1600px detail image for the paintings and prints you stand at or zoom in on.
 
@@ -276,8 +276,9 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
         });
         lazy.push({ work, entry, pos: new THREE.Vector3(f.x, hg.y, f.z), loaded: false });
         if (work.video) {
-          entry.video = createVideo(work.video.loop);
-          videos.push({ video: entry.video, pos: new THREE.Vector3(f.x, hg.y, f.z) });
+          const pos = new THREE.Vector3(f.x, hg.y, f.z);
+          entry.video = createVideo(work.video.loop, { pos, sound: !!work.video.sound, work: work.id });
+          videos.push({ video: entry.video, pos });
         }
       } else {
         // Canvas on a stretcher (paintings) or a thin mounted print

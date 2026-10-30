@@ -189,7 +189,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 /* ---------------- Navbar & footer ----------------
    Thin and quiet: blue on a pale band over the title screen, light text on a soft
-   gradient over the exhibition. Both fade out while walking (pointer locked). */
+   gradient over the exhibition. */
 #site-nav, #site-foot {
   position: fixed;
   left: 0;
@@ -266,7 +266,6 @@ body.entered #site-foot {
   background: linear-gradient(to bottom, rgba(5, 5, 6, 0.6), rgba(5, 5, 6, 0));
 }
 body.entered #site-foot { background: linear-gradient(to top, rgba(5, 5, 6, 0.6), rgba(5, 5, 6, 0)); color: var(--muted); }
-body.locked #site-nav, body.locked #site-foot { opacity: 0; pointer-events: none; }
 body.entered.touch #site-foot { display: none; }
 body.touch #toolbar { bottom: calc(16px + var(--safe-b)); }
 
@@ -427,7 +426,9 @@ body.touch #crosshair { display: none; }
   letter-spacing: 0.16em;
   transition: opacity 0.4s;
 }
-body.locked #click-to-look, body.touch #click-to-look, body.touring #click-to-look { opacity: 0; }
+#click-to-look { pointer-events: none; }
+body.looked #click-to-look, body.touch #click-to-look, body.touring #click-to-look { opacity: 0; }
+body.dragging, body.dragging canvas { cursor: grabbing !important; }
 
 #joystick {
   position: absolute;
@@ -469,7 +470,6 @@ body.touring #joystick { opacity: 0.25; }
   transition: opacity 0.4s ease;
 }
 body.touch #keypad { display: none; }
-body.locked #keypad { opacity: 0.5; pointer-events: none; }
 .cap {
   position: relative;
   display: grid;
@@ -542,7 +542,6 @@ body.locked #keypad { opacity: 0.5; pointer-events: none; }
   pointer-events: auto;
   transition: opacity 0.4s ease;
 }
-body.locked #zoompad { opacity: 0.5; pointer-events: none; }
 body.touch #zoompad { left: auto; right: 14px; bottom: calc(84px + var(--safe-b)); grid-template-rows: 46px 46px; width: 46px; }
 #zoom-level {
   position: absolute;

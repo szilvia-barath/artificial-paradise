@@ -36,7 +36,12 @@ export function buildLetItFlow(manager) {
   };
 
   // ---------------------------------------------------------------- wall projection
-  const wallVideo = createVideo('video/w16-projection.mp4');
+  const wallVideo = createVideo('video/w16-projection.mp4', {
+    pos: new THREE.Vector3(WALL_X, 1.2, (Z0 + Z1) / 2),
+    sound: true,
+    near: 4.5,
+    work: 'w16-let-it-flow',
+  });
   // The photographed projection stands in until the video plays; the video is added as
   // light over the wall (a projector cannot darken), so the brick shows through.
   const projMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95), toneMapped: false });

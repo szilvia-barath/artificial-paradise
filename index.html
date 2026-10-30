@@ -80,7 +80,7 @@
         <button id="enter" class="btn-enter" disabled>|&nbsp;<span data-i18n="loader.enter">Enter</span>&nbsp;|</button>
         <p class="hint" id="enter-hint" data-i18n="loader.hint">Sound on · headphones recommended</p>
         <div class="howto">
-          <span class="desk" data-i18n="loader.howtoDesk">↑↓ or the scroll wheel to walk · ←→ to turn · mouse to look · +/− to zoom · click a work to view · Shift to run · Esc to release</span>
+          <span class="desk" data-i18n="loader.howtoDesk">↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run</span>
           <span class="touch" data-i18n="loader.howtoTouch">Left stick to walk · drag to look · pinch to zoom · tap a work to view</span>
         </div>
       </div>
@@ -126,7 +126,7 @@
         <button class="cap k-zout" data-keys="ZoomOut" title="Zoom out (−)" data-i18n-attr="title:hud.keys.zoomOut;aria-label:hud.keys.zoomOut"><i>−</i><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" /><path d="m12.6 12.6 4.6 4.6M6 8.5h5" /></svg></button>
       </div>
       <button id="zoom-level" class="mono" hidden title="Reset zoom (0)" data-i18n-attr="title:hud.keys.zoomReset"><span></span> ✕</button>
-      <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Click to look around</div>
+      <div id="click-to-look" class="mono" data-i18n="hud.clickToLook">Drag to look around</div>
     </div>
 
     <!-- Artwork viewer -->
@@ -134,7 +134,7 @@
       <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
       <div class="viewer-media">
         <img id="viewer-img" alt="" />
-        <video id="viewer-video" hidden muted loop playsinline controls></video>
+        <video id="viewer-video" hidden loop playsinline controls></video>
         <iframe id="viewer-frame" hidden title="" allow="autoplay; fullscreen"></iframe>
         <div class="viewer-loading mono" data-i18n="viewer.loading">loading…</div>
       </div>

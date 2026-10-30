@@ -23,6 +23,11 @@ export class Tour {
     this._next();
   }
 
+  // The work the tour is at or heading to (its video's sound leads the mix).
+  get work() {
+    return this.active ? this.data.tour[this.i]?.work ?? null : null;
+  }
+
   stop() {
     if (!this.active) return;
     this.active = false;

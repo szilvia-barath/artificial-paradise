@@ -8,6 +8,7 @@ import { buildLights } from './world/lights.js';
 import { buildGallery } from './world/gallery.js';
 import { buildParadiseFactory } from './world/paradiseFactory.js';
 import { buildLetItFlow } from './world/letItFlow.js';
+import { VIDEOS, enableVideoSound } from './world/video.js';
 import { applyPlanAO } from './world/ao.js';
 import { createPost } from './fx/post.js';
 import { Ambience } from './audio/ambience.js';
@@ -94,15 +95,18 @@ const syncEnabled = () => {
 
 const ui = setupPanels(data, {
   onOpenWork: (w) => { ui.close(); viewer.open(w); },
-  onOpenPanel: () => { blockers.panel = true; controls.unlock(); syncEnabled(); },
+  onOpenPanel: () => { blockers.panel = true; syncEnabled(); },
   onClosePanel: () => { blockers.panel = false; syncEnabled(); },
   onJumpRoom: (id) => jumpToRoom(id),
 });
 
 const viewer = setupViewer(data, {
-  onOpen: () => { blockers.viewer = true; if (tour.active) tour.stop(); controls.unlock(); syncEnabled(); },
-  onClose: () => { blockers.viewer = false; syncEnabled(); },
+  onOpen: () => { blockers.viewer = true; if (tour.active) tour.stop(); syncEnabled(); },
+  onClose: () => { blockers.viewer = false; audio.setFocus(1); syncEnabled(); },
   onGoto: (w) => gotoWork(w),
+  // the viewer plays a video's sound itself, so the walk's mix steps aside
+  onMedia: (isVideo) => audio.setFocus(isVideo ? 0 : 0.4),
+  isMuted: () => audio.muted,
 });
 
 // Guided tour: the works in catalogue order, routed through the doorways.
@@ -121,7 +125,8 @@ function buildTourStops() {
       for (const [x, z] of DOORS[`${room}>${w.room}`] || []) stops.push({ x, z, look: null, dwell: 0 });
       room = w.room;
     }
-    stops.push({ x: w._focus.x, z: w._focus.z, look: w._focus.look, work: w.id, dwell: 5 });
+    // a little longer at the videos with sound, to hear them
+    stops.push({ x: w._focus.x, z: w._focus.z, look: w._focus.look, work: w.id, dwell: w.video?.sound ? 14 : 5 });
   }
   return stops;
 }
@@ -143,7 +148,6 @@ function toggleTour() {
   if (tour.active) { tour.stop(); return; }
   viewer.close();
   ui.close();
-  controls.unlock();
   document.body.classList.add('touring');
   tour.start();
   syncTourBtn();
@@ -234,7 +238,7 @@ let hovered = null;
 let mouseInside = false;
 canvas.addEventListener('mousemove', (e) => {
   mouseInside = true;
-  if (!controls.locked) ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
+  ndc.set((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1);
 });
 canvas.addEventListener('mouseleave', () => { mouseInside = false; });
 
@@ -247,15 +251,14 @@ function pick(x, y) {
 function updateHover() {
   let ud = null;
   if (controls.enabled && !isTouch) {
-    if (controls.locked) ud = pick(0, 0);
-    else if (mouseInside) ud = pick(ndc.x, ndc.y);
+    if (mouseInside) ud = pick(ndc.x, ndc.y);
   }
   const target = ud && (ud.work || ud.text || null);
   if (target !== hovered) {
     hovered = target;
     crosshair.classList.toggle('active', !!hovered);
     promptEl.classList.toggle('show', !!hovered);
-    canvas.style.cursor = hovered && !controls.locked ? 'pointer' : '';
+    canvas.style.cursor = hovered ? 'pointer' : '';
     if (hovered === 'text') setText(promptEl, 'hud.promptText');
     else if (hovered === 'roomsheet') setText(promptEl, 'hud.promptSheet');
     else if (hovered) setText(promptEl, 'hud.promptWork', { no: hovered.no, title: hovered.title });
@@ -268,21 +271,15 @@ function activate(ud) {
   if (ud.text) { ui.about(); return true; }
   return false;
 }
-controls.onTap = (x, y, touch) => {
-  if (activate(pick((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1))) return;
-  if (!touch && !controls.locked) controls.lock();
-};
-canvas.addEventListener('click', () => {
-  if (controls.locked && controls.enabled) activate(pick(0, 0));
-});
+controls.onTap = (x, y) => activate(pick((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1));
 window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen()) return;
   if (e.code === 'KeyE' || e.code === 'Enter') activate(pick(0, 0));
 });
 // During the tour (controls disabled) a click / tap opens the work in view
-canvas.addEventListener('pointerup', () => {
+canvas.addEventListener('pointerup', (e) => {
   if (!tour.active) return;
-  const ud = pick(0, 0);
+  const ud = pick((e.clientX / window.innerWidth) * 2 - 1, -(e.clientY / window.innerHeight) * 2 + 1) || pick(0, 0);
   if (ud && ud.work) viewer.open(ud.work);
 });
 
@@ -314,12 +311,14 @@ function enter() {
   document.getElementById('loader').classList.add('gone');
   document.getElementById('hud').hidden = false;
   audio.start();
+  // the videos' own sound, played from their screens
+  if (audio.attachVideos(VIDEOS)) enableVideoSound();
   syncEnabled();
-  if (!isTouch) controls.lock();
   post.trigger(1);
 }
 enterBtn.addEventListener('click', enter);
-controls.onLockChange = (locked) => document.body.classList.toggle('locked', locked);
+// the "drag to look" hint goes once the visitor has looked around
+controls.onLook = () => document.body.classList.add('looked');
 
 // ---------------------------------------------------------------- resize
 // Field of view before zoom (updateZoom divides it by the magnification).
@@ -370,6 +369,7 @@ function frame() {
   controls.update(dt);
   updateZoom();
   updateRoom();
+  audio.spotlight = tour.work;
   const bands = audio.update(controls.pos.x, controls.pos.y, controls.yaw, dt, t);
   for (const fn of props.anim) fn(t, dt);
   gallery.update(t, dt, camera, controls.zoom);

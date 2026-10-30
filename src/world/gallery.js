@@ -91,11 +91,13 @@ const screenFrag = /* glsl */ `
   }
 `;
 
-// Clickable volumes for the installations: [cx, cy, cz, sx, sy, sz]
+// Clickable volumes for the installations: [cx, cy, cz, sx, sy, sz, rotY]
+const PIPE_LEN = Math.hypot(PIPE.b.x - PIPE.a.x, PIPE.b.z - PIPE.a.z);
 const HIT_BOXES = {
   'w03-paradise-factory': [
-    [PLANT.x, 1.3, PLANT.z, 0.9, 2.6, 0.9], // plant, tank and LED bars
-    [PIPE.x, 1.1, (PIPE.z0 + PIPE.z1) / 2, 0.35, 0.6, PIPE.z1 - PIPE.z0], // hydroponic pipe
+    [PLANT.x + 0.05, 1.3, PLANT.z, 0.9, 2.6, 1.0], // plant, tank and LED bars
+    // the hydroponic line, a box turned along its diagonal
+    [(PIPE.a.x + PIPE.b.x) / 2, 1.1, (PIPE.a.z + PIPE.b.z) / 2, 0.35, 0.6, PIPE_LEN, Math.atan2(PIPE.b.x - PIPE.a.x, PIPE.b.z - PIPE.a.z)],
   ],
   'w16-let-it-flow': [
     [25.33, 1.2, 3.73, 0.12, 2.4, 4.0], // projection on the end wall
@@ -328,9 +330,10 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     } else if (work.anchor) {
       // Installations: invisible but clickable volumes around the real objects
       const a = work.anchor;
-      for (const [cx, cy, cz, sx, sy, sz] of HIT_BOXES[work.id] || [[a.x, a.y, a.z, 1, 2, 1]]) {
+      for (const [cx, cy, cz, sx, sy, sz, rotY = 0] of HIT_BOXES[work.id] || [[a.x, a.y, a.z, 1, 2, 1]]) {
         const hit = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), new THREE.MeshBasicMaterial({ visible: false }));
         hit.position.set(cx, cy, cz);
+        hit.rotation.y = rotY;
         hit.userData.work = work;
         group.add(hit);
         hitMeshes.push(hit);

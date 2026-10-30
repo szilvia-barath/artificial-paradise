@@ -65,12 +65,12 @@
       "image": "img/w03-paradise-factory",
       "photo": "_01_panorama",
       "anchor": {
-        "x": 1.52,
-        "y": 1.2,
-        "z": 3.58
+        "x": 1.85,
+        "y": 1.1,
+        "z": 3.66
       },
       "view": {
-        "x": 3.2,
+        "x": 3.5,
         "z": 4.9
       }
     },

@@ -34,7 +34,7 @@ export function buildLights(scene) {
   // Room 1: track spots + the cold LED bars of Paradise Factory
   lights.r1a = point(0xf6f6ff, 10, 2.3, 2.3, 2.6, 11);
   lights.r1b = point(0xf6f6ff, 10, 2.6, 2.3, 5.2, 11);
-  lights.led = point(0xe8f2ff, 1.6, 1.52, 1.7, 3.58, 3.2);
+  lights.led = point(0xe8f2ff, 1.1, 2.05, 1.5, 3.66, 2.6);
   // Room 2: warm enamel pendants
   lights.r2 = spot(0xffd9a6, 9, 7.98, 1.95, 3.412, 9, 1.4, 0.45);
   // Room 3: cool gallery white from the track rail

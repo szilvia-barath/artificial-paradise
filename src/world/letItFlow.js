@@ -9,14 +9,24 @@ import { createVideo } from './video.js';
 // checked against DSC_0113): one relief mesh whose height comes from the cut-out's shape
 // and the photo's light and shade. From above, the video Let it Flow (a night sky with
 // the river glowing in it) is projected over the floor, turned so its river lies on the
-// plastic; its specks are the white dots on the floor in the photos.
+// plastic; its specks are the white dots on the floor in the photos. Both projections
+// fill the room: the wall one edge to edge and up to the beam, the floor one wall to wall.
 
 const BASE = import.meta.env.BASE_URL;
 const WALL_X = 25.4;
 const Z0 = 1.73;
 const Z1 = 5.73;
-const TOP = 2.42;
+const TOP = 2.72; // underside of the beam along the end wall
+const VIDEO_ASPECT = 16 / 9;
 const P = RIVER.projection;
+
+// Shows a texture on the end wall without stretching it: it fills the wall's height and
+// what is too wide for the wall falls off both sides, as with a projector zoomed to fit.
+function coverWall(tex, aspect) {
+  const shown = (Z1 - Z0) / TOP / aspect;
+  tex.repeat.x = shown;
+  tex.offset.x = (1 - shown) / 2;
+}
 
 // floor projection frame (video turned 180°): u runs west from xEast, v runs north
 const projUV = /* glsl */ `
@@ -42,12 +52,14 @@ export function buildLetItFlow(manager) {
     near: 4.5,
     work: 'w16-let-it-flow',
   });
+  coverWall(wallVideo.tex, VIDEO_ASPECT);
   // The photographed projection stands in until the video plays; the video is added as
   // light over the wall (a projector cannot darken), so the brick shows through.
   const projMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95), toneMapped: false });
   let still = null;
   loader.load(`${BASE}img/w16-let-it-flow-tex.webp`, (t) => {
     still = srgb(t);
+    coverWall(still, t.image.width / t.image.height);
     if (!projMat.map) {
       projMat.map = still;
       projMat.needsUpdate = true;
@@ -60,6 +72,10 @@ export function buildLetItFlow(manager) {
 
   // ---------------------------------------------------------------- floor projection
   const floorVideo = createVideo('video/w16-floor.mp4');
+  // The frame is narrower than the room and scaled so that its river is the plastic's size,
+  // so zooming it to the walls would pull the two apart. It stays put, and the strips
+  // between its long edges and the side walls continue its specks in reflection.
+  floorVideo.tex.wrapT = THREE.MirroredRepeatWrapping;
   const floorMat = new THREE.MeshBasicMaterial({
     transparent: true,
     blending: THREE.AdditiveBlending,
@@ -68,19 +84,20 @@ export function buildLetItFlow(manager) {
     opacity: 0,
   });
   {
-    // a plane covering the projected frame, its UVs following letItFlowUV
+    // a plane from wall to wall, its UVs following letItFlowUV
     const x0 = P.xEast - P.lengthM;
-    const geo = new THREE.PlaneGeometry(P.lengthM, P.widthM);
+    const zMid = (Z0 + Z1) / 2;
+    const geo = new THREE.PlaneGeometry(P.lengthM, Z1 - Z0);
     geo.rotateX(-Math.PI / 2);
     const pos = geo.attributes.position;
     const uv = geo.attributes.uv;
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i) + x0 + P.lengthM / 2;
-      const z = pos.getZ(i) + P.zCentre;
+      const z = pos.getZ(i) + zMid;
       uv.setXY(i, (P.xEast - x) / P.lengthM, 0.5 + (z - P.zCentre) / P.widthM);
     }
     const floorProj = new THREE.Mesh(geo, floorMat);
-    floorProj.position.set(x0 + P.lengthM / 2, 0.004, P.zCentre);
+    floorProj.position.set(x0 + P.lengthM / 2, 0.004, zMid);
     floorProj.renderOrder = 2;
     group.add(floorProj);
   }

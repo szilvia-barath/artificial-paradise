@@ -100,7 +100,7 @@ const HIT_BOXES = {
     [(PIPE.a.x + PIPE.b.x) / 2, 1.1, (PIPE.a.z + PIPE.b.z) / 2, 0.35, 0.6, PIPE_LEN, Math.atan2(PIPE.b.x - PIPE.a.x, PIPE.b.z - PIPE.a.z)],
   ],
   'w16-let-it-flow': [
-    [25.33, 1.2, 3.73, 0.12, 2.4, 4.0], // projection on the end wall
+    [25.33, 1.36, 3.73, 0.12, 2.72, 4.0], // projection on the end wall
     [23.61, 0.06, 3.69, 3.53, 0.14, 1.4], // the melted plastic river
   ],
 };

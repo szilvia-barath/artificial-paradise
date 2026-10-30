@@ -1,13 +1,15 @@
 {
-  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json.",
+  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer.",
   "meta": {
     "title": "Artificial Paradise",
     "digitalBy": "Szilvia Barath",
     "links": {
       "exhibition": "https://artkartell.hu/vizit/759-kristoflab-artificial-paradise",
-      "gallery": "https://mamusociety.wordpress.com/galeria-gallery/",
+      "gallery": "https://mamu.hu",
       "instagram": "https://www.instagram.com/p/DFH19tjo3ph/",
-      "map": "https://www.openstreetmap.org/node/4819875781"
+      "map": "https://www.openstreetmap.org/node/4819875781",
+      "facebook": "https://www.facebook.com/mamu.tarsasag",
+      "mamuInstagram": "https://www.instagram.com/mamu_society"
     }
   },
   "works": [
@@ -93,6 +95,15 @@
         "y": 1.35,
         "w": 0.32,
         "h": 0.4
+      },
+      "video": {
+        "loop": "video/w03-screen.mp4",
+        "full": [
+          {
+            "drive": "1xNVqmP0bHdLemgj343JJgydy_IAo9--O",
+            "label": "full"
+          }
+        ]
       }
     },
     {
@@ -145,10 +156,19 @@
       "hang": {
         "face": "+x",
         "at": 5.85,
-        "along": 2.85,
+        "along": 2.794,
         "y": 1.55,
         "w": 0.94,
         "h": 0.53
+      },
+      "video": {
+        "loop": "video/w06-artificial-paradise-i.mp4",
+        "full": [
+          {
+            "drive": "1HnBVZR0aTIM-EsjxCZsk0q-MmbJH68Gd",
+            "label": "full"
+          }
+        ]
       }
     },
     {
@@ -167,10 +187,19 @@
       "hang": {
         "face": "+z",
         "at": 1.73,
-        "along": 7.15,
+        "along": 7.201,
         "y": 1.5,
         "w": 0.94,
         "h": 0.53
+      },
+      "video": {
+        "loop": "video/w07-artificial-paradise-ii.mp4",
+        "full": [
+          {
+            "drive": "1ZtXyfb9kdgpmvFMggiM9p0MeKkwqzpdO",
+            "label": "full"
+          }
+        ]
       }
     },
     {
@@ -185,10 +214,19 @@
       "hang": {
         "face": "+z",
         "at": 1.73,
-        "along": 12.35,
+        "along": 12.5,
         "y": 1.6,
         "w": 1.21,
         "h": 0.68
+      },
+      "video": {
+        "loop": "video/w08-wiena-wrong-landscape-ii.mp4",
+        "full": [
+          {
+            "drive": "1iwGauzuP_sOdcIbcs9J8F7Aa-qffDfqW",
+            "label": "full"
+          }
+        ]
       }
     },
     {
@@ -203,8 +241,8 @@
       "photo": "DSC_0094",
       "hang": {
         "face": "-x",
-        "at": 15.45,
-        "along": 2.36,
+        "at": 15.6,
+        "along": 2.329,
         "y": 1.45,
         "w": 0.4,
         "h": 0.75
@@ -222,8 +260,8 @@
       "photo": "DSC_0080",
       "hang": {
         "face": "+x",
-        "at": 10.05,
-        "along": 5.42,
+        "at": 10.2,
+        "along": 5.236,
         "y": 1.5,
         "w": 0.5,
         "h": 0.8,
@@ -242,8 +280,8 @@
       "photo": "DSC_0077",
       "hang": {
         "face": "-z",
-        "at": 5.94,
-        "along": 10.99,
+        "at": 5.73,
+        "along": 11.14,
         "y": 1.55,
         "w": 0.5,
         "h": 0.5
@@ -261,8 +299,8 @@
       "photo": "DSC_0075",
       "hang": {
         "face": "-z",
-        "at": 5.94,
-        "along": 11.9,
+        "at": 5.73,
+        "along": 12.05,
         "y": 1.55,
         "w": 0.5,
         "h": 0.5
@@ -280,8 +318,8 @@
       "photo": "DSC_0073",
       "hang": {
         "face": "-z",
-        "at": 5.94,
-        "along": 12.86,
+        "at": 5.73,
+        "along": 13.01,
         "y": 1.55,
         "w": 0.5,
         "h": 0.5
@@ -299,8 +337,8 @@
       "photo": "DSC_0071",
       "hang": {
         "face": "-x",
-        "at": 14.35,
-        "along": 5.38,
+        "at": 14.5,
+        "along": 5.198,
         "y": 1.45,
         "w": 0.4,
         "h": 0.75
@@ -317,11 +355,20 @@
       "photo": "DSC_0120",
       "hang": {
         "face": "-z",
-        "at": 5.94,
-        "along": 18.6,
+        "at": 5.73,
+        "along": 18.629,
         "y": 1.6,
         "w": 1.21,
         "h": 0.68
+      },
+      "video": {
+        "loop": "video/w15-wiena-wrong-landscape-i.mp4",
+        "full": [
+          {
+            "drive": "1RCL-S3kwpjcpTsVgCWZxLheWWjFYPBOt",
+            "label": "full"
+          }
+        ]
       }
     },
     {
@@ -334,13 +381,26 @@
       "image": "img/w16-let-it-flow",
       "photo": "DSC_0113",
       "anchor": {
-        "x": 22.6,
-        "y": 0.4,
-        "z": 3.6
+        "x": 23.61,
+        "y": 0.3,
+        "z": 3.69
       },
       "view": {
-        "x": 18.4,
-        "z": 4.3
+        "x": 19.9,
+        "z": 4.6
+      },
+      "video": {
+        "loop": "video/w16-projection.mp4",
+        "full": [
+          {
+            "drive": "1bRQB_qBqCt_EmhaU1-7Mk4t8hw1QPSlY",
+            "label": "wall"
+          },
+          {
+            "drive": "15j1HRd1x63S_KsRATcps3rH1rsY_9fWv",
+            "label": "floor"
+          }
+        ]
       }
     },
     {
@@ -355,10 +415,19 @@
       "hang": {
         "face": "+z",
         "at": 1.73,
-        "along": 22.2,
+        "along": 22.077,
         "y": 1.5,
         "w": 0.94,
         "h": 0.53
+      },
+      "video": {
+        "loop": "video/w17-natural-life.mp4",
+        "full": [
+          {
+            "drive": "1YfdR_rzjFrcy0gD05rfuaarCUWwrYNU-",
+            "label": "full"
+          }
+        ]
       }
     }
   ],
@@ -376,15 +445,15 @@
       "kind": "text",
       "face": "+z",
       "at": 1.73,
-      "along": 8.3,
+      "along": 8.395,
       "y": 1.5
     },
     {
       "id": "roomsheet",
       "kind": "roomsheet",
       "face": "-x",
-      "at": 7.42,
-      "along": 5.7,
+      "at": 7.481,
+      "along": 5.502,
       "y": 1.5
     }
   ]

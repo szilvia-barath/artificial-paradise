@@ -23,15 +23,32 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
       ${data.credits.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}
     </dl>
     <h3>${esc(t('panels.real'))}</h3>
-    <p>${esc(t('panels.address', { venue: t('panels.linkGallery'), address: m.address }))} ·
-      <a href="${esc(m.links.map)}" target="_blank" rel="noopener">${esc(t('panels.map'))}</a></p>
+    <p>${esc(t('panels.address', { venue: m.venue, address: m.address }))} ·
+      <a href="${esc(m.links.map)}" target="_blank" rel="noopener">${esc(t('panels.map'))}</a><br />
+      ${esc(m.opening)}<br />${esc(m.hours)}</p>
     <p>
       <a href="${esc(m.links.exhibition)}" target="_blank" rel="noopener">${esc(t('panels.linkExhibition'))}</a><br />
       <a href="${esc(m.links.gallery)}" target="_blank" rel="noopener">${esc(t('panels.linkGallery'))}</a><br />
+      <a href="${esc(m.links.facebook)}" target="_blank" rel="noopener">${esc(t('panels.linkFacebook'))}</a> ·
+      <a href="${esc(m.links.mamuInstagram)}" target="_blank" rel="noopener">${esc(t('panels.linkMamuInstagram'))}</a><br />
       <a href="${esc(m.links.instagram)}" target="_blank" rel="noopener">${esc(t('panels.linkInstagram'))}</a>
     </p>
+    ${speechHTML()}
     <p class="note">${esc(t('panels.rights'))}</p>
   `;
+  };
+
+  // The opening speech, folded away under its title (it is long).
+  const speechHTML = () => {
+    const s = data.openingSpeech;
+    if (!s) return '';
+    return `
+    <h3>${esc(t('panels.speech'))}</h3>
+    <details class="speech">
+      <summary>${esc(s.author)}: <em>${esc(s.title)}</em> · ${esc(t('panels.speechRead'))}</summary>
+      ${s.text.map((p) => `<p>${esc(p)}</p>`).join('')}
+      ${s.note ? `<p class="note">${esc(s.note)}</p>` : ''}
+    </details>`;
   };
 
   const worksHTML = () => `

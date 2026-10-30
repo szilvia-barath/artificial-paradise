@@ -31,6 +31,6 @@ Every push to `main` (or a `claude/**` branch) runs `.github/workflows/deploy.ym
 
 ## Credits
 
-Artist: Kristóf Szabó / KristofLab. Gallery: MAMŰ, Budapest. Text: Luca Cserhalmi. Opening: Barabás Zemlényi-Kovács. Digital exhibition and photography: Szilvia Barath.
+Artist: Kristóf Szabó / KristofLab. Curator and text: Luca Cserhalmi. Opening speech: Barnabás Zemlényi-Kovács. Gallery: MAMŰ, Budapest. Supported by the National Cultural Fund of Hungary, the Hungarian Academy of Arts and the Municipality of Budapest District VII. Photography: Kristóf Szabó. Digital exhibition: Szilvia Barath.
 
 All artworks © Kristóf Szabó / KristofLab, reproduced from installation photographs for documentation purposes. The code is separate from the artworks, which are not licensed for reuse.

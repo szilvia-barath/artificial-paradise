@@ -2,10 +2,11 @@ import * as THREE from 'three';
 import { wallFrame, ROOMS } from './layout.js';
 import { PLANT, PIPE } from './paradiseFactory.js';
 import { t } from '../i18n.js';
+import { createVideo, scheduleVideos } from './video.js';
 
-// Hangs the works from exhibition.json: prints as thin mounted panels, videos as
-// glowing flat screens (with a subtle scanline/glitch shader), installations and the
-// installations as clickable volumes. Fake spotlights = additive light pools on the wall.
+// Hangs the works from exhibition.json: prints as thin mounted panels, videos as flat
+// screens playing the artist's videos (short silent loops; the photographed frames
+// stand in until a loop has loaded), installations as clickable volumes. Fake spotlights = additive light pools on the wall.
 // Textures load lazily: 512px thumbs first, 1024px versions once you get close, and the
 // 1600px detail image for the paintings and prints you stand at or zoom in on.
 
@@ -97,8 +98,8 @@ const HIT_BOXES = {
     [PIPE.x, 1.1, (PIPE.z0 + PIPE.z1) / 2, 0.35, 0.6, PIPE.z1 - PIPE.z0], // hydroponic pipe
   ],
   'w16-let-it-flow': [
-    [25.6, 1.2, 3.83, 0.12, 2.4, 4.2], // projection on the end wall
-    [22.6, 0.12, 3.6, 6.2, 0.24, 2.4], // plastic river
+    [25.33, 1.2, 3.73, 0.12, 2.4, 4.0], // projection on the end wall
+    [23.61, 0.06, 3.69, 3.53, 0.14, 1.4], // the melted plastic river
   ],
 };
 
@@ -182,11 +183,12 @@ function drawRoomSheet(g, data) {
   }
 }
 
-export function buildGallery(data, materials, manager, renderer, { hdBudget = 6 } = {}) {
+export function buildGallery(data, materials, manager, renderer, { hdBudget = 6, videoBudget = 3 } = {}) {
   const group = new THREE.Group();
   group.name = 'gallery';
   const hitMeshes = [];
   const screens = [];
+  const videos = []; // { video, pos } for scheduleVideos
   const lazy = []; // { work, material(s), loaded, pos }
   const loader = new THREE.TextureLoader(manager);
   const lazyLoader = new THREE.TextureLoader();
@@ -271,6 +273,10 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6 
           });
         });
         lazy.push({ work, entry, pos: new THREE.Vector3(f.x, hg.y, f.z), loaded: false });
+        if (work.video) {
+          entry.video = createVideo(work.video.loop);
+          videos.push({ video: entry.video, pos: new THREE.Vector3(f.x, hg.y, f.z) });
+        }
       } else {
         // Canvas on a stretcher (paintings) or a thin mounted print
         const depth = work.type === 'painting' ? 0.035 : 0.012;
@@ -417,10 +423,18 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6 
   let upgradeTimer = 0;
   const update = (t, dt, camera, zoom = 1) => {
     upgradeTimer -= dt;
-    if (upgradeTimer <= 0) { upgradeTimer = 0.4; upgrade(camera, zoom); }
+    if (upgradeTimer <= 0) {
+      upgradeTimer = 0.4;
+      upgrade(camera, zoom);
+      scheduleVideos(videos, camera.position, videoBudget, 9);
+    }
     for (const s of screens) {
       const u = s.mat.uniforms;
-      if (s.frames.length > 1) {
+      if (s.video && s.video.ready) {
+        u.map.value = s.video.tex;
+        u.mapB.value = s.video.tex;
+        u.mixB.value = 0;
+      } else if (s.frames.length > 1) {
         s.t += dt;
         const period = 7;
         const phase = s.t % period;

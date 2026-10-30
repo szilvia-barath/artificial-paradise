@@ -215,12 +215,12 @@ export function buildProps(materials) {
   // ================================================================ Room 2
   {
     // bar counter tops (dark laminate) over the brick half walls
-    g.add(slab(materials.counterTop, 7.62, 9.72, 1.0, 1.05, 4.78, 5.36));
-    g.add(slab(materials.counterTop, 9.64, 10.14, 1.0, 1.05, 4.18, 4.92));
+    g.add(slab(materials.counterTop, 7.689, 9.87, 1.0, 1.05, 4.628, 5.179));
+    g.add(slab(materials.counterTop, 9.788, 10.29, 1.0, 1.05, 4.058, 4.761));
     // behind the bar: low cabinets, shelves with glasses, kettle, bottles
-    g.add(slab(materials.white, 7.72, 9.66, 0, 0.88, 5.52, 5.93));
-    g.add(slab(materials.counterTop, 7.7, 9.68, 0.88, 0.92, 5.5, 5.94));
-    for (const y of [1.42, 1.78]) g.add(slab(materials.wood, 7.8, 9.55, y, y + 0.025, 5.7, 5.93));
+    g.add(slab(materials.white, 7.793, 9.808, 0, 0.88, 5.331, 5.72));
+    g.add(slab(materials.counterTop, 7.772, 9.829, 0.88, 0.92, 5.312, 5.73));
+    for (const y of [1.42, 1.78]) g.add(slab(materials.wood, 7.876, 9.694, y, y + 0.025, 5.502, 5.72));
     const glassGeo = new THREE.CylinderGeometry(0.035, 0.028, 0.12, 10);
     const n = 22;
     const glasses = new THREE.InstancedMesh(glassGeo, materials.glass, n);
@@ -228,36 +228,36 @@ export function buildProps(materials) {
     for (let i = 0; i < n; i++) {
       const row = i < 9 ? 0 : i < 18 ? 1 : 2;
       const k = row === 2 ? i - 18 : i % 9;
-      const x = row === 2 ? 8.6 + k * 0.1 : 7.95 + k * 0.17;
+      const x = row === 2 ? 8.707 + k * 0.1 : 8.032 + k * 0.17;
       const y = row === 0 ? 1.505 : row === 1 ? 1.865 : 1.11;
-      const z = row === 2 ? 5.0 + (k % 2) * 0.08 : 5.81;
+      const z = row === 2 ? 4.837 + (k % 2) * 0.08 : 5.6;
       m.makeTranslation(x, y, z);
       glasses.setMatrixAt(i, m);
     }
     g.add(glasses);
     const kettle = cyl(0.075, 0.095, 0.22, materials.white, 16);
-    g.add(place(kettle, 8.05, 1.03, 5.7));
+    g.add(place(kettle, 8.136, 1.03, 5.502));
     const bottleMat = new THREE.MeshStandardMaterial({ color: 0x3a1f16, roughness: 0.2, metalness: 0.1 });
     for (let i = 0; i < 3; i++) {
-      g.add(place(cyl(0.035, 0.035, 0.24, bottleMat, 10), 9.2 + i * 0.09, 1.04, 5.72));
-      g.add(place(cyl(0.012, 0.02, 0.08, bottleMat, 8), 9.2 + i * 0.09, 1.2, 5.72));
+      g.add(place(cyl(0.035, 0.035, 0.24, bottleMat, 10), 9.331 + i * 0.09, 1.04, 5.51));
+      g.add(place(cyl(0.012, 0.02, 0.08, bottleMat, 8), 9.331 + i * 0.09, 1.2, 5.51));
     }
-    obstacle(7.42, 9.72, 4.78, 5.94);
+    obstacle(7.481, 9.87, 4.628, 5.73);
 
     // round black café table and the folding wire chairs under Artificial Paradise II
     const table = new THREE.Group();
     table.add(place(cyl(0.3, 0.3, 0.025, materials.black, 32), 0, 0.75, 0));
     table.add(place(cyl(0.03, 0.03, 0.74, materials.black, 10), 0, 0.37, 0));
     table.add(place(cyl(0.2, 0.22, 0.025, materials.black, 24), 0, 0.012, 0));
-    g.add(place(table, 8.2, 0, 2.3));
-    obstacle(7.9, 8.5, 2.0, 2.6);
-    g.add(place(wireChair(materials, gridMat), 7.12, 0, 2.08, 0.1));
-    obstacle(6.88, 7.36, 1.85, 2.32);
-    g.add(place(wireChair(materials, gridMat, true), 8.85, 0, 2.6, -1.9));
-    obstacle(8.6, 9.1, 2.35, 2.85);
+    g.add(place(table, 8.292, 0, 2.272));
+    obstacle(7.98, 8.603, 1.987, 2.557);
+    g.add(place(wireChair(materials, gridMat), 7.169, 0, 2.063, 0.1));
+    obstacle(6.92, 7.419, 1.844, 2.291);
+    g.add(place(wireChair(materials, gridMat, true), 8.967, 0, 2.557, -1.9));
+    obstacle(8.707, 9.227, 2.319, 2.794);
 
     // enamel pendant lamps (DSC_0083)
-    for (const [x, z] of [[7.35, 3.2], [8.5, 3.75]]) {
+    for (const [x, z] of [[7.408, 3.127], [8.603, 3.649]]) {
       const lamp = new THREE.Group();
       lamp.add(place(cyl(0.005, 0.005, 0.5, materials.black, 4), 0, 2.5, 0));
       lamp.add(place(cyl(0.05, 0.19, 0.15, materials.black, 24), 0, 2.2, 0));
@@ -270,22 +270,22 @@ export function buildProps(materials) {
     }
 
     // closed door to the toilets
-    g.add(slab(materials.door, 6.08, 6.92, 0, 2.02, 5.9, 5.94));
-    g.add(slab(materials.white, 6.02, 6.08, 0, 2.08, 5.89, 5.94));
-    g.add(slab(materials.white, 6.92, 6.98, 0, 2.08, 5.89, 5.94));
-    g.add(slab(materials.white, 6.02, 6.98, 2.02, 2.08, 5.89, 5.94));
-    g.add(place(box(0.12, 0.02, 0.04, materials.steel), 6.8, 1.02, 5.88));
+    g.add(slab(materials.door, 6.089, 6.962, 0, 2.02, 5.692, 5.73));
+    g.add(slab(materials.white, 6.027, 6.089, 0, 2.08, 5.682, 5.73));
+    g.add(slab(materials.white, 6.962, 7.024, 0, 2.08, 5.682, 5.73));
+    g.add(slab(materials.white, 6.027, 7.024, 2.02, 2.08, 5.682, 5.73));
+    g.add(place(box(0.12, 0.02, 0.04, materials.steel), 6.837, 1.02, 5.673));
 
     // gate in front of the storage alcove (DSC_0058–0060), with lumber stored behind
-    for (let x = 8.7; x < 9.68; x += 0.11) g.add(slab(materials.white, x, x + 0.016, 0.05, 2.08, 1.58, 1.6));
-    for (const y of [0.05, 1.0, 2.06]) g.add(slab(materials.white, 8.66, 9.69, y, y + 0.025, 1.57, 1.61));
+    for (let x = 8.811; x < 9.829; x += 0.11) g.add(slab(materials.white, x, x + 0.016, 0.05, 2.08, 1.58, 1.6));
+    for (const y of [0.05, 1.0, 2.06]) g.add(slab(materials.white, 8.769, 9.84, y, y + 0.025, 1.57, 1.61));
     for (let i = 0; i < 5; i++) {
       const b = box(0.12, 2.0, 0.025, materials.wood);
-      place(b, 8.8 + i * 0.17, 1.0, 0.25 + i * 0.06);
+      place(b, 8.915 + i * 0.17, 1.0, 0.25 + i * 0.06);
       b.rotation.x = -0.12;
       g.add(b);
     }
-    obstacle(8.65, 9.7, 1.5, 1.62);
+    obstacle(8.759, 9.85, 1.5, 1.62);
   }
 
   // ================================================================ Room 4
@@ -297,20 +297,20 @@ export function buildProps(materials) {
     const lens = cyl(0.045, 0.045, 0.03, materials.led, 16);
     lens.rotation.z = Math.PI / 2;
     proj.add(place(lens, 0.19, 2.38, 0));
-    g.add(place(proj, 17.4, 0, 3.83));
+    g.add(place(proj, 17.48, 0, 3.725));
 
     const pipeMat = new THREE.MeshStandardMaterial({ color: 0x55575c, roughness: 0.6 });
     // low heating pipe along the north wall + big drain pipes coming down (DSC_0104–0109)
-    const low = cyl(0.03, 0.03, 9.9, pipeMat, 8);
+    const low = cyl(0.03, 0.03, 9.48, pipeMat, 8);
     low.rotation.z = Math.PI / 2;
-    g.add(place(low, 20.7, 0.42, 1.78));
-    for (const [x, y0, r] of [[18.9, 0.42, 0.03], [20.35, 1.9, 0.065], [21.05, 1.9, 0.065], [24.4, 0.42, 0.03]]) {
+    g.add(place(low, 20.64, 0.42, 1.778));
+    for (const [x, y0, r] of [[18.917, 0.42, 0.03], [20.305, 1.9, 0.065], [20.976, 1.9, 0.065], [24.184, 0.42, 0.03]]) {
       g.add(place(cyl(r, r, 2.9 - y0, pipeMat, 10), x, (2.9 + y0) / 2, 1.73 + r + 0.02));
     }
     // gas meter by the partition (DSC_0098–0101)
-    g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.3, 1.62, 1.82));
-    g.add(place(cyl(0.025, 0.025, 0.12, new THREE.MeshStandardMaterial({ color: 0xe6c21e, roughness: 0.5 }), 8), 16.3, 1.83, 1.82));
-    g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.2, 0.72, 1.79));
+    g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.427, 1.62, 1.816));
+    g.add(place(cyl(0.025, 0.025, 0.12, new THREE.MeshStandardMaterial({ color: 0xe6c21e, roughness: 0.5 }), 8), 16.427, 1.83, 1.816));
+    g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.331, 0.72, 1.787));
 
     // curtain bunched at the south side of the opening between Room 3 and Room 4
     const cg = new THREE.PlaneGeometry(0.55, 2.42, 18, 1);
@@ -318,8 +318,8 @@ export function buildProps(materials) {
     for (let i = 0; i < pos.count; i++) pos.setZ(i, Math.sin(pos.getX(i) * 46) * 0.045);
     cg.computeVertexNormals();
     const curtain = new THREE.Mesh(cg, materials.curtain);
-    g.add(place(curtain, 15.84, 1.22, 4.5, Math.PI / 2));
-    obstacle(15.78, 15.92, 4.2, 4.82);
+    g.add(place(curtain, 15.986, 1.22, 4.362, Math.PI / 2));
+    obstacle(15.929, 16.063, 4.077, 4.666);
   }
 
   // ================================================================ track lights
@@ -327,7 +327,7 @@ export function buildProps(materials) {
     const rails = [
       { x0: R1.west + 0.6, x1: R1.east - 0.45, z: 2.9, y: 3.0 },
       { x0: R1.west + 0.6, x1: R1.east - 0.45, z: R1.D * 0.74, y: 3.0 },
-      { x0: 10.3, x1: 15.1, z: 3.83, y: 2.75 },
+      { x0: 10.45, x1: 15.25, z: 3.725, y: 2.75 },
     ];
     const per = 4;
     const spotGeo = new THREE.CylinderGeometry(0.04, 0.055, 0.15, 12);

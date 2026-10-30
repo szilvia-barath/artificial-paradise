@@ -1,11 +1,13 @@
-// Floor plan of the MAMŰ basement, in metres, traced from the exhibition's own room
-// sheet (the plan printed next to the works list, photographed in DSC_0049) at
-// 0.026 m per plan pixel, then checked against the photos: the Room 1 panorama
-// (camera solved from the corner bearings), brick courses, floor tiles and the
-// canvas sizes on the works list. Cross-check with OpenStreetMap: the gallery is in
-// the basement of Damjanich utca 39, a corner building whose wing along Murányi utca
-// is 26.5 m from the street front to the back; this basement measures about 26.5 m from
-// the outer face of Room 1's west wall to the outer face of Room 4's end wall.
+// Floor plan of the MAMŰ basement, in metres. Room sizes are the gallery's measured
+// plan ("Alaprajz_ok new.jpg"): Room 1 5.0 × 7.0 m, Room 2 4.0 m wide, Room 3 5.4 m and
+// Room 4 9.5 m long, Rooms 2–4 4.0 m deep. Openings, recesses and where things stand
+// were traced from the exhibition's room sheet (DSC_0049) and checked against the
+// photos: the Room 1 panorama (camera solved from the corner bearings), brick courses,
+// floor tiles and the canvas sizes on the works list. Cross-check with OpenStreetMap:
+// the gallery is in the basement of Damjanich utca 39, a corner building whose wing
+// along Murányi utca is 26.5 m from the street front to the back; this basement
+// measures 26.35 m from the outer face of Room 1's west wall to the outer face of
+// Room 4's end wall.
 // +x (Room 1 -> Room 4) points to bearing 146° (south-east); Room 1's window wall
 // faces Damjanich utca.
 //
@@ -21,9 +23,8 @@
 
 export const EYE = 1.62;
 
-// Room 1's size is PROVISIONAL until the owner's tape measurements arrive: change W and D
-// here and the walls, stairs, bench, windows and Paradise Factory follow. The panorama
-// measurement gave 4.5 x 6.55 m; the owner remembers the room larger.
+// Room 1 is 5.0 × 7.0 m (the gallery's measured plan). Change W and D here and the walls,
+// stairs, bench, windows and Paradise Factory follow.
 export const R1 = { W: 5.0, D: 7.0, east: 4.85, recess: 5.4 };
 R1.west = R1.east - R1.W;
 
@@ -38,21 +39,21 @@ export const ROOMS = [
   },
   {
     id: 'r2',
-    x0: 5.85, x1: 9.7, z0: 1.73, z1: 5.94,
+    x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.73,
     ceiling: 2.75,
-    spawn: { x: 6.6, z: 4.25, look: { x: 8.2, z: 1.73 } },
+    spawn: { x: 6.629, z: 4.124, look: { x: 8.292, z: 1.73 } },
   },
   {
     id: 'r3',
-    x0: 10.05, x1: 15.45, z0: 1.73, z1: 5.94,
+    x0: 10.2, x1: 15.6, z0: 1.73, z1: 5.73,
     ceiling: 2.75,
-    spawn: { x: 10.7, z: 3.4, look: { x: 15.4, z: 3.9 } },
+    spawn: { x: 10.85, z: 3.317, look: { x: 15.55, z: 3.792 } },
   },
   {
     id: 'r4',
-    x0: 15.75, x1: 25.67, z0: 1.73, z1: 5.94,
+    x0: 15.9, x1: 25.4, z0: 1.73, z1: 5.73,
     ceiling: 2.9,
-    spawn: { x: 16.6, z: 3.9, look: { x: 25.67, z: 3.8 } },
+    spawn: { x: 16.714, z: 3.792, look: { x: 25.4, z: 3.697 } },
   },
 ];
 
@@ -89,44 +90,44 @@ export const BLOCKS = [
   { x0: R1.east, x1: 5.85, z0: 5.0, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick', faces: { px: 'warmBrick' } },
 
   // ---------- Room 2 ----------
-  // north: wall in front of the storage alcove (not accessible), gated opening x 8.65–9.70
-  { x0: 5.85, x1: 8.65, z0: 1.5, z1: 1.73, y1: 2.75, mat: 'warmBrick' },
-  { x0: 8.65, x1: 9.7, z0: 1.5, z1: 1.73, y0: DOOR, y1: 2.75, mat: 'warmBrick' },
+  // north: wall in front of the storage alcove (not accessible), gated opening x 8.76–9.85
+  { x0: 5.85, x1: 8.759, z0: 1.5, z1: 1.73, y1: 2.75, mat: 'warmBrick' },
+  { x0: 8.759, x1: 9.85, z0: 1.5, z1: 1.73, y0: DOOR, y1: 2.75, mat: 'warmBrick' },
   // storage alcove shell (only glimpsed through the gate)
-  { x0: 5.85, x1: 10.05, z0: -T, z1: 0, y1: 2.75, mat: 'darkBrick' },
+  { x0: 5.85, x1: 10.2, z0: -T, z1: 0, y1: 2.75, mat: 'darkBrick' },
   // south: wall with the (closed) door to the toilets
-  { x0: 5.85, x1: 7.4, z0: 5.94, z1: 6.34, y1: 2.75, mat: 'warmBrick' },
+  { x0: 5.85, x1: 7.46, z0: 5.73, z1: 6.13, y1: 2.75, mat: 'warmBrick' },
   // bar: low brick counter (you see over it from the Room 1 doorway, DSC_0021),
   // a brick pillar at its back corner and the back wall
-  { x0: 7.7, x1: 9.7, z0: 4.85, z1: 5.3, y1: 1.0, mat: 'warmBrick' },
-  { x0: 7.42, x1: 7.7, z0: 5.45, z1: 5.94, y1: 2.75, mat: 'warmBrick' },
-  { x0: 7.35, x1: 9.7, z0: 5.94, z1: 6.34, y1: 2.75, mat: 'warmBrick' },
-  // Room 2 | Room 3 wall: pillar, doorway z 2.60–4.20, bar pass-through z 4.20–4.90, wall
-  { x0: 9.7, x1: 10.05, z0: -T, z1: 2.6, y1: 2.75, mat: 'warmBrick', faces: { px: 'whiteBrick' } },
-  { x0: 9.7, x1: 10.05, z0: 2.6, z1: 4.2, y0: ARCH, y1: 2.75, mat: 'whiteBrick', reveal: 'whiteBrick' },
-  { x0: 9.7, x1: 10.05, z0: 4.2, z1: 4.9, y1: 1.0, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
-  { x0: 9.7, x1: 10.05, z0: 4.2, z1: 4.9, y0: ARCH, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
-  { x0: 9.7, x1: 10.05, z0: 4.9, z1: 6.34, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
+  { x0: 7.772, x1: 9.85, z0: 4.694, z1: 5.122, y1: 1.0, mat: 'warmBrick' },
+  { x0: 7.481, x1: 7.772, z0: 5.264, z1: 5.73, y1: 2.75, mat: 'warmBrick' },
+  { x0: 7.408, x1: 9.85, z0: 5.73, z1: 6.13, y1: 2.75, mat: 'warmBrick' },
+  // Room 2 | Room 3 wall: pillar, doorway z 2.56–4.08, bar pass-through z 4.08–4.74, wall
+  { x0: 9.85, x1: 10.2, z0: -T, z1: 2.557, y1: 2.75, mat: 'warmBrick', faces: { px: 'whiteBrick' } },
+  { x0: 9.85, x1: 10.2, z0: 2.557, z1: 4.077, y0: ARCH, y1: 2.75, mat: 'whiteBrick', reveal: 'whiteBrick' },
+  { x0: 9.85, x1: 10.2, z0: 4.077, z1: 4.742, y1: 1.0, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
+  { x0: 9.85, x1: 10.2, z0: 4.077, z1: 4.742, y0: ARCH, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
+  { x0: 9.85, x1: 10.2, z0: 4.742, z1: 6.13, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
 
   // ---------- Room 3 + Room 4 (one long room) ----------
   // north wall: painted grey brick in Room 3, black brick in Room 4
-  { x0: 10.05, x1: 13.3, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },
+  { x0: 10.2, x1: 13.45, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },
   // bricked-up opening right of Wiena Wrong Landscape II, recessed 14 cm (DSC_0088–0093)
-  { x0: 13.3, x1: 14.9, z0: 1.33, z1: 1.73, y1: 1.25, mat: 'greyBrick' },
-  { x0: 13.3, x1: 14.9, z0: 1.33, z1: 1.59, y0: 1.25, y1: 2.9, mat: 'greyBrick', faces: { pz: 'greyBrickShade' } },
-  { x0: 14.9, x1: 15.45, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },
-  { x0: 15.45, x1: 25.67 + T, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'darkBrick' },
+  { x0: 13.45, x1: 15.05, z0: 1.33, z1: 1.73, y1: 1.25, mat: 'greyBrick' },
+  { x0: 13.45, x1: 15.05, z0: 1.33, z1: 1.59, y0: 1.25, y1: 2.9, mat: 'greyBrick', faces: { pz: 'greyBrickShade' } },
+  { x0: 15.05, x1: 15.6, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },
+  { x0: 15.6, x1: 25.4 + T, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'darkBrick' },
   // south wall: white brick
-  { x0: 10.05, x1: 14.35, z0: 5.94, z1: 6.34, y1: 2.9, mat: 'whiteBrick' },
-  { x0: 15.75, x1: 25.67 + T, z0: 5.94, z1: 6.34, y1: 2.9, mat: 'dimBrick' },
+  { x0: 10.2, x1: 14.5, z0: 5.73, z1: 6.13, y1: 2.9, mat: 'whiteBrick' },
+  { x0: 15.9, x1: 25.4 + T, z0: 5.73, z1: 6.13, y1: 2.9, mat: 'dimBrick' },
   // closet block beside the south stub (#14 hangs on its west face)
-  { x0: 14.35, x1: 15.45, z0: 4.82, z1: 6.34, y1: 2.9, mat: 'plaster' },
+  { x0: 14.5, x1: 15.6, z0: 4.666, z1: 6.13, y1: 2.9, mat: 'plaster' },
   // the two side stubs between Room 3 and Room 4, plus the header above the opening
-  { x0: 15.45, x1: 15.75, z0: 1.73, z1: 2.98, y1: 2.9, mat: 'plaster' },
-  { x0: 15.45, x1: 15.75, z0: 4.82, z1: 6.34, y1: 2.9, mat: 'plaster' },
-  { x0: 15.45, x1: 15.75, z0: 2.98, z1: 4.82, y0: 2.45, y1: 2.9, mat: 'plaster' },
+  { x0: 15.6, x1: 15.9, z0: 1.73, z1: 2.918, y1: 2.9, mat: 'plaster' },
+  { x0: 15.6, x1: 15.9, z0: 4.666, z1: 6.13, y1: 2.9, mat: 'plaster' },
+  { x0: 15.6, x1: 15.9, z0: 2.918, z1: 4.666, y0: 2.45, y1: 2.9, mat: 'plaster' },
   // projection wall (east end)
-  { x0: 25.67, x1: 25.67 + T, z0: 1.33, z1: 6.34, y1: 2.9, mat: 'dimBrick', faces: { nx: 'projWall' } },
+  { x0: 25.4, x1: 25.4 + T, z0: 1.33, z1: 6.13, y1: 2.9, mat: 'dimBrick', faces: { nx: 'projWall' } },
 ];
 
 // Floors and ceilings (rectangles); doorway soffits come from the lintel blocks.
@@ -135,17 +136,17 @@ export const STAIRWELL = { x0: R1.west, x1: R1.west + 1.4, z0: 0, z1: 1.95 };
 export const R1_WEST_OUTER = R1.west - T; // outer face of Room 1's west wall (the stair shaft starts here)
 export const FLOORS = [
   { x0: R1.west - 0.1, x1: 5.6, z0: -0.1, z1: R1.D + 0.1, mat: 'floor' },
-  { x0: 5.4, x1: 9.85, z0: 1.6, z1: 6.0, mat: 'floor' },
-  { x0: 9.7, x1: 15.6, z0: 1.6, z1: 6.0, mat: 'floor' },
-  { x0: 15.6, x1: 25.7, z0: 1.6, z1: 6.0, mat: 'floorDark' },
-  { x0: 5.85, x1: 9.7, z0: 0, z1: 1.5, mat: 'darkFloor', y: 0.002 },
+  { x0: 5.4, x1: 10, z0: 1.6, z1: 5.79, mat: 'floor' },
+  { x0: 9.85, x1: 15.75, z0: 1.6, z1: 5.79, mat: 'floor' },
+  { x0: 15.75, x1: 25.43, z0: 1.6, z1: 5.79, mat: 'floorDark' },
+  { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, mat: 'darkFloor', y: 0.002 },
 ];
 export const CEILINGS = [
   { x0: R1.west, x1: R1.east, z0: 0, z1: R1.D, y: 3.0, mat: 'ceiling', hole: STAIRWELL },
   { x0: R1.east, x1: R1.recess, z0: 3.2, z1: 5.0, y: 3.0, mat: 'ceiling' },
-  { x0: 5.85, x1: 9.7, z0: 1.73, z1: 5.94, y: 2.75, mat: 'planks' },
-  { x0: 5.85, x1: 9.7, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling' },
-  { x0: 10.05, x1: 15.45, z0: 1.73, z1: 5.94, y: 2.75, mat: 'ceiling' },
+  { x0: 5.85, x1: 9.85, z0: 1.73, z1: 5.73, y: 2.75, mat: 'planks' },
+  { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, y: 2.4, mat: 'darkCeiling' },
+  { x0: 10.2, x1: 15.6, z0: 1.73, z1: 5.73, y: 2.75, mat: 'ceiling' },
   // Room 4's ceiling is a run of shallow brick vaults (built in architecture.js)
 ];
 

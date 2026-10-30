@@ -1,145 +1,184 @@
 import * as THREE from 'three';
+import RIVER from '../data/river.json';
+import { OBSTACLES } from './layout.js';
+import { createVideo } from './video.js';
 
-// #16 Let it Flow (2024): trees projected over the whole end wall of Room 4, and a
-// "river" of crushed plastic that winds out of the projected forest across the floor.
-// The projection is the photographed image (DSC_0113, perspective-corrected); the
-// river follows its course in DSC_0112–0117 and is built from instanced pieces.
+// #16 Let it Flow (2024), Room 4. On the end wall the projected video Siluett (trees in
+// grey silhouette, DSC_0112–0117). On the floor a river of melted plastic, rebuilt from
+// the artist's top-down photograph of it (PLANE copy.png, scaled by its 30 cm tiles and
+// checked against DSC_0113): one relief mesh whose height comes from the cut-out's shape
+// and the photo's light and shade. From above, the video Let it Flow (a night sky with
+// the river glowing in it) is projected over the floor, turned so its river lies on the
+// plastic; its specks are the white dots on the floor in the photos.
 
 const BASE = import.meta.env.BASE_URL;
-const WALL_X = 25.67;
+const WALL_X = 25.4;
 const Z0 = 1.73;
-const Z1 = 5.94;
+const Z1 = 5.73;
 const TOP = 2.42;
+const P = RIVER.projection;
 
-// centreline of the river, from the projection wall towards the curtain
-const COURSE = [
-  [25.62, 2.72], [25.0, 2.78], [24.3, 2.98], [23.6, 2.8], [22.9, 3.08],
-  [22.2, 3.62], [21.6, 4.1], [21.0, 4.36], [20.45, 4.48],
-];
-
-function rng(seed) {
-  let s = seed >>> 0;
-  return () => {
-    s = (s * 1664525 + 1013904223) >>> 0;
-    return s / 4294967296;
-  };
-}
+// floor projection frame (video turned 180°): u runs west from xEast, v runs north
+const projUV = /* glsl */ `
+  vec2 letItFlowUV(vec3 w) {
+    return vec2((${P.xEast.toFixed(3)} - w.x) / ${P.lengthM.toFixed(3)},
+                0.5 + (w.z - ${P.zCentre.toFixed(3)}) / ${P.widthM.toFixed(3)});
+  }
+`;
 
 export function buildLetItFlow(manager) {
   const group = new THREE.Group();
   group.name = 'let-it-flow';
-  const rand = rng(16);
-
-  // ---------------------------------------------------------------- projection
-  const projMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95) });
   const loader = new THREE.TextureLoader(manager);
-  loader.load(`${BASE}img/w16-let-it-flow-tex.webp`, (t) => {
+  const srgb = (t) => {
     t.colorSpace = THREE.SRGBColorSpace;
-    t.anisotropy = 4;
-    projMat.map = t;
-    projMat.needsUpdate = true;
-    // full resolution once loaded in the background
-    new THREE.TextureLoader().load(`${BASE}img/w16-let-it-flow.webp`, (hi) => {
-      hi.colorSpace = THREE.SRGBColorSpace;
-      hi.anisotropy = 8;
-      projMat.map = hi;
+    return t;
+  };
+
+  // ---------------------------------------------------------------- wall projection
+  const wallVideo = createVideo('video/w16-projection.mp4');
+  // The photographed projection stands in until the video plays; the video is added as
+  // light over the wall (a projector cannot darken), so the brick shows through.
+  const projMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(0.95, 0.95, 0.95), toneMapped: false });
+  let still = null;
+  loader.load(`${BASE}img/w16-let-it-flow-tex.webp`, (t) => {
+    still = srgb(t);
+    if (!projMat.map) {
+      projMat.map = still;
       projMat.needsUpdate = true;
-      t.dispose();
-    });
+    }
   });
   const proj = new THREE.Mesh(new THREE.PlaneGeometry(Z1 - Z0, TOP), projMat);
   proj.rotation.y = -Math.PI / 2;
   proj.position.set(WALL_X - 0.005, TOP / 2, (Z0 + Z1) / 2);
   group.add(proj);
 
-  // ---------------------------------------------------------------- the river
-  const curve = new THREE.CatmullRomCurve3(COURSE.map(([x, z]) => new THREE.Vector3(x, 0, z)));
-  const palette = [
-    [0x2f62e0, 30], [0x3f86f0, 18], [0x1e3fa8, 10], [0xdfe8f2, 16], [0xf4f4f0, 6],
-    [0xd23a3a, 4], [0xe8792a, 2], [0x3aa04a, 4], [0xe8c63a, 3], [0x8a4ad8, 5], [0x1a1a1e, 2],
-  ];
-  const total = palette.reduce((s, p) => s + p[1], 0);
-  const pick = (bias) => {
-    let r = rand() * total;
-    if (bias && rand() < bias) return new THREE.Color(rand() < 0.7 ? 0xf2f4f6 : 0xdfe8f2);
-    for (const [c, w] of palette) { if ((r -= w) <= 0) return new THREE.Color(c); }
-    return new THREE.Color(palette[0][0]);
-  };
-
-  // one crumpled piece: a jittered, flattened icosahedron
-  const pieceGeo = new THREE.IcosahedronGeometry(1, 1);
+  // ---------------------------------------------------------------- floor projection
+  const floorVideo = createVideo('video/w16-floor.mp4');
+  const floorMat = new THREE.MeshBasicMaterial({
+    transparent: true,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+    toneMapped: false,
+    opacity: 0,
+  });
   {
-    const p = pieceGeo.attributes.position;
-    const jr = rng(4);
-    const seen = new Map();
-    for (let i = 0; i < p.count; i++) {
-      const key = `${p.getX(i).toFixed(3)},${p.getY(i).toFixed(3)},${p.getZ(i).toFixed(3)}`;
-      if (!seen.has(key)) seen.set(key, 0.65 + jr() * 0.6);
-      const k = seen.get(key);
-      p.setXYZ(i, p.getX(i) * k, p.getY(i) * k, p.getZ(i) * k);
+    // a plane covering the projected frame, its UVs following letItFlowUV
+    const x0 = P.xEast - P.lengthM;
+    const geo = new THREE.PlaneGeometry(P.lengthM, P.widthM);
+    geo.rotateX(-Math.PI / 2);
+    const pos = geo.attributes.position;
+    const uv = geo.attributes.uv;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i) + x0 + P.lengthM / 2;
+      const z = pos.getZ(i) + P.zCentre;
+      uv.setXY(i, (P.xEast - x) / P.lengthM, 0.5 + (z - P.zCentre) / P.widthM);
     }
-    pieceGeo.computeVertexNormals();
+    const floorProj = new THREE.Mesh(geo, floorMat);
+    floorProj.position.set(x0 + P.lengthM / 2, 0.004, P.zCentre);
+    floorProj.renderOrder = 2;
+    group.add(floorProj);
   }
-  const plastic = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.05 });
-  // plastic catches the projector's light: give each piece a little glow of its own colour
-  plastic.onBeforeCompile = (sh) => {
-    sh.fragmentShader = sh.fragmentShader.replace(
-      '#include <emissivemap_fragment>',
-      '#include <emissivemap_fragment>\n  totalEmissiveRadiance += diffuseColor.rgb * diffuseColor.rgb * 0.35;',
-    );
+
+  // ---------------------------------------------------------------- the river
+  const riverMat = new THREE.MeshStandardMaterial({
+    map: srgb(loader.load(`${BASE}tex/river.webp`)),
+    normalMap: loader.load(`${BASE}tex/river-normal.webp`),
+    normalScale: new THREE.Vector2(0.8, 0.8),
+    roughness: 0.3,
+    metalness: 0,
+    alphaTest: 0.5,
+  });
+  const projUniform = { value: null };
+  const projStrength = { value: 0 };
+  // the floor projection lands on the plastic too
+  riverMat.onBeforeCompile = (sh) => {
+    sh.uniforms.lifProj = projUniform;
+    sh.uniforms.lifStrength = projStrength;
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vLifPos;')
+      .replace('#include <project_vertex>', '#include <project_vertex>\nvLifPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>\nvarying vec3 vLifPos;\nuniform sampler2D lifProj;\nuniform float lifStrength;\n${projUV}`)
+      .replace(
+        '#include <emissivemap_fragment>',
+        `#include <emissivemap_fragment>
+        vec2 lifUV = letItFlowUV(vLifPos);
+        if (lifStrength > 0.0 && lifUV.x > 0.0 && lifUV.x < 1.0 && lifUV.y > 0.0 && lifUV.y < 1.0)
+          totalEmissiveRadiance += texture2D(lifProj, lifUV).rgb * diffuseColor.rgb * lifStrength;`,
+      );
   };
-  const N = 1400;
-  const pieces = new THREE.InstancedMesh(pieceGeo, plastic, N);
-  const m = new THREE.Matrix4();
-  const q = new THREE.Quaternion();
-  const e = new THREE.Euler();
-  const len = curve.getLength();
-  for (let i = 0; i < N; i++) {
-    const t = Math.pow(rand(), 0.9);
-    const c = curve.getPointAt(t);
-    const tan = curve.getTangentAt(t);
-    // narrow where it leaves the wall, widest at the pile of white bags at the end
-    const width = 0.14 + 0.05 * Math.sin(t * 9) + (t > 0.86 ? (t - 0.86) * 1.4 : 0);
-    const off = (rand() - 0.5) * 2 * width * (0.4 + 0.6 * rand());
-    const x = c.x - tan.z * off;
-    const z = c.z + tan.x * off;
-    const s = 0.018 + rand() * 0.035 + (rand() < 0.06 ? 0.03 : 0);
-    const flat = 0.25 + rand() * 0.35;
-    e.set(rand() * 0.6 - 0.3, rand() * Math.PI * 2, rand() * 0.6 - 0.3);
-    q.setFromEuler(e);
-    m.compose(new THREE.Vector3(x, s * flat * 0.8 + rand() * 0.03, z), q, new THREE.Vector3(s * (1 + rand()), s * flat, s));
-    pieces.setMatrixAt(i, m);
-    pieces.setColorAt(i, pick(t > 0.86 ? 0.55 : 0));
-  }
-  pieces.instanceColor.needsUpdate = true;
-  group.add(pieces);
+  // relief mesh from the height grid (0 = no plastic), built once the image is in
+  new THREE.ImageLoader(manager).load(`${BASE}tex/river-height.png`, (img) => {
+    const [gw, gh] = RIVER.grid;
+    const c = document.createElement('canvas');
+    c.width = gw;
+    c.height = gh;
+    const g = c.getContext('2d', { willReadFrequently: true });
+    g.drawImage(img, 0, 0);
+    const px = g.getImageData(0, 0, gw, gh).data;
+    const h = (i, j) => px[(j * gw + i) * 4];
+    const positions = new Float32Array(gw * gh * 3);
+    const uvs = new Float32Array(gw * gh * 2);
+    for (let j = 0; j < gh; j++) {
+      for (let i = 0; i < gw; i++) {
+        const k = j * gw + i;
+        const u = i / (gw - 1);
+        const v = j / (gh - 1);
+        const val = h(i, j);
+        positions[k * 3] = RIVER.xTop - v * RIVER.lengthM;
+        positions[k * 3 + 1] = val ? ((val - 1) / 254) * RIVER.hmax + 0.002 : 0;
+        positions[k * 3 + 2] = RIVER.zLeft + u * RIVER.widthM;
+        uvs[k * 2] = u;
+        uvs[k * 2 + 1] = 1 - v;
+      }
+    }
+    const index = [];
+    for (let j = 0; j < gh - 1; j++) {
+      for (let i = 0; i < gw - 1; i++) {
+        const a = j * gw + i;
+        const b = a + 1;
+        const c2 = a + gw;
+        const d = c2 + 1;
+        if (!(h(i, j) || h(i + 1, j) || h(i, j + 1) || h(i + 1, j + 1))) continue;
+        index.push(a, c2, b, b, c2, d); // counter-clockwise seen from above
+      }
+    }
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+    geo.setIndex(index);
+    geo.computeVertexNormals();
+    const river = new THREE.Mesh(geo, riverMat);
+    river.name = 'plastic-river';
+    group.add(river);
+  });
+  // keep visitors off the installation
+  for (const [x0, x1, z0, z1] of RIVER.obstacles) OBSTACLES.push({ x0, x1, z0, z1 });
 
-  // confetti of tiny plastic bits scattered over the floor around the river
-  const flecks = 380;
-  const fleckGeo = new THREE.PlaneGeometry(1, 1);
-  fleckGeo.rotateX(-Math.PI / 2);
-  const fleckMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.7 });
-  const fl = new THREE.InstancedMesh(fleckGeo, fleckMat, flecks);
-  for (let i = 0; i < flecks; i++) {
-    const c = curve.getPointAt(rand());
-    const r = 0.3 + rand() * 1.4;
-    const a = rand() * Math.PI * 2;
-    const s = 0.008 + rand() * 0.016;
-    e.set(0, rand() * Math.PI, 0);
-    q.setFromEuler(e);
-    m.compose(new THREE.Vector3(c.x + Math.cos(a) * r, 0.003, Math.min(5.85, Math.max(1.8, c.z + Math.sin(a) * r))), q, new THREE.Vector3(s, 1, s * 0.7));
-    fl.setMatrixAt(i, m);
-    fl.setColorAt(i, new THREE.Color(rand() < 0.5 ? 0x5a52c8 : rand() < 0.5 ? 0x3d7be0 : 0xd8dde8));
-  }
-  fl.instanceColor.needsUpdate = true;
-  group.add(fl);
-
-  // projector flicker: the lamp breathes by a couple of percent, nothing more
-  const update = (t, light) => {
+  // Videos play while the visitor is in Rooms 3–4; the projector lamp breathes a little.
+  const update = (t, light, camPos) => {
+    const on = !camPos || camPos.x > 12.5;
+    wallVideo.want(on);
+    floorVideo.want(on);
+    if (wallVideo.ready && projMat.map !== wallVideo.tex) {
+      projMat.map = wallVideo.tex;
+      projMat.transparent = true;
+      projMat.blending = THREE.AdditiveBlending;
+      projMat.depthWrite = false;
+      projMat.needsUpdate = true;
+    }
+    if (floorVideo.ready && floorMat.map !== floorVideo.tex) {
+      floorMat.map = floorVideo.tex;
+      floorMat.opacity = 0.7;
+      floorMat.needsUpdate = true;
+      projUniform.value = floorVideo.tex;
+      projStrength.value = 0.8;
+    }
     const f = 0.97 + 0.02 * Math.sin(t * 0.9) + 0.01 * Math.sin(t * 2.3);
     projMat.color.setScalar(0.95 * f);
     if (light) light.intensity = light.userData.base * f;
   };
 
-  return { group, update, length: len };
+  return { group, update };
 }

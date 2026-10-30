@@ -1,8 +1,8 @@
 {
-  "_readme": "English texts. 'ui' holds the interface strings; everything else is exhibition content copied onto src/data/exhibition.json at runtime (works are matched by id). Captions of the works are visual descriptions written for the digital exhibition; replace them with the artist's texts when available.",
+  "_readme": "English texts. 'ui' holds the interface strings; everything else is exhibition content copied onto src/data/exhibition.json at runtime (works are matched by id). The opening speech is translated from the Hungarian original. Work captions are descriptions written for the digital exhibition.",
   "ui": {
     "docTitle": "Artificial Paradise: Digital Exhibition",
-    "docDescription": "Walk through KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser.",
+    "docDescription": "Check out the digital version of Kristóf Szabó - KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10-31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser.",
     "sceneLabel": "3D exhibition view",
     "nav": {
       "main": "Main",
@@ -14,7 +14,7 @@
     },
     "loader": {
       "meta1": "Digital exhibition",
-      "meta2": "MAMŰ Gallery, Budapest · 10–31.01.2025",
+      "meta2": "MAMŰ Gallery, Budapest · 10-31.01.2025",
       "preparing": "Preparing the basement…",
       "loading": "Hanging the works… {loaded}/{total}",
       "ready": "Ready",
@@ -69,7 +69,12 @@
       "goto": "Walk to this work",
       "situ": "View in situ (installation photo)",
       "work": "View the work",
-      "no": "No. {no}"
+      "no": "No. {no}",
+      "full": "Full video with sound",
+      "wall": "Wall projection (Siluett), full length",
+      "floor": "Floor projection (Let it Flow), full length",
+      "loop": "Back to the loop",
+      "videoNote": "The full videos play from Google Drive."
     },
     "panels": {
       "credits": "Credits",
@@ -77,18 +82,22 @@
       "address": "{venue}, {address} (basement)",
       "map": "map",
       "linkExhibition": "Artkartell: KristofLab, Artificial Paradise",
-      "linkGallery": "MAMŰ Gallery",
+      "linkGallery": "MAMŰ Gallery (mamu.hu)",
       "linkInstagram": "Instagram post from the exhibition",
-      "rights": "All artworks © Kristóf Szabó / KristofLab, reproduced from installation photographs for documentation purposes. The rooms are reconstructed from the same photographs and the gallery's floor plan.",
+      "rights": "All artworks were created by Kristóf Szabó / KristofLab, reproduced from installation photographs for documentation purposes. The rooms are reconstructed from the same photographs and the gallery's floor plan.",
       "worksTitle": "List of works",
       "btsEyebrow": "Behind the scenes",
       "btsTitle": "How it's built",
       "controls": "Controls",
       "controlsDesk": "Desktop: ↑/↓ or W/S (or the scroll wheel) to walk, ←/→ to turn, A/D to step sideways, mouse to look, +/− or Ctrl+scroll to zoom (0 resets), Shift to run, click a work or press E to open it, T for the tour, M to mute. The keys on screen do the same when held with the mouse.",
-      "controlsTouch": "Touch: left stick to walk, drag to look, pinch to zoom, tap a work."
+      "controlsTouch": "Touch: left stick to walk, drag to look, pinch to zoom, tap a work.",
+      "linkFacebook": "MAMŰ on Facebook",
+      "linkMamuInstagram": "MAMŰ on Instagram",
+      "speech": "Opening speech",
+      "speechRead": "Read the opening speech"
     },
     "wall": {
-      "sheetMeta": "KristofLab · MAMŰ Gallery · 10–31.01.2025"
+      "sheetMeta": "KristofLab · MAMŰ Gallery · 10-31.01.2025"
     }
   },
   "meta": {
@@ -96,8 +105,10 @@
     "venue": "MAMŰ Gallery, Budapest",
     "dates": "10–31 January 2025",
     "medium": "Acrylic paintings, giclée prints, video, installation",
-    "address": "Damjanich utca 39, 1071 Budapest",
-    "subtitle": "Digital Exhibition"
+    "address": "Damjanich utca 39, H-1071 Budapest, entrance from Murányi utca",
+    "subtitle": "Digital Exhibition",
+    "opening": "Opening: 10 January 2025, 7 pm",
+    "hours": "On view until 31 January 2025, Wednesday, Thursday and Friday, 3–6 pm"
   },
   "text": [
     "Kristóf Szabó aka KristofLab presents his most critical project yet, Artificial Paradise. His practice explores the relationship between nature and civilisation, wilderness and urbanisation, and man's artificially created habitat: the city and its symbol, the tower block.",
@@ -105,23 +116,27 @@
     "Controlled, industrialised nature calls into question the very definition of nature. Can we still speak of nature when vegetation is artificially created and sustained, and functions as a visual element? How does this affect ecology and our image of nature?",
     "KristofLab uses his usual multimedia tools (installations, videos, paintings and collages) to explore the bizarre, alienating nature of the phenomenon, and to envision the possibilities encoded in its present."
   ],
-  "textCredit": "Text by Luca Cserhalmi, aesthete. The exhibition was opened by Barabás Zemlényi-Kovács, theorist and independent curator.",
+  "textCredit": "Text by Luca Cserhalmi, esthete, curator of the exhibition. The exhibition was opened by Barnabás Zemlényi-Kovács, theorist and independent curator.",
   "credits": [
     [
       "Artist",
       "Kristóf Szabó / KristofLab"
     ],
     [
+      "Curator",
+      "Luca Cserhalmi, esthete"
+    ],
+    [
+      "Opening speech",
+      "Barnabás Zemlényi-Kovács, theorist, independent curator"
+    ],
+    [
       "Gallery",
       "MAMŰ, Budapest"
     ],
     [
-      "Text",
-      "Luca Cserhalmi"
-    ],
-    [
-      "Opening",
-      "Barabás Zemlényi-Kovács"
+      "Supported by",
+      "National Cultural Fund of Hungary (NKA) · Hungarian Academy of Arts (MMA) · Municipality of Budapest District VII, Erzsébetváros"
     ],
     [
       "Digital exhibition",
@@ -129,14 +144,14 @@
     ],
     [
       "Photography",
-      "Szilvia Barath"
+      "Kristóf Szabó"
     ],
     [
       "Building outline",
       "© OpenStreetMap contributors (ODbL)"
     ]
   ],
-  "behindTheScenes": "A reconstruction, not an invention. The floor plan is traced from the gallery's own room sheet, photographed on the wall by the bar, and its overall length matches the building's outline on OpenStreetMap. Room 1 is measured from a 360° panorama: solving the camera position from the corners and the four canvases of known size gives the room's real size, the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops, and the screens show the frames caught on camera. Paradise Factory and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
+  "behindTheScenes": "The floor plan follows the gallery's measured plan (Room 1 is 5 × 7 m, Rooms 3 and 4 are 5.4 and 9.5 m long and 4 m wide) and its overall length matches the building's outline on OpenStreetMap. Rooms are measured from 360° panorama photos: solving the camera position from the corners and the four canvases of known size gives the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops, and the screens play the artist's videos. Paradise Factory is modelled from the photos, and the melted plastic river of Let it Flow from a top-down photograph of it. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
   "rooms": {
     "r1": {
       "name": "Room 1",
@@ -174,7 +189,7 @@
     },
     "w03-screen": {
       "medium": "Video on a small screen, part of the installation",
-      "caption": "The monitor beside the hydroponic line: slow, vertically smeared blues and greens, like a feed from inside the plant factory."
+      "caption": "The monitor beside the hydroponic line, turned on its side: footage from industrial plant factories (lettuce on vertical racks, gloved hands, net pots and pale roots) broken up by scanlines."
     },
     "w04-human-as-error-iii": {
       "medium": "Acrylic on canvas",
@@ -186,11 +201,11 @@
     },
     "w06-artificial-paradise-i": {
       "medium": "Video, Full HD",
-      "caption": "A split screen of managed nature: orchids under grow lights, glasshouse struts, geodesic domes and artificial trees."
+      "caption": "Gardens by the Bay in Singapore cut into a split screen: the steel Supertrees and the walkway between them, mist over the Cloud Forest, branching steel canopies against the sky."
     },
     "w07-artificial-paradise-ii": {
       "medium": "Video, Full HD",
-      "caption": "The hexagonal glazing of biodomes, a waterfall, ivy and a leaf beaded with water, cut into a grid."
+      "caption": "The Eden Project in Cornwall in a four-way split: the hexagonal skins of the biomes, their steel lattice seen from inside, rainforest planting and a leaf beaded with water."
     },
     "w08-wiena-wrong-landscape-ii": {
       "medium": "Video, 4K",
@@ -225,14 +240,28 @@
       "caption": "A city front on open water; buildings slip into red and pastel glitch columns above the waves."
     },
     "w16-let-it-flow": {
-      "medium": "Installation: video projection, plastic waste",
-      "caption": "Trees are projected across the end wall of the dark room. Out of the projected forest a river of crushed plastic (bottles, cups, bags, wrappers) winds across the floor."
+      "medium": "Installation: two video projections (Siluett on the wall, Let it Flow on the floor), melted plastic waste",
+      "caption": "In the dark end room the video Siluett throws trees in grey silhouette across the end wall. Out of the projected forest runs a river of melted plastic: blue and white where it leaves the wall, then every colour, ending in a white heap. From above, the video Let it Flow scatters light over it like a night sky."
     },
     "w17-natural-life": {
       "medium": "Video, Full HD",
       "caption": "Ferns on a forest slope, filmed close up, on the black brick wall of the projection room."
     }
   },
-  "source": "Titles, sizes, media and years from the room sheet displayed in the gallery (photographed in DSC_0049).",
-  "tourIntro": "Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10–31 January 2025."
+  "source": "Titles, sizes, media and years from the room sheet displayed in the gallery.",
+  "tourIntro": "Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10-31 January 2025.",
+  "openingSpeech": {
+    "author": "Barnabás Zemlényi-Kovács",
+    "title": "Opening speech for Kristóf Szabó's exhibition Artificial Paradise",
+    "note": "Translated from the Hungarian original for the digital exhibition.",
+    "text": [
+      "165 years ago two men, both forty years old and knowing nothing of each other, one in France and the other in Ireland, each wrote a long study about smoke. It may sound surprising, but in my view Kristóf Szabó's exhibition can be placed somewhere in the connections between these two texts, both written around 1860 and, despite their related subject, seemingly very far apart. One of the men was John Tyndall, an Irish physicist who in 1859 began experiments to measure with laboratory instruments how effectively various gases, such as carbon dioxide, water vapour and methane, hold on to heat. Tyndall was thus the first to prove that certain components of the atmosphere, carbon dioxide above all, absorb and re-radiate a large part of the infrared radiation emitted by the Earth, and so warm the atmosphere. Tyndall's discovery is nothing other than what we now call the greenhouse effect. The Irish physicist carried out his research at the dawn of the second industrial revolution, that is, precisely when human activity began to drive up the concentration of carbon dioxide, which, through the greenhouse effect Tyndall described, led to global warming and to the climate crisis of our time.",
+      "If Tyndall's problem was that smoke, in a sense, stays, the other author's was precisely that it inevitably drifts away. In 1860 Charles Baudelaire published his study Artificial Paradises: for him the term, which also gives this exhibition its title, means the alternative wish-realities and ephemeral utopias induced by intoxicants such as hashish and opium. In this personal text, which largely reflects on his own drug use, Baudelaire circles the fundamental ambivalence of this intoxicated happiness and psychedelic fantasy world: unlike real social movements, this state can offer only a passing salvation, and once the drug wears off the user falls back into a bare reality that seems all the more desolate. In other words, only one step separates the artificial paradise from a real hell.",
+      "In Kristóf Szabó's works these two texts, written 165 years ago, are fused: his exhibition is filled with gigantic greenhouses built in response to global warming, mini-ecospheres designed to be sustainable, artificially created micro-Edens, or, as he himself calls them, “artificial paradises”. All of these are at once concrete scientific and technological answers to the climate situation, metaphors that point far beyond themselves, and utopias or wish-images of a sustainable future. And here it turns out that Baudelaire is present far beyond the title: although they are indeed more environmentally friendly than today's agricultural mass production, in Kristóf Szabó's exhibition these utopian “artificial natures”, just like Baudelaire's artificial paradises, are unmasked as fantasies whose sustainability is more than questionable, and which, as apparent answers to the crisis, partly seem to cover up the real questions.",
+      "John Tyndall did not yet use the greenhouse metaphor for greenhouse gases; it was introduced by the Swede Nils Ekholm in 1901. The artificial ecospheres Kristóf Szabó examines are built precisely on the greenhouse, which holds a certain dark irony, since they appear as a response to a climate crisis in which the whole planet has turned into an overheated global greenhouse. The greenhouse, the archetype of the artificial, humanly controlled environment, goes back to antiquity; the Romans already experimented with it. The greenhouse is an ecological paradox in which nature is the more ideal, the more artificial the conditions it is created in. Where nature is artificial, the artificial is natural. This ideal, seemingly untouched environment, which also appears in documentary footage in Kristóf Szabó's works, is made possible by an all-encompassing human control, that is, by the same logic that led to the present situation.",
+      "Baudelaire was not only one of the most influential, proto-avant-garde poets of his time but also a defining art critic and theorist of the period, one of the first to formulate the intellectual foundations of the emerging modern art. In 1863, two years after Artificial Paradises, Baudelaire wrote his essay The Painter of Modern Life, perhaps the first manifesto of modern art. “The transitory, the fugitive, the contingent make up one half of art; the other half is the eternal and the immutable,” Baudelaire writes. “[The artist] is looking for that quality which we may call modernity (…) His task is to extract from fashion whatever poetry within history it may contain, to distil the eternal from the transitory.” Despite all the crises of modernity, Baudelaire's avant-garde definition of art still sets the basic frame of art today. Kristóf Szabó, too, stands with one foot in tradition and the other in the ephemeral present; it is enough to mention his conscious dialogue with the traditional genre of the landscape. In the time of Tyndall and Baudelaire, it was artists who created artificial ideal landscapes, and the exhibition also quotes these 19th-century romantic, academic or impressionist landscape ideals. What art once produced is produced today by industry and technology, and in this situation Kristóf Szabó sees one possible task of the artist in denaturalising this synthetically produced, harmonious nature: in revealing its artificiality, in the errors, glitches and blind spots of the flawlessly staged vision, which also appear as faults in the image.",
+      "Also at the turn of the 1850s and 1860s, in 1859, a third book appeared from a third gentleman, ten years older than the other two: On the Origin of Species by Charles Darwin. Kristóf Szabó approaches the origin of species from the end of species, natural selection from artificial selection. His works claim that man is not only not the crown of creation but not even the peak of evolution; in fact, an error. Human as Error. The question is what correcting this error would mean: besides the radical transformation or abolition of capitalism, posthuman and post-anthropocentric theories argue that, if we do not want to abolish ourselves, it is precisely our human-centredness that we have to overcome in order to survive.",
+      "Our problem today is still that of Baudelaire and Tyndall: the smoke of utopia drifts away, but the smoke of dystopia stays."
+    ]
+  }
 }

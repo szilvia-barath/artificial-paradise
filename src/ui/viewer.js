@@ -1,13 +1,17 @@
 import { t } from '../i18n.js';
 
-// Artwork overlay: large image, caption, exhibition text, prev/next, "in situ" photo,
-// and a "walk to this work" shortcut.
+// Artwork overlay: large image (for the video works, the silent loop, and on request the
+// full video with sound from Google Drive), caption, exhibition text, prev/next, "in situ"
+// photo, and a "walk to this work" shortcut.
 
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
 export function setupViewer(data, { onOpen, onClose, onGoto }) {
   const el = document.getElementById('viewer');
   const img = document.getElementById('viewer-img');
+  const video = document.getElementById('viewer-video');
+  const frame = document.getElementById('viewer-frame');
+  const videoBtns = document.getElementById('viewer-videos');
   const loading = el.querySelector('.viewer-loading');
   const title = document.getElementById('viewer-title');
   const meta = document.getElementById('viewer-meta');
@@ -19,6 +23,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
   const works = data.works;
   let index = -1;
   let situ = false;
+  let full = -1; // index of the full video shown from Drive, -1 = none
 
   const renderText = () => {
     text.innerHTML = data.text.map((p) => `<p>${esc(p)}</p>`).join('') + `<p class="mono" style="color:#8a8a88;font-size:11px">${esc(data.textCredit)}</p>`;
@@ -39,6 +44,36 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
     meta.innerHTML = `${esc(data.meta.artist)}<br />${esc([w.medium, w.size, w.year].filter(Boolean).join(', '))}`;
     caption.textContent = w.caption;
     situBtn.textContent = t(situ ? 'viewer.work' : 'viewer.situ');
+    const vids = (!situ && w.video && w.video.full) || [];
+    videoBtns.innerHTML = vids
+      .map((v, i) => `<button class="link mono" data-full="${i}">${esc(t(full === i ? 'viewer.loop' : `viewer.${v.label}`))}</button>`)
+      .join('') + (vids.length ? `<p class="note mono">${esc(t('viewer.videoNote'))}</p>` : '');
+  };
+
+  // Which medium fills the left side: Drive player, video loop, or the photograph.
+  const showMedia = (w) => {
+    const vids = w.video && !situ ? w.video : null;
+    const drive = vids && full >= 0 ? vids.full[full].drive : null;
+    frame.hidden = !drive;
+    if (drive) {
+      const src = `https://drive.google.com/file/d/${drive}/preview`;
+      if (frame.getAttribute('src') !== src) frame.setAttribute('src', src);
+    } else frame.removeAttribute('src');
+    const loop = vids && !drive;
+    video.hidden = !loop;
+    if (loop) {
+      if (video.getAttribute('src') !== `${base}${vids.loop}`) {
+        video.poster = `${base}${w.image}.webp`;
+        video.src = `${base}${vids.loop}`;
+      }
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+      video.removeAttribute('src');
+      video.load();
+    }
+    img.hidden = !!vids;
+    loading.hidden = !!vids;
   };
 
   const show = () => {
@@ -48,6 +83,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
     loading.hidden = false;
     img.onload = () => { img.classList.add('ready'); loading.hidden = true; };
     img.src = src;
+    showMedia(w);
     renderInfo();
     count.textContent = `${index + 1} / ${works.length}`;
     // Preload neighbours
@@ -61,6 +97,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
   const open = (work) => {
     index = works.indexOf(work);
     situ = false;
+    full = -1;
     show();
     el.hidden = false;
     onOpen();
@@ -69,15 +106,26 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
     if (el.hidden) return;
     el.hidden = true;
     img.removeAttribute('src');
+    full = -1;
+    showMedia({});
     onClose();
   };
   const step = (d) => {
     index = (index + d + works.length) % works.length;
     situ = false;
+    full = -1;
     show();
   };
 
-  situBtn.addEventListener('click', () => { situ = !situ; show(); });
+  situBtn.addEventListener('click', () => { situ = !situ; full = -1; show(); });
+  videoBtns.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-full]');
+    if (!b) return;
+    const i = Number(b.dataset.full);
+    full = full === i ? -1 : i;
+    showMedia(works[index]);
+    renderInfo();
+  });
   el.querySelector('[data-close]').addEventListener('click', close);
   document.getElementById('viewer-prev').addEventListener('click', () => step(-1));
   document.getElementById('viewer-next').addEventListener('click', () => step(1));
@@ -86,7 +134,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto }) {
     close();
     onGoto(w);
   });
-  el.querySelector('.viewer-media').addEventListener('click', (e) => { if (e.target !== img) close(); });
+  el.querySelector('.viewer-media').addEventListener('click', (e) => { if (e.target === e.currentTarget) close(); });
   window.addEventListener('keydown', (e) => {
     if (el.hidden) return;
     if (e.key === 'Escape') close();

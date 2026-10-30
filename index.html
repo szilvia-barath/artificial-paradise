@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>Artificial Paradise: Digital Exhibition</title>
-    <meta name="description" content="Walk through KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10–31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser." />
+    <meta name="description" content="Check out the digital version of Kristóf Szabó - KristofLab's Artificial Paradise (MAMŰ Gallery, Budapest, 10-31 January 2025) reconstructed from photographs as a walkable 3D exhibition in the browser." />
     <meta name="theme-color" content="#0b0c0e" />
     <meta name="color-scheme" content="light dark" />
     <!-- Styles load from the head (render-blocking) so the title screen never flashes
@@ -74,7 +74,7 @@
       <div class="loader-card">
         <h1 class="sr-only">Artificial Paradise · KristofLab · Digital Exhibition</h1>
         <img class="loader-logo" src="./brand/logo-blue.webp" alt="" width="1480" height="816" />
-        <p class="loader-meta"><span data-i18n="loader.meta1">Digital exhibition</span><br /><span data-i18n="loader.meta2">MAMŰ Gallery, Budapest · 10–31.01.2025</span></p>
+        <p class="loader-meta"><span data-i18n="loader.meta1">Digital exhibition</span><br /><span data-i18n="loader.meta2">MAMŰ Gallery, Budapest · 10-31.01.2025</span></p>
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="progress-bar"></span></div>
         <p id="progress-label" data-i18n="loader.preparing">Preparing the basement…</p>
         <button id="enter" class="btn-enter" disabled>|&nbsp;<span data-i18n="loader.enter">Enter</span>&nbsp;|</button>
@@ -134,6 +134,8 @@
       <button class="close" data-close aria-label="Close" data-i18n-attr="aria-label:viewer.close">×</button>
       <div class="viewer-media">
         <img id="viewer-img" alt="" />
+        <video id="viewer-video" hidden muted loop playsinline controls></video>
+        <iframe id="viewer-frame" hidden title="" allow="autoplay; fullscreen" allowfullscreen></iframe>
         <div class="viewer-loading mono" data-i18n="viewer.loading">loading…</div>
       </div>
       <aside class="viewer-info">
@@ -141,6 +143,7 @@
         <h2 id="viewer-title"></h2>
         <p class="meta mono" id="viewer-meta"></p>
         <p id="viewer-caption"></p>
+        <div id="viewer-videos"></div>
         <details>
           <summary class="mono" data-i18n="viewer.exhibitionText">Exhibition text</summary>
           <div id="viewer-text"></div>

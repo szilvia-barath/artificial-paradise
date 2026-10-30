@@ -622,6 +622,18 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   transition: opacity 0.4s ease;
 }
 .viewer-media img.ready { opacity: 1; }
+.viewer-media video, .viewer-media iframe {
+  width: 100%;
+  max-width: 100%;
+  max-height: calc(100vh - var(--nav-h) - 52px);
+  aspect-ratio: 16 / 9;
+  border: 0;
+  background: #000;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+.viewer-media video { width: auto; height: auto; aspect-ratio: auto; }
+#viewer-videos { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
+#viewer-videos .note { font-size: 11px; color: var(--muted); margin: 8px 0 0; }
 .viewer-loading { position: absolute; font-size: 11px; color: var(--muted); }
 .viewer-info {
   border-left: 1px solid var(--line);
@@ -689,6 +701,9 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
 #panel-body a { color: var(--fg); text-decoration-color: var(--accent); text-underline-offset: 3px; }
 #panel-body .stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
 #panel-body .stack span { font-family: var(--mono); font-size: 11px; border: 1px solid var(--line); padding: 4px 8px; color: #cfcfcb; }
+#panel-body details.speech summary { cursor: pointer; line-height: 1.6; font-size: 15px; color: var(--fg); }
+#panel-body details.speech summary em { font-style: normal; color: #dedcd6; }
+#panel-body details.speech[open] summary { margin-bottom: 12px; }
 #panel-body .eyebrow, .viewer-info .eyebrow { font-size: 11px; line-height: 1.7; color: var(--muted); }
 #panel-body .note { font-size: 12px; color: var(--muted); font-family: var(--mono); line-height: 1.6; }
 
@@ -696,6 +711,7 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
   #viewer { grid-template-columns: 1fr; grid-template-rows: minmax(0, 55vh) minmax(0, 1fr); }
   .viewer-media { padding: calc(var(--nav-h) + 40px) 12px 12px; }
   .viewer-media img { max-height: calc(55vh - 60px); }
+  .viewer-media video, .viewer-media iframe { max-height: calc(55vh - 60px); }
   .viewer-info { border-left: 0; border-top: 1px solid var(--line); padding: 18px 16px calc(18px + var(--safe-b)); }
   .viewer-info h2 { font-size: 24px; }
   #minimap { width: 150px; height: 102px; right: 10px; top: calc(var(--nav-h) + 6px); }

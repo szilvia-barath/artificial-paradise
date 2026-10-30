@@ -36,11 +36,11 @@ export function buildLights(scene) {
   lights.r1b = point(0xf6f6ff, 10, 2.6, 2.3, 5.2, 11);
   lights.led = point(0xe8f2ff, 1.6, 1.52, 1.7, 3.58, 3.2);
   // Room 2: warm enamel pendants
-  lights.r2 = spot(0xffd9a6, 9, 7.9, 1.95, 3.5, 9, 1.4, 0.45);
+  lights.r2 = spot(0xffd9a6, 9, 7.98, 1.95, 3.412, 9, 1.4, 0.45);
   // Room 3: cool gallery white from the track rail
-  lights.r3 = point(0xf4f6ff, 11, 12.7, 2.1, 3.85, 11);
+  lights.r3 = point(0xf4f6ff, 11, 12.85, 2.1, 3.744, 11);
   // Room 4: light thrown back off the projection wall (driven by letItFlow.update)
-  lights.proj = point(0xd2e4d0, 3.2, 24.6, 1.3, 3.83, 11);
+  lights.proj = point(0xd2e4d0, 3.2, 24.375, 1.3, 3.725, 11);
   // Stair shaft: cold light falling from the street entrance
   lights.stair = point(0xbcd2ff, 4, -1.2, 4.6, 1.05, 7);
 

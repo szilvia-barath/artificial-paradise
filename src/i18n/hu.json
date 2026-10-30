@@ -1,8 +1,8 @@
 {
-  "_readme": "Hungarian texts, same shape as en.json (anything missing falls back to English). DRAFT: translated from the English version for the digital exhibition; replace with the owner's Hungarian texts (the exhibition text by Cserhalmi Luca in particular).",
+  "_readme": "Hungarian texts, same shape as en.json (anything missing falls back to English). The exhibition text is the official one by Cserhalmi Luca; the opening speech is Zemlényi-Kovács Barnabás's. Work captions are still descriptions written for the digital exhibition.",
   "ui": {
-    "docTitle": "Artificial Paradise – digitális kiállítás",
-    "docDescription": "Járd be KristofLab Artificial Paradise című kiállítását (MAMŰ Galéria, Budapest, 2025. január 10–31.) fotókból rekonstruálva, bejárható 3D kiállításként a böngészőben.",
+    "docTitle": "Artificial Paradise digitális kiállítás",
+    "docDescription": "Nézd meg Szabó Kristóf - KristofLab Artificial Paradise című kiállítását fotókból rekonstruálva, bejárható 3D kiállításként a böngészőben. A kiállítás eredetileg a MAMŰ Galériában, Budapesten, 2025. január 10-31. között volt megtekinthető.",
     "sceneLabel": "3D kiállítási nézet",
     "nav": {
       "main": "Fő menü",
@@ -14,12 +14,12 @@
     },
     "loader": {
       "meta1": "Digitális kiállítás",
-      "meta2": "MAMŰ Galéria, Budapest · 2025. 01. 10–31.",
-      "preparing": "Készül a pince…",
+      "meta2": "MAMŰ Galéria, Budapest · 2025. 01. 10-31.",
+      "preparing": "Lemegyünk a pincébe...",
       "loading": "A művek felkerülnek a falra… {loaded}/{total}",
       "ready": "Kész",
       "enter": "Belépés",
-      "hint": "Hanggal · fejhallgató ajánlott",
+      "hint": "Hanggal · fejhallgatóval izgalmasabb",
       "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · egér: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás · Esc: kilépés",
       "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · csippentés: nagyítás · koppintás egy műre: megtekintés",
       "failure": "Ez a böngésző nem tudta elindítani a 3D kiállítást (WebGL szükséges). Próbáld meg egy friss Chrome, Firefox vagy Safari böngészővel."
@@ -69,7 +69,12 @@
       "goto": "Ugrás a műhöz",
       "situ": "Helyszíni fotó (installációs kép)",
       "work": "A mű megtekintése",
-      "no": "{no}. mű"
+      "no": "{no}. mű",
+      "full": "A teljes videó hanggal",
+      "wall": "Falra vetített videó (Siluett), teljes hosszban",
+      "floor": "Padlóra vetített videó (Let it Flow), teljes hosszban",
+      "loop": "Vissza a loophoz",
+      "videoNote": "A teljes videók a Google Drive-ról töltődnek be."
     },
     "panels": {
       "credits": "Közreműködők",
@@ -77,18 +82,22 @@
       "address": "{venue}, {address} (pince)",
       "map": "térkép",
       "linkExhibition": "Artkartell: KristofLab, Artificial Paradise",
-      "linkGallery": "MAMŰ Galéria",
+      "linkGallery": "MAMŰ Galéria (mamu.hu)",
       "linkInstagram": "Instagram-poszt a kiállításról",
-      "rights": "Minden műalkotás © Szabó Kristóf / KristofLab; a reprodukciók installációs fotókról, dokumentációs céllal készültek. A termek rekonstrukciója ugyanezeken a fotókon és a galéria alaprajzán alapul.",
+      "rights": "Minden műalkotás Szabó Kristóf / KristofLab munkája; a reprodukciók installációs fotókról, dokumentációs céllal készültek. A termek rekonstrukciója ugyanezeken a fotókon és a galéria alaprajzán alapul.",
       "worksTitle": "Műlista",
       "btsEyebrow": "Kulisszák mögött",
       "btsTitle": "Hogyan készült",
       "controls": "Irányítás",
       "controlsDesk": "Asztali gépen: ↑/↓ vagy W/S (vagy a görgő): séta, ←/→: fordulás, A/D: oldalazás, egér: körülnézés, +/− vagy Ctrl+görgő: nagyítás (0: visszaállítás), Shift: futás, kattintás egy műre vagy E: megnyitás, T: tárlatvezetés, M: némítás. A képernyőn látható billentyűk egérrel lenyomva ugyanígy működnek.",
-      "controlsTouch": "Érintőképernyőn: bal oldali kar: séta, húzás: körülnézés, csippentés: nagyítás, koppintás egy műre: megnyitás."
+      "controlsTouch": "Érintőképernyőn: bal oldali kar: séta, húzás: körülnézés, csippentés: nagyítás, koppintás egy műre: megnyitás.",
+      "linkFacebook": "A MAMŰ a Facebookon",
+      "linkMamuInstagram": "A MAMŰ az Instagramon",
+      "speech": "Megnyitószöveg",
+      "speechRead": "A megnyitószöveg elolvasása"
     },
     "wall": {
-      "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. 01. 10–31."
+      "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. 01. 10-31."
     }
   },
   "meta": {
@@ -96,32 +105,36 @@
     "venue": "MAMŰ Galéria, Budapest",
     "dates": "2025. január 10–31.",
     "medium": "Akrilfestmények, giclée nyomatok, videó, installáció",
-    "address": "1071 Budapest, Damjanich utca 39.",
-    "subtitle": "Digitális kiállítás"
+    "address": "H-1071 Budapest, Damjanich u. 39., bejárat a Murányi utcából",
+    "subtitle": "Digitális kiállítás",
+    "opening": "Megnyitó: 2025. január 10., 19:00",
+    "hours": "Megtekinthető 2025. január 31-ig, szerda, csütörtök, péntek 15–18 óra között"
   },
   "text": [
-    "Szabó Kristóf, azaz KristofLab eddigi legkritikusabb projektjét, az Artificial Paradise-t mutatja be. Művészete a természet és a civilizáció, a vadon és az urbanizáció viszonyát, valamint az ember mesterségesen létrehozott élőhelyét vizsgálja: a várost és annak szimbólumát, a panelházat.",
-    "Az Artificial Paradise továbbmegy: a mesterségesen létrehozott természeti terekkel, a háziasított és iparosított természettel foglalkozik. A néhány évtizede még utópisztikusnak tűnő jövőképek (a természet és az ember új viszonya, a teljes kontroll lehetősége) mára a mindennapi gyakorlat részévé váltak.",
-    "A kontrollált, iparosított természet magát a természet fogalmát kérdőjelezi meg. Beszélhetünk-e még természetről, ha a növényzetet mesterségesen hozzák létre és tartják fenn, és vizuális elemként működik? Hogyan hat ez az ökológiára és a természetről alkotott képünkre?",
-    "KristofLab megszokott multimédiás eszközeivel (installációkkal, videókkal, festményekkel és kollázsokkal) a jelenség bizarr, elidegenítő természetét tárja fel, és elképzeli a jelenében kódolt lehetőségeket."
+    "Szabó Kristóf aka KristofLab eddigi legkritikusabb hangvételű projektjét mutatja be Artificial Paradise című önálló kiállításán. Művészeti praxisában természet és civilizáció, vadon és ember kapcsolata eddig főként az urbanizáció, az ember mesterségesen kialakított élőhelye, a város és annak szimbóluma, a toronyház képében jelent meg. Az Artificial Paradise ezt a gondolatot szövi tovább, a mesterségesen létrehozott természeti területek, a domesztikált, valamint az iparosított természet jelenségének kérdéskörével. A pár évtizeddel ezelőtt egészen utópisztikusnak tűnő jövőképek természet és ember új viszonyának, a teljes kontrollálásnak a lehetőségeiről, napjainkra hétköznapi gyakorlatokká váltak. A kontrollált, iparosított természet a definiciót is kérdésessé teszi: vajon még mindig természetről beszélhetünk-e a mesterségesen kialakított és életben tartott, művi, látványelemként funkcionáló növényzet kapcsán is? Hogyan hat mindez az ökológiára és a természetről kialakított képünkre?",
+    "KristofLab a tőle megszokott multimediális eszköztárral, installációkon, videókon, festményeken és kollázsokon keresztül tematizálja a kérdést. Művei a jelenség bizarrságát és elidegenítő hatását emelik ki, víziószerűen láttatva a jelenükbe kódolt lehetőségeket."
   ],
-  "textCredit": "Szöveg: Cserhalmi Luca esztéta. A kiállítást Zemlényi-Kovács Barabás teoretikus, független kurátor nyitotta meg.",
+  "textCredit": "Szöveg: Cserhalmi Luca esztéta, a kiállítás kurátora. A kiállítást Zemlényi-Kovács Barnabás teoretikus, független kurátor nyitotta meg.",
   "credits": [
     [
-      "Művész",
+      "Kiállító művész",
       "Szabó Kristóf / KristofLab"
+    ],
+    [
+      "Kurátor",
+      "Cserhalmi Luca esztéta"
+    ],
+    [
+      "Megnyitja",
+      "Zemlényi-Kovács Barnabás teoretikus, független kurátor"
     ],
     [
       "Galéria",
       "MAMŰ, Budapest"
     ],
     [
-      "Szöveg",
-      "Cserhalmi Luca"
-    ],
-    [
-      "Megnyitó",
-      "Zemlényi-Kovács Barabás"
+      "Támogatók",
+      "Nemzeti Kulturális Alap · Magyar Művészeti Akadémia · Budapest VII. kerület Erzsébetváros Önkormányzata"
     ],
     [
       "Digitális kiállítás",
@@ -129,14 +142,14 @@
     ],
     [
       "Fotó",
-      "Barath Szilvia"
+      "Szabó Kristóf"
     ],
     [
       "Épületkörvonal",
       "© OpenStreetMap-közreműködők (ODbL)"
     ]
   ],
-  "behindTheScenes": "Rekonstrukció, nem kitaláció. Az alaprajz a galéria saját teremlapja alapján készült, amely a bár melletti falon volt kifüggesztve; teljes hossza egyezik az épület OpenStreetMap-körvonalával. Az 1. terem egy 360°-os panorámafotó alapján van felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik a terem mérete, az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falak téglái a fotókból vannak kivágva: egy szkript a 7,7 cm-es téglasorokból számolja ki a méretarányt, kiszűri a galéria világítását, és a fugák mentén illeszti a foltokat, hogy hézagmentesen ismétlődjenek. A műalkotások perspektívakorrigált kivágások, a képernyőkön a fényképeken rögzített képkockák láthatók. A Paradise Factory és a Let it Flow műanyag folyója a fotók alapján készült modell. Three.js és Vite, szerver nélkül; a terem alapzaját Web Audio szintetizálja.",
+  "behindTheScenes": "Az alaprajz a galéria felmért alaprajzát követi (az 1. terem 5 × 7 m-es, a 3. és a 4. terem 5,4 és 9,5 m hosszú és 4 m széles), teljes hossza egyezik az épület OpenStreetMap-körvonalával. A termek 360°-os panorámafotók alapján vannak felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falak téglái a fotókból vannak kivágva: egy szkript a 7,7 cm-es téglasorokból számolja ki a méretarányt, kiszűri a galéria világítását, és a fugák mentén illeszti a foltokat, hogy hézagmentesen ismétlődjenek. A műalkotások perspektívakorrigált kivágások, a képernyőkön a művész videói futnak. A Paradise Factory a fotók alapján készült modell, a Let it Flow megolvasztott műanyag folyója pedig egy felülnézeti fénykép alapján. Three.js és Vite, backend nélkül; a terem alapzaját Web Audio szintetizálja.",
   "rooms": {
     "r1": {
       "name": "1. terem",
@@ -156,7 +169,7 @@
     "r4": {
       "name": "4. terem",
       "subtitle": "Let it Flow · videó",
-      "blurb": "Két falcsonk és egy függöny között nyílik a 3. teremből: a Let it Flow, az oldalfalakon a Wiena Wrong Landscape I és a Natural Life."
+      "blurb": "Két fal és egy függöny között nyílik a 3. teremből: a Let it Flow, az oldalfalakon a Wiena Wrong Landscape I és a Natural Life."
     }
   },
   "works": {
@@ -175,7 +188,7 @@
     "w03-screen": {
       "title": "Paradise Factory (képernyő)",
       "medium": "videó kis képernyőn, az installáció része",
-      "caption": "A monitor a hidropóniás sor mellett: lassú, függőlegesen elkent kékek és zöldek, mintha a növénygyár belsejéből érkezne a kép."
+      "caption": "Az élére állított monitor a hidropóniás sor mellett: ipari növénygyárakban készült felvételek (függőleges állványokon növő saláta, kesztyűs kezek, ültetőkosarak és sápadt gyökerek), képsorokra tördelve."
     },
     "w04-human-as-error-iii": {
       "medium": "akril, vászon",
@@ -187,11 +200,11 @@
     },
     "w06-artificial-paradise-i": {
       "medium": "videó, Full HD",
-      "caption": "Az irányított természet osztott képernyőn: orchideák növénylámpák alatt, üvegházmerevítők, geodéziai kupolák és mesterséges fák."
+      "caption": "A szingapúri Gardens by the Bay osztott képernyőn: az acél Supertree-k és a köztük futó függőhíd, pára a Cloud Forest fölött, elágazó acélkoronák az ég előtt."
     },
     "w07-artificial-paradise-ii": {
       "medium": "videó, Full HD",
-      "caption": "Biodómok hatszögletű üvegezése, vízesés, borostyán és egy vízcseppes levél, rácsba vágva."
+      "caption": "Az Eden Project Cornwallban, négyfelé osztott képen: a biomok hatszögletű burka, belülről látott acélrácsuk, esőerdei növényzet és egy vízcseppes levél."
     },
     "w08-wiena-wrong-landscape-ii": {
       "medium": "videó, 4K",
@@ -226,14 +239,28 @@
       "caption": "Városi part nyílt víz fölött; az épületek vörös és pasztell glitch-oszlopokba csúsznak át a hullámok fölött."
     },
     "w16-let-it-flow": {
-      "medium": "installáció: videóvetítés, műanyag hulladék",
-      "caption": "A sötét terem végfalára fák vetülnek. A kivetített erdőből összenyomott műanyagból (palackokból, poharakból, zacskókból, csomagolásokból) álló folyó kanyarog végig a padlón."
+      "medium": "installáció: két videóvetítés (falon a Siluett, padlón a Let it Flow), megolvasztott műanyag hulladék",
+      "caption": "A sötét végteremben a Siluett videó szürke fasziluetteket vetít a végfalra. A kivetített erdőből megolvasztott műanyagból álló folyó indul: ahol a falat elhagyja, kék és fehér, aztán minden színben játszik, végül egy fehér kupacban ér véget. Felülről a Let it Flow videó csillagos égboltként szórja rá a fényt."
     },
     "w17-natural-life": {
       "medium": "videó, Full HD",
       "caption": "Páfrányok egy erdei lejtőn, közelről filmezve, a vetítőterem fekete téglafalán."
     }
   },
-  "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról származnak (DSC_0049).",
-  "tourIntro": "Le a lépcsőn, a MAMŰ pincéjébe: KristofLab Artificial Paradise című kiállítása, 2025. január 10–31."
+  "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról származnak.",
+  "tourIntro": "Le a lépcsőn, a MAMŰ pincéjébe: KristofLab Artificial Paradise című kiállítása, 2025. január 10-31.",
+  "openingSpeech": {
+    "author": "Zemlényi-Kovács Barnabás",
+    "title": "Megnyitószöveg Szabó Kristóf Artificial Paradise című kiállításához",
+    "note": "",
+    "text": [
+      "165 évvel ezelőtt két, egyaránt a negyvenedik életévét betöltő férfi, egymásról mit sem tudva, az egyik Franciaországban, a másik Írországban a füstökkel kapcsolatban írt egy-egy hosszú tanulmányt. Meglepőnek hangozhat, de megítélésem szerint valahol e között a két, 1860 körül születő, rokon témájuk ellenére egymástól nagyon távolinak tűnő írás közötti összefüggésekben helyezhető el Szabó Kristóf kiállítása. Az egyik férfit John Tyndallnak hívták, aki ír fizikusként 1859-ben kísérletezésbe kezdett, hogy laboratóriumi eszközökkel megmérje, hogy a különféle gázok, mint a szén-dioxid, a vízgőz és a metán milyen hatékonyan tartják meg a hőt. Tyndall ezáltal elsőként bizonyította be, hogy a légkör bizonyos összetevői, különösen a szén-dioxid, a Föld által kibocsátott infravörös sugárzás jelentős részét elnyelik és visszasugározzák, ezáltal pedig melegítik a légkört. Tyndall felfedezése nem más, mint amit ma üvegházhatásnak nevezünk. Az ír fizikus a második ipari forradalom hajnalán végezte kutatásait, azaz éppen akkor, amikor az emberi tevékenység révén meredeken emelkedni kezdett széndioxid-koncentráció, amely a Tyndall által leírt üvegházhatás révén elvezetett a globális felmelegedéshez és napjaink klímaválságához.",
+      "Ha Tyndall problémája az volt, hogy a füst bizonyos értelemben megmarad, akkor a másik szerzőé éppen az, hogy menthetetlenül elszáll. Charles Baudelaire 1860-ban publikálja Mesterséges mennyországok című tanulmányát: az ezen kiállítás címéül is szolgáló fogalom nála a különféle bódító szerek, mint a hasis és az ópium okozta alternatív vágyvalóságokat és efemer utópiákat jelenti. A jelentős részben saját szerhasználatára reflektáló, személyes hangú írásában Baudelaire e bódult boldogság és pszichedelikus fantáziavilág alapvető ambivalenciáját járja körbe, amelynek alapja, hogy ez az állapot, a valódi társadalmi mozgalmakkal szemben csak átmeneti üdvöt tud nyújtani, amint a szer hatása elmúlik, a szerhasználó visszahullik egy ezután még kietlenebbnek ható rögvalóságba. Azaz a mesterséges mennyországot csak egy lépés választja el a valódi pokoltól.",
+      "Szabó Kristóf munkáiban ez a két, 165 éve íródott munka ötvöződik: kiállításában a globális felmelegedésre adott válaszként épülő gigantikus üvegházak, fenntarthatónak tervezett miniökoszférák, mesterségesen létrehozott mikroédenkertek, illetve ahogy maga is hívja, „mesterséges mennyországok” állnak. Mindezek egyszerre a klímahelyzetre adott konkrét tudományos-technológiai válaszok, ugyanakkor magukon messze túlmutató metaforák, illetve egy fenntartható jövő utópia- vagy vágyképei is egyben. És itt derül ki, hogy Baudelaire messze nem csak a cím révén van jelen: bár egyfelől a jelenlegi mezőgazdasági tömegtermelésnél valóban környezetbarátabbak, akárcsak az ő mesterséges mennyországai, Szabó Kristóf kiállításában ezek az utópisztikus „mesterséges természetek” is olyan fantáziákként lepleződnek le, amelyek fenntarthatósága több mint kérdéses, látszólagos válságválaszokként pedig részben a valódi kérdéseket látszanak elfedni.",
+      "John Tyndall még nem használta az üvegház-metaforát az üvegházhatású gázok esetében, ezt a svéd Nils Ekholm vezette be 1901-ben. A Szabó Kristóf által elemzett mesterséges ökoszférák alapja éppen az üvegház, amelyben rejlik némi sötét irónia, tekintve, hogy egy olyan klímaválságra adott válaszként jelennek meg, amelyben az egész bolygó egy túlfűtött globális üvegházzá változott. Az üvegház mint a mesterséges, emberileg kontrollált környezet archetípusa az ókorig nyúlik vissza, már a Rómaiak is kísérleteztek vele. Az üvegház egy ökológiai paradoxon, amelyben annál ideálisabb a természet, minél mesterségesebb körülmények között jön létre. Ahol a természet mesterséges, ott a mesterséges természetes. Ezt az ideális, érintetlennek ható környezetet, amelynek dokumentumfelvételei Szabó Kristóf munkáiban is megjelennek, egy mindenre kiterjedő emberi kontroll teszi lehetővé, azaz ugyanaz a logika, amely a jelenlegi állapothoz is vezetett.",
+      "Baudelaire nemcsak korának egyik legnagyobb hatású, proto-avantgárd költője volt, de a korszak meghatározó művészetkritikusa és teoretikusa is, aki az elsők között fogalmazta meg a kialakulóban lévő modern művészet szellemi alapjait. 1863-ban, két évvel a Mesterséges mennyországok után Baudelaire megírja A modern élet festője című esszéjét, amely a modern művészet talán első manifesztuma. „Az átmeneti, a múlékony, az esetleges – alkotja a művészet egyik felét, a másik fele örök és változhatatlan” – írja Baudelaire. „[a művész] azt a valamit keresi, amit szabad legyen modernségnek neveznünk (…) Vagyis az a dolga, hogy kihámozza a divatból mindazt a történelmi poézist, ami csak megtalálható benne, az átmenetiből kiszűrje a maradandót”. Baudelaire avantgárd művészetdefiníciója a modernitás minden válsága ellenére ma is a kurrens művészet alapkereteit jelenti. Szabó Kristóf is fél lábbal a tradícióban, fél lábbal pedig az efemer jelenben áll, elég csak a tájkép tradicionális zsánerével folytatott tudatos párbeszédére utalni. Tyndall és Baudelaire idején a képzőművészek hozták létre a mesterséges ideáltájakat; a kiállítás idézi is ezeket a 19. századi, romantikus, akademikus vagy épp impresszionista tájeszményeket. Amit egykor a képzőművészet, azt ma az ipar és a technológia hozza létre, Szabó Kristóf pedig ebben a helyzetben a művész egy lehetséges feladatát a szintetikus módon előállított harmonikus természet denaturalizálásában, mesterséges voltának felfedésében, a hibátlannak beállított vízió képhibákként is megjelenő errorjaiban, glitcheiben és vakfoltjaiban látja.",
+      "Szintén az 1850-es és hatvanas évek fordulóján, 1859-ben jelenik meg egy harmadik könyv egy harmadik, az előző kettőnél tíz évvel idősebb úriembertől: A fajok eredete Charles Darwintól. Szabó Kristóf A fajok eredetét a fajok vége felől, a természetes szelekciót a mesterséges szelekció felől közelíti meg. Munkái azt állítják, hogy az ember nemcsak, hogy nem a teremtés koronája, de még csak nem is az evolúció csúcsa – ami azt illeti: hiba. Human as Error. Kérdés, mit jelent ennek a hibának a kijavítása: a kapitalizmus radikális átalakítása vagy felszámolása mellett a poszthumán és posztantropocentrikus elméletek alapján, ha nem akarjuk önmagunkat felszámolni, éppen az emberközpontúságunkat kell meghaladni ahhoz, hogy fennmaradhassunk.",
+      "A problémánk ma is Baudelaire-é és Tyndallé: az utópia füstje elszáll, de a disztópia füstje itt marad."
+    ]
+  }
 }

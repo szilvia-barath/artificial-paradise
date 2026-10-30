@@ -68,12 +68,12 @@ scene.add(arch.group);
 const props = buildProps(materials);
 scene.add(props.group);
 scene.add(buildParadiseFactory(materials));
-applyPlanAO(materials, arch.segments); // after props and installations add their footprints
-const lights = buildLights(scene);
-const gallery = buildGallery(data, materials, manager, renderer, { hdBudget: lowPower ? 3 : 8 });
-scene.add(gallery.group);
 const letItFlow = buildLetItFlow(manager);
 scene.add(letItFlow.group);
+applyPlanAO(materials, arch.segments); // after props and installations add their footprints
+const lights = buildLights(scene);
+const gallery = buildGallery(data, materials, manager, renderer, { hdBudget: lowPower ? 3 : 8, videoBudget: lowPower ? 2 : 3 });
+scene.add(gallery.group);
 
 const controls = new FirstPersonControls(camera, canvas, arch.segments);
 const r1 = roomById('r1');
@@ -108,8 +108,8 @@ const viewer = setupViewer(data, {
 // Guided tour: the works in catalogue order, routed through the doorways.
 const DOORS = {
   'r1>r2': [[4.95, 4.12], [6.35, 4.12]],
-  'r2>r3': [[9.25, 3.4], [10.5, 3.4]],
-  'r3>r4': [[15.05, 3.9], [16.15, 3.9]],
+  'r2>r3': [[9.382, 3.317], [10.65, 3.317]],
+  'r3>r4': [[15.2, 3.792], [16.283, 3.792]],
 };
 function buildTourStops() {
   const r1 = roomById('r1');
@@ -188,7 +188,9 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
 // Navbar sections open as panels, on the title screen as well as in the exhibition.
 document.getElementById('site-nav').addEventListener('click', (e) => {
   const b = e.target.closest('[data-nav]');
-  if (b) ui.show(b.dataset.nav);
+  if (!b) return;
+  viewer.close();
+  ui.show(b.dataset.nav);
 });
 window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen()) return;
@@ -371,7 +373,7 @@ function frame() {
   const bands = audio.update(controls.pos.x, controls.pos.y, controls.yaw, dt, t);
   for (const fn of props.anim) fn(t, dt);
   gallery.update(t, dt, camera, controls.zoom);
-  letItFlow.update(t, lights.proj);
+  letItFlow.update(t, lights.proj, camera.position);
   updateHover();
   if (entered) {
     minimap(controls.pos.x, controls.pos.y, controls.yaw, currentRoomId, t);

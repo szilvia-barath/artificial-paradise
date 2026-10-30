@@ -6,8 +6,8 @@
 // An AnalyserNode on the master bus exposes bass/mid/high/level for the visuals.
 // None of it is part of the artworks: the videos' own soundtracks are not reproduced.
 
-const BAR = { x: 8.6, z: 4.6 };
-const PROJ = { x: 17.4, z: 3.83 };
+const BAR = { x: 8.707, z: 4.457 };
+const PROJ = { x: 17.48, z: 3.725 };
 
 function noiseBuffer(ctx, seconds = 4, pink = true) {
   const len = ctx.sampleRate * seconds;

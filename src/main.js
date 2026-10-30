@@ -190,12 +190,14 @@ document.getElementById('toolbar').addEventListener('click', (e) => {
   else if (a === 'sound') toggleSound();
 });
 // Navbar sections open as panels, on the title screen as well as in the exhibition.
-document.getElementById('site-nav').addEventListener('click', (e) => {
-  const b = e.target.closest('[data-nav]');
-  if (!b) return;
-  viewer.close();
-  ui.show(b.dataset.nav);
-});
+for (const bar of ['site-nav', 'site-foot']) {
+  document.getElementById(bar).addEventListener('click', (e) => {
+    const b = e.target.closest('[data-nav]');
+    if (!b) return;
+    viewer.close();
+    ui.show(b.dataset.nav);
+  });
+}
 window.addEventListener('keydown', (e) => {
   if (!entered || viewer.isOpen() || ui.isOpen()) return;
   if (e.code === 'KeyT') toggleTour();

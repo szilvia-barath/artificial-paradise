@@ -258,6 +258,18 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 #site-foot a { color: inherit; text-underline-offset: 3px; }
 #site-foot .sep { opacity: 0.5; }
+#site-foot button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.foot-logo { display: inline-flex; margin: -2px 6px -2px 0; }
+.foot-logo img { display: block; width: auto; height: 22px; }
 
 /* In the exhibition, or over a dark panel */
 body.entered #site-nav, body.overlay #site-nav,
@@ -632,7 +644,6 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
 }
 .viewer-media video { width: auto; height: auto; aspect-ratio: auto; }
 #viewer-videos { display: flex; flex-direction: column; align-items: flex-start; gap: 0; }
-#viewer-videos .note { font-size: 11px; color: var(--muted); margin: 8px 0 0; }
 .viewer-loading { position: absolute; font-size: 11px; color: var(--muted); }
 .viewer-info {
   border-left: 1px solid var(--line);
@@ -647,6 +658,9 @@ body.touch #zoom-level { left: auto; right: 14px; top: auto; transform: none; bo
 .viewer-info details { margin: 8px 0 22px; border-top: 1px solid var(--line); padding-top: 12px; }
 .viewer-info summary { font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); cursor: pointer; }
 #viewer-text p { font-size: 13px; color: #cfcfcb; }
+#viewer-desc h3 { font-family: var(--mono); font-size: 11px; font-weight: 400; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); margin: 22px 0 0; }
+#viewer-desc p { font-size: 14px; color: #dedcd6; }
+#viewer-desc .note { font-family: var(--mono); font-size: 11px; color: var(--muted); }
 .viewer-nav {
   margin-top: auto;
   display: flex;

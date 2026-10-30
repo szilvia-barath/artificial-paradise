@@ -1,5 +1,5 @@
 {
-  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer.",
+  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files (with 'descOnly' it replaces the caption in the viewer); 'situ' lists a work's installation photos. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in.",
   "meta": {
     "title": "Artificial Paradise",
     "digitalBy": "Szilvia Barath",
@@ -30,7 +30,8 @@
         "y": 1.33,
         "w": 1.6,
         "h": 1.4
-      }
+      },
+      "desc": "landscape"
     },
     {
       "id": "w02-human-as-error-vi",
@@ -53,7 +54,8 @@
       "view": {
         "x": 3.1,
         "z": 2.2
-      }
+      },
+      "desc": "human-as-error"
     },
     {
       "id": "w03-paradise-factory",
@@ -72,6 +74,20 @@
       "view": {
         "x": 3.5,
         "z": 4.9
+      },
+      "desc": "paradise-factory",
+      "descOnly": true,
+      "situ": [
+        "img/w03-paradise-factory-b",
+        "img/w03-paradise-factory-c"
+      ],
+      "video": {
+        "full": [
+          {
+            "drive": "1BfU8xxBOmY8v9S-iKBYXGh44sbsZroXj",
+            "label": "documentation"
+          }
+        ]
       }
     },
     {
@@ -104,7 +120,8 @@
             "label": "full"
           }
         ]
-      }
+      },
+      "desc": "paradise-factory"
     },
     {
       "id": "w04-human-as-error-iii",
@@ -123,7 +140,8 @@
         "y": 1.4,
         "w": 1.2,
         "h": 0.9
-      }
+      },
+      "desc": "human-as-error"
     },
     {
       "id": "w05-human-as-error-i",
@@ -142,7 +160,8 @@
         "y": 1.38,
         "w": 1.2,
         "h": 0.9
-      }
+      },
+      "desc": "human-as-error"
     },
     {
       "id": "w06-artificial-paradise-i",
@@ -229,7 +248,8 @@
             "label": "full"
           }
         ]
-      }
+      },
+      "desc": "landscape"
     },
     {
       "id": "w09-warsaw-g24-i",
@@ -248,7 +268,8 @@
         "y": 1.45,
         "w": 0.4,
         "h": 0.75
-      }
+      },
+      "desc": "landscape"
     },
     {
       "id": "w10-warsaw-ii",
@@ -268,7 +289,8 @@
         "w": 0.5,
         "h": 0.8,
         "label": "none"
-      }
+      },
+      "desc": "landscape"
     },
     {
       "id": "w11-artificial-paradise-i-print",
@@ -344,7 +366,8 @@
         "y": 1.45,
         "w": 0.4,
         "h": 0.75
-      }
+      },
+      "desc": "landscape"
     },
     {
       "id": "w15-wiena-wrong-landscape-i",
@@ -371,7 +394,8 @@
             "label": "full"
           }
         ]
-      }
+      },
+      "desc": "landscape"
     },
     {
       "id": "w16-let-it-flow",
@@ -380,7 +404,7 @@
       "type": "installation",
       "title": "Let it Flow",
       "year": "2024",
-      "image": "img/w16-let-it-flow",
+      "image": "img/w16-let-it-flow-a",
       "photo": "DSC_0113",
       "anchor": {
         "x": 23.61,
@@ -401,10 +425,20 @@
           {
             "drive": "15j1HRd1x63S_KsRATcps3rH1rsY_9fWv",
             "label": "floor"
+          },
+          {
+            "drive": "1w6FBdA-9nx4xS9f_AXqebwbZHS15tmpz",
+            "label": "documentation"
           }
         ],
         "sound": true
-      }
+      },
+      "desc": "let-it-flow",
+      "descOnly": true,
+      "situ": [
+        "img/w16-let-it-flow-a",
+        "img/w16-let-it-flow-b"
+      ]
     },
     {
       "id": "w17-natural-life",
@@ -459,6 +493,82 @@
       "at": 7.481,
       "along": 5.502,
       "y": 1.5
+    }
+  ],
+  "contacts": [
+    {
+      "id": "Gallery",
+      "items": [
+        {
+          "type": "address",
+          "href": "https://www.openstreetmap.org/node/4819875781"
+        },
+        {
+          "type": "phone",
+          "text": "+36 30 998 4717",
+          "href": "tel:+36309984717"
+        },
+        {
+          "type": "email",
+          "text": "mamusociety@gmail.com",
+          "href": "mailto:mamusociety@gmail.com"
+        },
+        {
+          "type": "website",
+          "text": "mamu.hu",
+          "href": "https://mamu.hu"
+        },
+        {
+          "type": "instagram",
+          "text": "@mamu_society",
+          "href": "https://www.instagram.com/mamu_society"
+        },
+        {
+          "type": "facebook",
+          "text": "mamu.tarsasag",
+          "href": "https://www.facebook.com/mamu.tarsasag"
+        }
+      ]
+    },
+    {
+      "id": "Artist",
+      "items": [
+        {
+          "type": "website",
+          "text": "kristoflab.com",
+          "href": "https://kristoflab.com"
+        },
+        {
+          "type": "instagram",
+          "text": "@kristoflab",
+          "href": "https://www.instagram.com/kristoflab/"
+        },
+        {
+          "type": "linkedin",
+          "text": "",
+          "href": ""
+        }
+      ]
+    },
+    {
+      "id": "Digital",
+      "items": [
+        {
+          "type": "email",
+          "text": "",
+          "href": ""
+        },
+        {
+          "type": "website",
+          "text": "",
+          "href": ""
+        },
+        {
+          "type": "linkedin",
+          "text": "",
+          "href": ""
+        }
+      ]
     }
   ]
 }

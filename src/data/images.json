@@ -9,7 +9,7 @@
  ],
  "w03-paradise-factory": [
   1600,
-  1563
+  1067
  ],
  "w03-screen": [
   479,
@@ -48,28 +48,28 @@
   900
  ],
  "w09-warsaw-g24-i": [
-  511,
-  958
+  853,
+  1600
  ],
  "w10-warsaw-ii": [
   1000,
   1600
  ],
  "w11-artificial-paradise-i-print": [
-  1247,
-  1247
+  1600,
+  1600
  ],
  "w12-artificial-paradise-ii-print": [
-  1336,
-  1336
+  1600,
+  1600
  ],
  "w13-artificial-paradise-iii-print": [
-  1254,
-  1254
+  1600,
+  1600
  ],
  "w14-warsaw-g24-ii": [
-  754,
-  1414
+  853,
+  1600
  ],
  "w15-wiena-wrong-landscape-i": [
   1600,
@@ -82,5 +82,21 @@
  "w17-natural-life": [
   1600,
   900
+ ],
+ "w03-paradise-factory-b": [
+  1600,
+  1066
+ ],
+ "w03-paradise-factory-c": [
+  1600,
+  1067
+ ],
+ "w16-let-it-flow-a": [
+  1600,
+  1067
+ ],
+ "w16-let-it-flow-b": [
+  1600,
+  1068
  ]
 }

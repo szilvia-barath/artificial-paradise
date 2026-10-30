@@ -1,71 +1,59 @@
 {
  "w01-dresden": {
-  "photo": "DSC_0017",
+  "repro": "1 terem/Wrong-Data-Landscape-Dresden-140x160-cm-acrylic-canwas-2023-copy.jpg",
   "quad": [
    [
-    0.1329,
-    0.3424
+    0.0304,
+    0.0303
    ],
    [
-    0.5644,
-    0.3409
+    0.9684,
+    0.0311
    ],
    [
-    0.5644,
-    0.5923
+    0.9691,
+    0.9677
    ],
    [
-    0.1329,
-    0.599
+    0.0299,
+    0.969
    ]
   ],
-  "aspect": 1.1429,
-  "enhance": true
+  "aspect": 1.1429
  },
  "w02-human-as-error-vi": {
-  "photo": "DSC_0018",
+  "repro": "1 terem/Human as error VI, 190x150 cm, acrylic canvas, 2024.jpg",
   "quad": [
    [
-    0.4123,
-    0.2942
+    0.0325,
+    0.0285
    ],
    [
-    0.7289,
-    0.2107
+    0.9646,
+    0.0304
    ],
    [
-    0.7186,
-    0.7644
+    0.9623,
+    0.9691
    ],
    [
-    0.4089,
-    0.6794
+    0.0362,
+    0.9685
    ]
   ],
-  "aspect": 0.7895,
-  "enhance": true
+  "aspect": 0.7895
  },
  "w03-paradise-factory": {
-  "photo": "_01_panorama",
-  "quad": [
-   [
-    0.03,
-    0.0
-   ],
-   [
-    0.215,
-    0.0
-   ],
-   [
-    0.215,
-    1.0
-   ],
-   [
-    0.03,
-    1.0
-   ]
-  ],
-  "enhance": true
+  "repro": "1 terem/_artificial paradise 01 - 02.jpg",
+  "full": true
+ },
+ "w03-paradise-factory-b": {
+  "repro": "1 terem/_artificial paradise 01 - 01.jpg",
+  "full": true
+ },
+ "w03-paradise-factory-c": {
+  "repro": "1 terem/_artificial paradise 01 - 06.jpg",
+  "full": true
  },
  "w03-screen": {
   "photo": "DSC_0032",
@@ -134,50 +122,48 @@
   "aspect": 0.8
  },
  "w04-human-as-error-iii": {
-  "photo": "DSC_0029",
+  "repro": "1 terem/Human as error III, 90x120 cm, acrylic canvas, 2024.jpg",
   "quad": [
    [
-    0.144,
-    0.32
+    0.0384,
+    0.0415
    ],
    [
-    0.558,
-    0.36533
+    0.9604,
+    0.043
    ],
    [
-    0.575,
-    0.592
+    0.959,
+    0.9497
    ],
    [
-    0.1475,
-    0.617
+    0.0387,
+    0.9483
    ]
   ],
-  "aspect": 1.3333,
-  "enhance": true
+  "aspect": 1.3333
  },
  "w05-human-as-error-i": {
-  "photo": "DSC_0026",
+  "repro": "1 terem/Human as error I, 90x120 cm, acrylic canvas, 2024.jpg",
   "quad": [
    [
-    0.096,
-    0.2922
+    0.0365,
+    0.0425
    ],
    [
-    0.6797,
-    0.3018
+    0.9599,
+    0.0388
    ],
    [
-    0.682,
-    0.5799
+    0.9603,
+    0.9504
    ],
    [
-    0.096,
-    0.5922
+    0.0356,
+    0.9522
    ]
   ],
-  "aspect": 1.3333,
-  "enhance": true
+  "aspect": 1.3333
  },
  "w06-artificial-paradise-i": {
   "photo": "DSC_0053",
@@ -268,142 +254,82 @@
   "aspect": 1.7778
  },
  "w09-warsaw-g24-i": {
-  "photo": "DSC_0094",
+  "repro": "3 terem/Wrong-Data-Landscape-Warsaw-G24-I-75x40-cm-acrylic-canwas-2024-copy.jpg",
   "quad": [
    [
-    0.5435,
-    0.3616
+    0.0425,
+    0.024
    ],
    [
-    0.6553,
-    0.3552
+    0.9467,
+    0.0251
    ],
    [
-    0.6598,
-    0.5148
+    0.9446,
+    0.9775
    ],
    [
-    0.5408,
-    0.513
+    0.0424,
+    0.9764
    ]
   ],
-  "aspect": 0.5333,
-  "enhance": true
+  "aspect": 0.5333
  },
  "w10-warsaw-ii": {
-  "photo": "DSC_0080",
+  "repro": "3 terem/Wrong Data Landscape Warsaw II, 80x50 cm, acrylic canwas, 2023.jpg",
   "quad": [
    [
-    0.359,
-    0.262
+    0.0371,
+    0.0236
    ],
    [
-    0.5895,
-    0.241
+    0.9602,
+    0.023
    ],
    [
-    0.5795,
-    0.53733
+    0.9616,
+    0.9785
    ],
    [
-    0.356,
-    0.52867
+    0.0371,
+    0.9771
    ]
   ],
-  "aspect": 0.625,
-  "enhance": true
+  "aspect": 0.625
  },
  "w11-artificial-paradise-i-print": {
-  "photo": "DSC_0077",
-  "quad": [
-   [
-    0.4387,
-    0.2553
-   ],
-   [
-    0.6896,
-    0.2584
-   ],
-   [
-    0.6781,
-    0.4661
-   ],
-   [
-    0.4285,
-    0.4594
-   ]
-  ],
-  "aspect": 1.0,
-  "enhance": true
+  "repro": "3 terem/Artificial paradise I.jpg",
+  "full": true
  },
  "w12-artificial-paradise-ii-print": {
-  "photo": "DSC_0075",
-  "quad": [
-   [
-    0.452,
-    0.23
-   ],
-   [
-    0.7775,
-    0.23567
-   ],
-   [
-    0.777,
-    0.45833
-   ],
-   [
-    0.4465,
-    0.45167
-   ]
-  ],
-  "aspect": 1.0,
-  "enhance": true
+  "repro": "3 terem/Artificial paradise II.jpg",
+  "full": true
  },
  "w13-artificial-paradise-iii-print": {
-  "photo": "DSC_0073",
-  "quad": [
-   [
-    0.5645,
-    0.26733
-   ],
-   [
-    0.863,
-    0.25133
-   ],
-   [
-    0.859,
-    0.46033
-   ],
-   [
-    0.5645,
-    0.45967
-   ]
-  ],
-  "aspect": 1.0,
-  "enhance": true
+  "repro": "3 terem/Artificial paradise III.jpg",
+  "full": true
  },
  "w14-warsaw-g24-ii": {
-  "photo": "DSC_0071",
+  "repro": "3 terem/Wrong-Data-Landscape-Warsaw-G24-II-75x40-cm-acrylic-canwas-2024-copy.jpg",
   "quad": [
    [
-    0.265,
-    0.28867
+    0.0625,
+    0.0309
    ],
    [
-    0.426,
-    0.30267
+    0.935,
+    0.0314
    ],
    [
-    0.426,
-    0.519
+    0.9348,
+    0.97
    ],
    [
-    0.273,
-    0.52433
+    0.0642,
+    0.9702
    ]
   ],
-  "aspect": 0.5333,
-  "enhance": true
+  "aspect": 0.5333
  },
  "w15-wiena-wrong-landscape-i": {
   "photo": "DSC_0120",
@@ -449,6 +375,14 @@
   ],
   "aspect": 1.7397,
   "enhance": true
+ },
+ "w16-let-it-flow-a": {
+  "repro": "4 terem/_artificial paradise 04 - 01.jpg",
+  "full": true
+ },
+ "w16-let-it-flow-b": {
+  "repro": "4 terem/_artificial paradise 04 - 03.jpg",
+  "full": true
  },
  "w17-natural-life": {
   "photo": "DSC_0109",

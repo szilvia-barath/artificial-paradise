@@ -55,6 +55,7 @@
         <button data-nav="about" data-i18n="nav.about">About</button>
         <button data-nav="works" data-i18n="nav.works">Works</button>
         <button data-nav="bts" data-i18n="nav.build">Behind the scenes</button>
+        <button data-nav="contact" data-i18n="nav.contact">Contact</button>
       </nav>
       <div class="lang-switch" role="group" aria-label="Language" data-i18n-attr="aria-label:nav.language">
         <button data-lang="en" lang="en" title="English" aria-pressed="true">EN</button>
@@ -87,6 +88,7 @@
     </section>
 
     <footer id="site-foot">
+      <a class="foot-logo" href="https://mamu.hu" target="_blank" rel="noopener"><img src="./brand/mamu-logo.svg" alt="MAMŰ" width="284" height="120" /></a>
       <span data-i18n="footer.rights">Artworks © Kristóf Szabó / KristofLab</span>
       <span class="sep" aria-hidden="true">·</span>
       <span data-i18n="footer.digital">Digital exhibition by Szilvia Barath</span>
@@ -94,6 +96,8 @@
       <span class="wide" data-i18n="footer.venue">MAMŰ Gallery, Budapest, 2025</span>
       <span class="sep" aria-hidden="true">·</span>
       <a href="https://www.instagram.com/p/DFH19tjo3ph/" target="_blank" rel="noopener">Instagram ↗</a>
+      <span class="sep" aria-hidden="true">·</span>
+      <button data-nav="contact" data-i18n="nav.contact">Contact</button>
     </footer>
 
     <!-- In-world HUD -->
@@ -144,6 +148,7 @@
         <p class="meta mono" id="viewer-meta"></p>
         <p id="viewer-caption"></p>
         <div id="viewer-videos"></div>
+        <div id="viewer-desc"></div>
         <details>
           <summary class="mono" data-i18n="viewer.exhibitionText">Exhibition text</summary>
           <div id="viewer-text"></div>

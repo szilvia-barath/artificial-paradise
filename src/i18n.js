@@ -57,7 +57,7 @@ export function applyStatic(root = document) {
 export function localize(data) {
   const loc = LOCALES[current];
   data.meta = { ...data.meta, ...en.meta, ...loc.meta };
-  for (const k of ['text', 'textCredit', 'credits', 'behindTheScenes', 'source', 'tourIntro', 'openingSpeech']) data[k] = loc[k] ?? en[k];
+  for (const k of ['text', 'textCredit', 'credits', 'behindTheScenes', 'source', 'tourIntro', 'openingSpeech', 'descriptions']) data[k] = loc[k] ?? en[k];
   data.rooms = {};
   for (const id of Object.keys(en.rooms)) data.rooms[id] = { ...en.rooms[id], ...loc.rooms?.[id] };
   for (const w of data.works) {

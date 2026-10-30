@@ -75,7 +75,23 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
     <p class="note">${esc(t('panels.controlsDesk'))}<br />${esc(t('panels.controlsTouch'))}</p>
   `;
 
-  const PAGES = { about: aboutHTML, works: worksHTML, bts: btsHTML };
+  // Contact details from exhibition.json; an entry stays hidden until it has an href, and a
+  // group with none left says they are on the way.
+  const contactHTML = () => `
+    <p class="eyebrow">${esc(data.meta.title)}</p>
+    <h2>${esc(t('panels.contactTitle'))}</h2>
+    ${data.contacts.map((g) => {
+      const items = g.items.filter((c) => c.href);
+      return `
+      <h3>${esc(t(`panels.contact${g.id}`))}</h3>
+      ${items.length ? `<dl class="credits">${items.map((c) => `
+        <dt>${esc(t(`panels.contactLabel.${c.type}`))}</dt>
+        <dd><a href="${esc(c.href)}"${c.href.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${esc(c.type === 'address' ? data.meta.address : c.text)}</a></dd>`).join('')}
+      </dl>` : `<p class="note">${esc(t('panels.contactSoon'))}</p>`}`;
+    }).join('')}
+  `;
+
+  const PAGES = { about: aboutHTML, works: worksHTML, bts: btsHTML, contact: contactHTML };
 
   const markNav = () => {
     for (const b of navButtons) b.setAttribute('aria-current', String(b.dataset.nav === current));

@@ -10,7 +10,8 @@
       "works": "Művek",
       "build": "Kulisszák mögött",
       "menu": "Menü",
-      "language": "Nyelv"
+      "language": "Nyelv",
+      "contact": "Kapcsolat"
     },
     "loader": {
       "meta1": "Digitális kiállítás",
@@ -74,7 +75,9 @@
       "wall": "Falra vetített videó (Siluett), teljes hosszban",
       "floor": "Padlóra vetített videó (Let it Flow), teljes hosszban",
       "loop": "Vissza a loophoz",
-      "videoNote": "A teljes videók a Google Drive-ról töltődnek be."
+      "documentation": "Videódokumentáció",
+      "photo": "Vissza a fotóhoz",
+      "situNext": "Következő installációs fotó"
     },
     "panels": {
       "credits": "Közreműködők",
@@ -84,7 +87,7 @@
       "linkExhibition": "Artkartell: KristofLab, Artificial Paradise",
       "linkGallery": "MAMŰ Galéria",
       "linkInstagram": "Instagram-poszt a kiállításról",
-      "rights": "Minden műalkotás Szabó Kristóf / KristofLab munkája; a reprodukciók installációs fotókról, dokumentációs céllal készültek. A termek rekonstrukciója ugyanezeken a fotókon és a galéria alaprajzán alapul.",
+      "rights": "Minden műalkotás Szabó Kristóf / KristofLab munkája; a művész reprodukcióin és installációs fotókon láthatók, dokumentációs céllal. A termek rekonstrukciója a fotókon és a galéria alaprajzán alapul.",
       "worksTitle": "Műlista",
       "btsEyebrow": "Kulisszák mögött",
       "btsTitle": "Hogyan készült",
@@ -94,7 +97,21 @@
       "linkFacebook": "A MAMŰ a Facebookon",
       "linkMamuInstagram": "A MAMŰ az Instagramon",
       "speech": "Megnyitószöveg",
-      "speechRead": "A megnyitószöveg elolvasása"
+      "speechRead": "A megnyitószöveg elolvasása",
+      "contactTitle": "Kapcsolat",
+      "contactGallery": "MAMŰ Galéria",
+      "contactArtist": "Szabó Kristóf / KristofLab",
+      "contactDigital": "Digitális kiállítás: Barath Szilvia",
+      "contactSoon": "Az elérhetőségek hamarosan itt lesznek.",
+      "contactLabel": {
+        "address": "Cím",
+        "phone": "Telefon",
+        "email": "E-mail",
+        "website": "Weboldal",
+        "instagram": "Instagram",
+        "facebook": "Facebook",
+        "linkedin": "LinkedIn"
+      }
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Galéria · 2025. 01. 10-31."
@@ -149,7 +166,7 @@
       "© OpenStreetMap-közreműködők (ODbL)"
     ]
   ],
-  "behindTheScenes": "Az alaprajz a galéria saját teremlapja alapján készült, teljes hossza egyezik az épület OpenStreetMap-körvonalával. A termek 360°-os panorámafotók alapján vannak felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik a terem mérete, az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falak téglái a fotókból vannak kivágva: egy szkript a 7,7 cm-es téglasorokból számolja ki a méretarányt, kiszűri a galéria világítását, és a fugák mentén illeszti a foltokat, hogy hézagmentesen ismétlődjenek. A műalkotások perspektívakorrigált kivágások, a képernyőkön a művész videói futnak, a saját hangjukkal. A Paradise Factory és a Let it Flow műanyag folyója a fotók alapján készült modell. Three.js és Vite, backend nélkül; a terem alapzaját Web Audio szintetizálja.",
+  "behindTheScenes": "Az alaprajz a galéria saját teremlapja alapján készült, teljes hossza egyezik az épület OpenStreetMap-körvonalával. A termek 360°-os panorámafotók alapján vannak felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik a terem mérete, az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falak téglái a fotókból vannak kivágva: egy szkript a 7,7 cm-es téglasorokból számolja ki a méretarányt, kiszűri a galéria világítását, és a fugák mentén illeszti a foltokat, hogy hézagmentesen ismétlődjenek. A festmények és a nyomatok a művész saját reprodukciói, a képernyőkön a művész videói futnak, a saját hangjukkal. A Paradise Factory és a Let it Flow műanyag folyója a fotók alapján készült modell. Three.js és Vite, backend nélkül; a terem alapzaját Web Audio szintetizálja.",
   "rooms": {
     "r1": {
       "name": "1. terem",
@@ -245,6 +262,37 @@
     "w17-natural-life": {
       "medium": "videó, Full HD",
       "caption": "Páfrányok egy erdei lejtőn, közelről filmezve, a vetítőterem fekete téglafalán."
+    }
+  },
+  "descriptions": {
+    "human-as-error": {
+      "heading": "A sorozatról",
+      "text": [
+        "Az emberiség körülbelül csak 300.000 éve van jelen a Földön, míg az élet körülbelül 3,5 millió éve keletkezett. Fajunk az ipari forradalom környékén kezdte el drasztikusabban átalakítani a bolygónkat, ezen folyamatoknak jelentős százaléka pedig az elmúlt 70 évre tehető.",
+        "Gondolkodhatunk magunkról hibaként a természeti diverzitás tekintetében. Ha az elmúlt századot nézzük, nem túlzás, ha kétharmados csökkenéssel becslünk. A Föld történetében eddig 5 nagy tömeges kihalás volt, amely elérte a 75%-ot. Az elmúlt 100 évben körülbelül az IUCN (Nemzetközi Természetvédelmi Unió) Vörös Listája szerint a jelenleg ismert fajok nagyjából 27%-a fenyegetett vagy kihalással veszélyeztetett. Ezen belül az emlősök 25%-a, a madarak 13%-a, a kétéltűek 41%-a és a növények 33%-a került veszélybe.",
+        "A sorozat témájának választott település, Szentkirályszabadja, amely orosz katonai bázis, laktanya volt Veszprém környékén, a rendszerváltás után néptelenedett el. Az itt található emberi építményeket a természet már uralma alá hajtotta. Ezen képek feldolgozásával koncepciózusan a természetből az ember eltűnésével foglalkozok. Csupán évtizedek kellenek, hogy a domesztikált tájat visszavegye a természet, és visszaálljon a biodiverzitás. A települések elnéptelenedése nem tervezett események következménye, betudható a véletlennek, melyekhez emberi tevékenységek okai köthetők. A hiba és annak esztétikája kulcsfontosságú helyet foglal el, így a képeken is visszatükröződik: festészeti metódusomban nagy szerepe van a véletlennek, absztrahált ecsetkezeléssel alakítom ki a glitchelt felületeket.",
+        "A sorozatban a tájképfestészet újragondolása a célom. A természet újra visszahódítja azt, amit az ember elvett, így visszaáll az „eredeti” állapot, és újra csodálhatjuk a fenségességét és erejét, így megmutatkozik a civilizáció fölé magasló ereje is. Caspar David Friedrich festészetében a romokhoz fűződő esztétikája, szeretete kötődik leginkább munkáimhoz. Hasonló gondolatmenet húzódik meg, a természet uralma mindkét esetben az emberi tevékenység fölé magaslik. Visszahódítja azt, amit az ember elvett. Friedrich életében az iparosodás alakította át teljes mértékben a világot, ma már ennek kicsúcsosodását éljük. A kapitalizmus már a természetet is árucikké tette. Friedrich munkásságában a természet fenségessége egyfajta visszavágyódást is jelenthet abba a korba, amikor a civilizáció még szimbiózisban élt vele. Munkáimnál az ember a természet alá rendelt koncepciója jelenik meg, így az épített környezet szépen lassan rommá válik, csak utalva civilizációnk egykori „fényére”."
+      ]
+    },
+    "landscape": {
+      "heading": "A sorozatról",
+      "text": [
+        "A sorozat témája ember és környezetének kapcsolata a kapitalizmus tükrében. A városi, illetve a természeti közeg harmonikus egybeolvasztása utópisztikusnak hat ebben a közegben. Fennálló rendszerben a határok átlépése során két végletes következménnyel is számolhatunk. Pozitívan értelmezve: a határok feszegetésével előrejuthatunk, ami fejlődéshez vezethet. Negatívan értelmezve: a határ megsértésével visszafordíthatatlan folyamatokat indíthatunk el, melyeknek kimenetele bizonytalan."
+      ]
+    },
+    "paradise-factory": {
+      "heading": "A műről",
+      "text": [
+        "Paradise Factory a természet és a civilizáció közti viszony új, mégis egyre ismerősebb formáit vizsgálja. A technológiai fejlődés és az iparosítás hatására az ember és természet közötti hierarchia tovább mélyült – az emberi beavatkozás a tájban, a mesterségesen életben tartott városi növényzet, vagy a napfényt sosem látott, zárt rendszerben termelt növények révén. Az installáció egyik eleme egy hidropóniás termesztőrendszer, amelyet egy átalakított monitor egészít ki – rajta manipulált videó fut a növények mesterséges neveléséről. Ez az ambivalens tárgy-együttes egyszerre kritizálja és tematizálja azokat az újfajta természet-konstrukciókat, amelyek a klímaváltozás, a termőföldek eróziója vagy az élelmiszerválság idején egyre inkább realitássá válnak. A munka központi kérdése: hol húzódik ma a határ a természetes és a mesterséges között – és egyáltalán: mit értünk természet alatt?"
+      ]
+    },
+    "let-it-flow": {
+      "heading": "A műről",
+      "text": [
+        "A Let it Flow egy olyan helyspecifikus installáció, amely az újrahasznosítás és a hulladékból létrehozott tárgyi kultúra kérdésein keresztül vizsgálja az ember és a természet közötti sérült anyagáramlásokat. A munka alapanyaga részben a Tisza folyóból származó műanyag hulladék, amely a PET Kupa folyótisztító akciói során került begyűjtésre, részben pedig a művész saját háztartásában keletkezett műanyag maradékok.",
+        "A tárgyegyüttes a „folyás” és a „hulladékáramlás” kettősségére épül: a Tisza mint természetes vízfolyam és a műanyag mint mesterségesen létrehozott, de már kontrollálhatatlan anyagi folyamat egymásra rétegződik. A hulladék nem eltűnik, hanem új formát keres – a hőpisztollyal történő olvasztás során a talált tárgyak részben elveszítik eredeti funkciójukat, miközben új, átmeneti plasztikai állapotba kerülnek. Így a „használhatatlan” anyagok új műtárgyként értelmeződnek újra.",
+        "A Let it Flow így nem csupán egy installáció, hanem egy anyagkörforgást követő vizuális protokoll: a szennyezésből származó tárgyak újrakontextualizálása, amelyben a természetes és mesterséges rendszerek határai elmosódnak."
+      ]
     }
   },
   "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról származnak",

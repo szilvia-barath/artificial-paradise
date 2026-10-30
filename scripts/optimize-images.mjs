@@ -12,6 +12,11 @@
 //
 // `quad` = four corners [TL, TR, BR, BL] in normalised photo coordinates (0..1, after EXIF
 // rotation). Tweak them in crops.json if a crop looks off, then re-run.
+//
+// `repro` = a file in reproductions/ (the room folders from the exhibition's Drive folder,
+// not in git), used instead of a photo: the artist's reproductions of the paintings and
+// prints, trimmed to the canvas by their `quad`, and the installation photos (`full`).
+// These keep the <id>-situ.webp they already have.
 
 import sharp from 'sharp';
 import fs from 'node:fs/promises';
@@ -125,12 +130,13 @@ for (const [id, spec] of Object.entries(crops)) {
   if (only.length && !only.includes(id)) continue;
   let photoPath = path.join(root, `${spec.photo}.JPG`);
   try { await fs.access(photoPath); } catch { photoPath = path.join(root, `${spec.photo}.jpg`); }
+  const source = spec.repro ? path.join(root, 'reproductions', spec.repro) : photoPath;
   const t0 = Date.now();
   let base;
   if (spec.full) {
-    base = sharp(photoPath, { limitInputPixels: false }).rotate();
+    base = sharp(source, { limitInputPixels: false }).rotate();
   } else {
-    base = await warp(photoPath, spec.quad, spec.aspect);
+    base = await warp(source, spec.quad, spec.aspect);
   }
   if (spec.enhance) base = base.normalise({ lower: 0.5, upper: 99.6 }).modulate({ saturation: 1.06 });
   const buf = await base.png().toBuffer();
@@ -143,12 +149,14 @@ for (const [id, spec] of Object.entries(crops)) {
     if (suffix === '') size = [info.width, info.height];
   }
   // In-situ photo (whole frame) for the viewer
-  await sharp(photoPath, { limitInputPixels: false }).rotate()
-    .resize({ width: 1400, height: 1400, fit: 'inside' })
-    .webp({ quality: 74, effort: 5 })
-    .toFile(path.join(outDir, `${id}-situ.webp`));
+  if (!spec.repro) {
+    await sharp(photoPath, { limitInputPixels: false }).rotate()
+      .resize({ width: 1400, height: 1400, fit: 'inside' })
+      .webp({ quality: 74, effort: 5 })
+      .toFile(path.join(outDir, `${id}-situ.webp`));
+  }
   manifest[id] = size;
-  console.log(`${id.padEnd(16)} ${spec.photo}  ${size.join('x')}  ${Date.now() - t0} ms`);
+  console.log(`${id.padEnd(16)} ${spec.repro || spec.photo}  ${size.join('x')}  ${Date.now() - t0} ms`);
 }
 
 await fs.writeFile(manifestPath, `${JSON.stringify(manifest, null, 1)}\n`);

@@ -10,7 +10,8 @@
       "works": "Works",
       "build": "Behind the scenes",
       "menu": "Menu",
-      "language": "Language"
+      "language": "Language",
+      "contact": "Contact"
     },
     "loader": {
       "meta1": "Digital exhibition",
@@ -74,7 +75,9 @@
       "wall": "Wall projection (Siluett), full length",
       "floor": "Floor projection (Let it Flow), full length",
       "loop": "Back to the loop",
-      "videoNote": "The full videos play from Google Drive."
+      "documentation": "Video documentation",
+      "photo": "Back to the photo",
+      "situNext": "Next installation photo"
     },
     "panels": {
       "credits": "Credits",
@@ -84,7 +87,7 @@
       "linkExhibition": "Artkartell: KristofLab, Artificial Paradise",
       "linkGallery": "MAMŰ Gallery",
       "linkInstagram": "Instagram post from the exhibition",
-      "rights": "All artworks were created by Kristóf Szabó / KristofLab, reproduced from installation photographs for documentation purposes. The rooms are reconstructed from the same photographs and the gallery's floor plan.",
+      "rights": "All artworks were created by Kristóf Szabó / KristofLab, shown in the artist’s reproductions and in installation photographs for documentation purposes. The rooms are reconstructed from the photographs and the gallery’s floor plan.",
       "worksTitle": "List of works",
       "btsEyebrow": "Behind the scenes",
       "btsTitle": "How it's built",
@@ -94,7 +97,21 @@
       "linkFacebook": "MAMŰ on Facebook",
       "linkMamuInstagram": "MAMŰ on Instagram",
       "speech": "Opening speech",
-      "speechRead": "Read the opening speech"
+      "speechRead": "Read the opening speech",
+      "contactTitle": "Contact",
+      "contactGallery": "MAMŰ Gallery",
+      "contactArtist": "Kristóf Szabó / KristofLab",
+      "contactDigital": "Digital exhibition: Szilvia Barath",
+      "contactSoon": "Contact details coming soon.",
+      "contactLabel": {
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email",
+        "website": "Website",
+        "instagram": "Instagram",
+        "facebook": "Facebook",
+        "linkedin": "LinkedIn"
+      }
     },
     "wall": {
       "sheetMeta": "KristofLab · MAMŰ Gallery · 10-31.01.2025"
@@ -151,7 +168,7 @@
       "© OpenStreetMap contributors (ODbL)"
     ]
   ],
-  "behindTheScenes": "The floor plan is traced from the gallery's own room sheet and its overall length matches the building's outline on OpenStreetMap. Rooms are measured from 360° panorama photos: solving the camera position from the corners and the four canvases of known size gives the room's real size, the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The artworks are perspective-corrected crops, and the screens play the artist's videos with their own sound. Paradise Factory and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
+  "behindTheScenes": "The floor plan is traced from the gallery's own room sheet and its overall length matches the building's outline on OpenStreetMap. Rooms are measured from 360° panorama photos: solving the camera position from the corners and the four canvases of known size gives the room's real size, the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The paintings and prints are the artist’s own reproductions, and the screens play the artist's videos with their own sound. Paradise Factory and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
   "rooms": {
     "r1": {
       "name": "Room 1",
@@ -246,6 +263,38 @@
     "w17-natural-life": {
       "medium": "Video, Full HD",
       "caption": "Ferns on a forest slope, filmed close up, on the black brick wall of the projection room."
+    }
+  },
+  "descriptions": {
+    "human-as-error": {
+      "heading": "About the series",
+      "text": [
+        "Humanity has been on Earth for only about 300,000 years, while life emerged around 3.5 million years ago. Our species began to transform the planet more drastically around the time of the Industrial Revolution, and a large share of these processes falls within the last 70 years.",
+        "We can think of ourselves as an error with regard to natural diversity. Looking at the past century, it is no exaggeration to estimate a decline of two thirds. There have been 5 great mass extinctions in the history of the Earth so far, each reaching 75%. According to the Red List of the IUCN (International Union for Conservation of Nature), over the past 100 years roughly 27% of currently known species have become threatened or endangered with extinction: among them 25% of mammals, 13% of birds, 41% of amphibians and 33% of plants.",
+        "The settlement chosen as the subject of the series, Szentkirályszabadja near Veszprém, was a Russian military base and barracks that emptied after the change of regime. Nature has already brought its human-built structures under its rule. Working with these images, I deal conceptually with the disappearance of humans from nature. It takes only decades for nature to take back the domesticated landscape and for biodiversity to return. The depopulation of settlements is not the result of planned events; it can be put down to chance, with human activities among its causes. Error and its aesthetics hold a key place, and this is reflected in the pictures as well: chance plays a large part in my painting method, and I build up the glitched surfaces with abstracted brushwork.",
+        "In this series my aim is to rethink landscape painting. Nature reconquers what humans took from it, the “original” state returns, and we can once again admire its grandeur and strength, which also shows its power towering above civilisation. What connects most closely with my work is the aesthetic of ruins, and the love of them, in the painting of Caspar David Friedrich. A similar line of thought runs through both: in each case the dominion of nature towers above human activity. It reconquers what humans took. In Friedrich’s lifetime industrialisation completely transformed the world; today we are living through its culmination. Capitalism has turned even nature into a commodity. In Friedrich’s work the sublimity of nature can also signify a longing for an age when civilisation still lived in symbiosis with it. In my work the concept of humans subordinated to nature appears, so the built environment slowly turns into ruins, only hinting at the former “glory” of our civilisation."
+      ],
+      "note": "Translated from the artist’s Hungarian text for the digital exhibition."
+    },
+    "landscape": {
+      "heading": "About the series",
+      "text": [
+        "The theme of the series is the relationship between man and his environment in the light of capitalism. The harmonious fusion of the urban and the natural environment seems utopian in this context. In the existing system, the crossing of boundaries can have two extreme consequences. On the positive side, pushing boundaries can lead to progress, which can lead to development. Negatively: by crossing the boundary, we can set in motion irreversible processes with uncertain outcomes."
+      ]
+    },
+    "paradise-factory": {
+      "heading": "About the work",
+      "text": [
+        "Paradise Factory explores new yet increasingly familiar configurations of the relationship between nature and civilization. Through rapid technological advancement and industrialization, the hierarchy between humans and nature has deepened—manifesting in altered landscapes, artificially sustained urban vegetation, and food crops grown entirely without sunlight in closed systems. The installation features a hydroponic cultivation setup alongside a repurposed monitor displaying manipulated footage of the growing process. This ambivalent assemblage simultaneously questions and reflects on emerging nature-constructs that, in an era of climate change, soil degradation, and food insecurity, may soon become the norm. At its core, the work poses a pressing question: where do we draw the line between the natural and the artificial today—and what do we even mean by \"nature\"?"
+      ]
+    },
+    "let-it-flow": {
+      "heading": "About the work",
+      "text": [
+        "Let it Flow is a site-specific installation that examines the disrupted material flows between humans and nature through the lens of recycling and object cultures created from waste. The work is composed partly of plastic waste collected from the River Tisza during the river-cleaning actions of the PET Kupa, and partly of plastic remnants generated within the artist’s own household.",
+        "The assemblage is built upon the duality of “flow” and “waste circulation”: the Tisza as a natural watercourse and plastic as an artificially produced yet now uncontrollable material process become layered onto one another. Waste does not disappear; instead, it searches for a new form. Through melting with a heat gun, the found objects partially lose their original function while entering a new, transitional plastic state. In this way, “useless” materials are reinterpreted as artworks.",
+        "Let it Flow is therefore not merely an installation, but a visual protocol following cycles of material circulation: a recontextualization of objects originating from pollution, in which the boundaries between natural and artificial systems become increasingly blurred."
+      ]
     }
   },
   "source": "Titles, sizes, media and years from the room sheet displayed in the gallery",

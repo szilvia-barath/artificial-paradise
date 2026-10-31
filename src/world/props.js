@@ -307,6 +307,20 @@ export function buildProps(materials) {
     for (const [x, y0, r] of [[18.917, 0.42, 0.03], [20.305, 1.9, 0.065], [20.976, 1.9, 0.065], [24.184, 0.42, 0.03]]) {
       g.add(place(cyl(r, r, 2.9 - y0, pipeMat, 10), x, (2.9 + y0) / 2, 1.73 + r + 0.02));
     }
+    // the pale pipe with collars above the projection, and the dark one along the top of the
+    // north wall (DSC_0113; height and thickness from the 4 m wall's scale)
+    const palePipe = new THREE.MeshStandardMaterial({ color: 0x3f3c37, roughness: 0.65 });
+    const along = (r, len, mat, x, y, z) => {
+      const m = cyl(r, r, len, mat, 14);
+      m.rotation.x = Math.PI / 2;
+      return place(m, x, y, z);
+    };
+    g.add(along(0.085, 3.75, palePipe, 25.295, 2.58, 3.725));
+    for (const z of [2.43, 3.43, 4.46, 5.54]) g.add(along(0.1, 0.1, palePipe, 25.295, 2.58, z));
+    const top = cyl(0.1, 0.1, 4.6, pipeMat, 12);
+    top.rotation.z = Math.PI / 2;
+    g.add(place(top, 23.1, 2.56, 1.84));
+
     // gas meter by the partition (DSC_0098–0101)
     g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.427, 1.62, 1.816));
     g.add(place(cyl(0.025, 0.025, 0.12, new THREE.MeshStandardMaterial({ color: 0xe6c21e, roughness: 0.5 }), 8), 16.427, 1.83, 1.816));

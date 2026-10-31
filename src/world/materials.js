@@ -143,10 +143,12 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     warmBrick: brickMat('brick-warm', 0xefe2bf),
     greyBrick: brickMat('brick-grey', 0x7c7d83),
     greyBrickShade: brickMat('brick-grey', 0x5c5d62),
-    darkBrick: brickMat('brick-grey', 0x2e2f33, 0.95, 1.6),
-    dimBrick: brickMat('brick-white', 0x8d8a83),
-    projWall: brickMat('brick-white', 0xcfcdc7, 0.95, 1.2),
-    vault: brickMat('brick-white', 0x7a7671, 0.95, 1.6),
+    // Room 4 is nearly black in the photos and the ambient light is shared by all rooms,
+    // so its surfaces are dark here; the projection wall only just shows under the video
+    darkBrick: brickMat('brick-grey', 0x131418, 0.95, 1.6),
+    dimBrick: brickMat('brick-white', 0x34302c),
+    projWall: brickMat('brick-white', 0x645a54, 0.95, 1.2),
+    vault: brickMat('brick-white', 0x191817, 0.95, 1.6),
     shaft: brickMat('brick-grey', 0x3b3c41),
     plaster: new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.95, map: concrete }),
     floor: new THREE.MeshStandardMaterial({
@@ -157,13 +159,13 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
       roughness: 0.5,
       metalness: 0.0,
     }),
-    floorDark: new THREE.MeshStandardMaterial({ color: 0x6f6a63, map: tileAlbedo, bumpMap: tileBump, bumpScale: 0.6, roughness: 0.45 }),
+    floorDark: new THREE.MeshStandardMaterial({ color: 0x151412, map: tileAlbedo, roughness: 0.62 }),
     darkFloor: new THREE.MeshStandardMaterial({ color: 0x1b1a19, roughness: 0.9 }),
     ceiling: new THREE.MeshStandardMaterial({ color: 0xf1f0ec, map: concrete, roughness: 1, emissive: 0x2a2a2a }),
     // (lit only by bounce: the pendants shine down)
     planks: new THREE.MeshStandardMaterial({ color: 0xe9e6df, map: planks, roughness: 0.95, emissive: 0x3a362f }),
     darkCeiling: new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 1 }),
-    beam: new THREE.MeshStandardMaterial({ color: 0x2f3033, roughness: 0.6, metalness: 0.4 }),
+    beam: new THREE.MeshStandardMaterial({ color: 0x101012, roughness: 0.6, metalness: 0.4 }),
     // furniture & fixtures
     bench: new THREE.MeshStandardMaterial({ color: 0x55575c, roughness: 0.7, metalness: 0.2 }),
     benchTop: new THREE.MeshStandardMaterial({ color: 0x6b6d72, roughness: 0.8 }),

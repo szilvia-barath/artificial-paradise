@@ -38,6 +38,16 @@ enc_cycle() { # file, output name, start s, cycle s, filter, fps, crf, sound gai
     -x264-params "keyint=infinite:scenecut=0:bframes=0:no-fast-pskip=1:no-dct-decimate=1:aq-mode=3:aq-strength=1.2:deblock=-2,-2" \
     -movflags +faststart "$OUT/$2.mp4"
 }
+# Picture only, for a video that never repeats: the end dissolves into the start, so the
+# loop has no jump.
+enc_fade() { # file, output name, start s, duration s, filter, fps, crf
+  local x=1.5 # dissolve, s
+  ffmpeg -v error -y -ss "$3" -t "$(awk "BEGIN { print $4 + $x }")" -i "$SRC/$1" -filter_complex "
+    [0:v]$5,fps=$6,format=yuv420p,split[a][b];
+    [a]trim=0:$x,setpts=PTS-STARTPTS[head];
+    [b]trim=$x,setpts=PTS-STARTPTS[body];
+    [body][head]xfade=transition=fade:duration=$x:offset=$(awk "BEGIN { print $4 - $x }"),format=yuv420p[v]" -map '[v]' -an     -c:v libx264 -profile:v high -preset slow -crf "$7" -movflags +faststart "$OUT/$2.mp4"
+}
 # with sound: Singapore and The Eden Project as they are (about -24 and -26 LUFS), the
 # quiet Natural life and Siluett (about -47 and -46 LUFS) raised by 15 dB
 enc "artifical paradise_singapore.mp4" w06-artificial-paradise-i 30 40 "scale=960:540" 30 30 -2
@@ -51,4 +61,5 @@ enc "Natural life, Full Hd, video, 2024 .mp4" w17-natural-life 30 40 "scale=960:
 enc "paradise factory_.mp4" w03-screen 20 45 "transpose=1,scale=512:640" 25 30
 # Siluett's picture is one 25.8 s cycle repeated 16 times, so a single cycle is all of it
 enc_cycle "Siluett.mp4" w16-projection 25.8 25.8 "scale=1600:900:flags=lanczos" 25 25 15
-enc "Let it flow_ok.mp4" w16-floor 10 40 "scale=960:540" 25 30
+# the black point is raised so the video's faint haze stays off the dark floor, as in the photos
+enc_fade "Let it flow_ok.mp4" w16-floor 10 40 "scale=1280:720:flags=lanczos,colorlevels=rimin=0.07:gimin=0.07:bimin=0.09" 25 27

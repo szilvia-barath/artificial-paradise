@@ -135,8 +135,8 @@ export function buildArchitecture(materials) {
       geo.computeVertexNormals();
       push('vault', geo);
     }
-    // beams (bottom flange + web) spanning north–south
-    for (let i = 0; i <= bays; i++) {
+    // beams (bottom flange + web) spanning north–south; none against the end wall
+    for (let i = 0; i < bays; i++) {
       const x = r.x0 + i * L;
       const beam = new THREE.BoxGeometry(0.16, 0.2, r.z1 - r.z0);
       beam.translate(x, spring + 0.07, (r.z0 + r.z1) / 2);

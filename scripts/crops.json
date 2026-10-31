@@ -353,29 +353,6 @@
   ],
   "aspect": 1.7778
  },
- "w16-let-it-flow": {
-  "photo": "DSC_0113",
-  "quad": [
-   [
-    0.195,
-    0.42
-   ],
-   [
-    0.845,
-    0.418
-   ],
-   [
-    0.845,
-    0.672
-   ],
-   [
-    0.195,
-    0.675
-   ]
-  ],
-  "aspect": 1.7397,
-  "enhance": true
- },
  "w16-let-it-flow-a": {
   "repro": "4 terem/_artificial paradise 04 - 01.jpg",
   "full": true

@@ -40,7 +40,7 @@ export function buildLights(scene) {
   // Room 3: cool gallery white from the track rail
   lights.r3 = point(0xf4f6ff, 11, 12.85, 2.1, 3.744, 11);
   // Room 4: light thrown back off the projection wall (driven by letItFlow.update)
-  lights.proj = point(0xd2e4d0, 3.2, 24.375, 1.3, 3.725, 11);
+  lights.proj = point(0xd2e4d0, 0.4, 23.4, 1.3, 3.725, 9);
   // Stair shaft: cold light falling from the street entrance
   lights.stair = point(0xbcd2ff, 4, -1.2, 4.6, 1.05, 7);
 

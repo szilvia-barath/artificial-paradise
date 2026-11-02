@@ -33,9 +33,9 @@ export const ROOMS = [
     id: 'r1',
     x0: R1.west, x1: R1.east, z0: 0, z1: R1.D,
     ceiling: 3.0,
-    // Foot of the stairs, facing the way you walk off them: Human as Error VI ahead,
-    // Wrong Data Landscape Dresden on the left.
-    spawn: { x: R1.east - 2.2, z: 1.0, look: { x: R1.east, z: 2.3 } },
+    // In the open middle of the room, east of Paradise Factory (the foot of the stairs is
+    // too tight between the flight and the walls), looking across the plant to the stairs.
+    spawn: { x: 3.4, z: 4.4, look: { x: 1.0, z: 2.4 } },
   },
   {
     id: 'r2',

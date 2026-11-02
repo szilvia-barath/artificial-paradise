@@ -57,8 +57,9 @@ enc "artifical paradise_The Eden Project_sound.mp4" w07-artificial-paradise-ii 0
 enc "Wiena Wrong Landscape NFT 2023.mp4" w08-wiena-wrong-landscape-ii 0 37.6 "scale=960:720" 25 30
 enc "Wiena Wrong Landscape NFT - 2 2023.mp4" w15-wiena-wrong-landscape-i 0 37.6 "scale=960:720" 25 30
 enc "Natural life, Full Hd, video, 2024 .mp4" w17-natural-life 30 40 "scale=960:540" 25 30 15
-# the Paradise Factory monitor stands on its side: turn the footage clockwise
-enc "paradise factory_.mp4" w03-screen 20 45 "transpose=1,scale=512:640" 25 30
+# the Paradise Factory monitor stands on its side: the footage turned counter-clockwise is
+# upright on it, as in the documentation video, and cropped to the panel (0.831 wide to 1 high)
+enc "paradise factory_.mp4" w03-screen 20 45 "transpose=2,crop=1024:1232,scale=532:640" 25 30
 # Siluett's picture is one 25.8 s cycle repeated 16 times, so a single cycle is all of it
 enc_cycle "Siluett.mp4" w16-projection 25.8 25.8 "scale=1600:900:flags=lanczos" 25 25 15
 # the black point is raised so the video's faint haze stays off the dark floor, as in the photos

@@ -49,8 +49,8 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
     room.textContent = `${data.rooms[w.room].name} · ${t('viewer.no', { no: w.no })}`;
     title.textContent = w.title;
     meta.innerHTML = `${esc(data.meta.artist)}<br />${esc([w.medium, w.size, w.year].filter(Boolean).join(', '))}`;
-    caption.textContent = w.caption;
-    caption.hidden = !!w.descOnly;
+    caption.textContent = w.caption || '';
+    caption.hidden = !w.caption;
     const d = w.desc && data.descriptions[w.desc];
     desc.innerHTML = d
       ? `<h3>${esc(d.heading)}</h3>${d.text.map((p) => `<p>${esc(p)}</p>`).join('')}${d.note ? `<p class="note">${esc(d.note)}</p>` : ''}`

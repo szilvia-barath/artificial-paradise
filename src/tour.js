@@ -57,7 +57,7 @@ export class Tour {
 
   _text(s) {
     const w = s.work ? this.byId[s.work] : null;
-    if (w) return `<span class="t">${esc(w.no)} · ${esc(w.title)} · ${esc([w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', '))}</span>${esc(w.caption)}`;
+    if (w) return `<span class="t">${esc(w.no)} · ${esc(w.title)} · ${esc([w.medium.split(':')[0], w.size, w.year].filter(Boolean).join(', '))}</span>${esc(w.caption || '')}`;
     return s.intro ? `<span class="t">Artificial Paradise</span>${esc(this.data.tourIntro)}` : '';
   }
 

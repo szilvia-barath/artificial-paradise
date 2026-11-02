@@ -1,5 +1,5 @@
 {
-  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files (with 'descOnly' it replaces the caption in the viewer); 'situ' lists a work's installation photos. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in.",
+  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen.",
   "meta": {
     "title": "Artificial Paradise",
     "digitalBy": "Szilvia Barath",
@@ -76,7 +76,6 @@
         "z": 4.9
       },
       "desc": "paradise-factory",
-      "descOnly": true,
       "situ": [
         "img/w03-paradise-factory-b",
         "img/w03-paradise-factory-c"
@@ -109,7 +108,7 @@
         "at": -0.15,
         "along": 5.29,
         "y": 1.35,
-        "w": 0.32,
+        "w": 0.3324,
         "h": 0.4
       },
       "video": {
@@ -121,7 +120,8 @@
           }
         ]
       },
-      "desc": "paradise-factory"
+      "desc": "paradise-factory",
+      "monitor": "img/monitor-frame"
     },
     {
       "id": "w04-human-as-error-iii",
@@ -409,7 +409,7 @@
       "anchor": {
         "x": 23.61,
         "y": 0.3,
-        "z": 3.69
+        "z": 3.77
       },
       "view": {
         "x": 19.9,
@@ -434,7 +434,6 @@
         "sound": true
       },
       "desc": "let-it-flow",
-      "descOnly": true,
       "situ": [
         "img/w16-let-it-flow-a",
         "img/w16-let-it-flow-b"

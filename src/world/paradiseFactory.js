@@ -239,9 +239,41 @@ export function buildParadiseFactory(materials) {
     const tank = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.28, 0.3), materials.clearPlastic);
     tank.position.set(x, 0.25, z);
     g.add(tank);
-    const water = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.14, 0.28), new THREE.MeshStandardMaterial({ color: 0x3d2a1d, roughness: 0.3, transparent: true, opacity: 0.8 }));
+    // the tank's edges are framed in aluminium angle (documentation video)
+    const edge = (sx, sy, sz, px, py, pz) => {
+      const b = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), materials.steel);
+      b.position.set(x + px, py, z + pz);
+      g.add(b);
+    };
+    for (const dy of [0.112, 0.388]) {
+      for (const dz of [-0.152, 0.152]) edge(0.43, 0.014, 0.014, 0, dy, dz);
+      for (const dx of [-0.212, 0.212]) edge(0.014, 0.014, 0.31, dx, dy, 0);
+    }
+    for (const dx of [-0.212, 0.212]) for (const dz of [-0.152, 0.152]) edge(0.014, 0.28, 0.014, dx, 0.25, dz);
+    // clear nutrient water with the roots hanging into it, and the black pump with its red tap
+    const water = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.14, 0.28), new THREE.MeshStandardMaterial({ color: 0xa89a6e, roughness: 0.1, transparent: true, opacity: 0.32, depthWrite: false }));
     water.position.set(x, 0.18, z);
     g.add(water);
+    const rootMat = new THREE.MeshStandardMaterial({ color: 0x6b4a2c, roughness: 0.8 });
+    const roots = [];
+    for (let i = 0; i < 16; i++) {
+      const a = rand() * Math.PI * 2;
+      const r = 0.02 + rand() * 0.04;
+      const pts = [];
+      for (let t = 0; t <= 4; t++) {
+        const f = t / 4;
+        pts.push(new THREE.Vector3(x + Math.cos(a) * r * (1 + f * 1.8) + (rand() - 0.5) * 0.02, 0.39 - f * (0.15 + rand() * 0.08), z + Math.sin(a) * r * (1 + f * 1.5) + (rand() - 0.5) * 0.02));
+      }
+      roots.push(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 8, 0.0025 + rand() * 0.002, 4, false));
+    }
+    g.add(new THREE.Mesh(mergeGeometries(roots, false), rootMat));
+    const pump = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.06, 0.06), materials.black);
+    pump.position.set(x - 0.12, 0.145, z + 0.07);
+    g.add(pump);
+    const tap = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.05, 10), new THREE.MeshStandardMaterial({ color: 0xc8261e, roughness: 0.5 }));
+    tap.rotation.z = Math.PI / 2;
+    tap.position.set(x - 0.06, 0.15, z + 0.07);
+    g.add(tap);
     const lid = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.018, 0.32), materials.clearPlastic);
     lid.position.set(x, 0.395, z);
     g.add(lid);
@@ -348,9 +380,13 @@ export function buildParadiseFactory(materials) {
     const bottle = new THREE.Mesh(new THREE.LatheGeometry(prof, 18), materials.clearPlastic);
     bottle.position.set(x, bottleY, z);
     g.add(bottle);
-    const liquid = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.09, 16), new THREE.MeshStandardMaterial({ color: 0xd8d2a0, roughness: 0.2, transparent: true, opacity: 0.6 }));
-    liquid.position.set(x, bottleY + 0.13, z);
+    // the "growing fluid": yellowish, two thirds full, a green cap on the neck
+    const liquid = new THREE.Mesh(new THREE.CylinderGeometry(0.043, 0.043, 0.17, 16), new THREE.MeshStandardMaterial({ color: 0xd8c25a, roughness: 0.2, transparent: true, opacity: 0.72 }));
+    liquid.position.set(x, bottleY + 0.165, z);
     g.add(liquid);
+    const neckCap = new THREE.Mesh(new THREE.CylinderGeometry(0.016, 0.016, 0.028, 14), new THREE.MeshStandardMaterial({ color: 0x3f9a3a, roughness: 0.5 }));
+    neckCap.position.set(x, bottleY - 0.005, z);
+    g.add(neckCap);
     for (let i = 0; i < 4; i++) {
       const ang = (i / 4) * Math.PI * 2 + 0.6;
       g.add(chain(chainMat, new THREE.Vector3(x + Math.cos(ang) * 0.045, bottleY + 0.3, z + Math.sin(ang) * 0.045), new THREE.Vector3(x + Math.cos(ang) * 0.18, CEIL, z + Math.sin(ang) * 0.18)));
@@ -371,6 +407,42 @@ export function buildParadiseFactory(materials) {
       new THREE.Vector3(B.x, PIPE.y - 0.04, B.z + 0.05),
     ]);
     g.add(new THREE.Mesh(new THREE.TubeGeometry(hose, 40, 0.006, 5, false), materials.clearPlastic));
+
+    // the "growing fluid" card, hung on a chain in front of the plant (documentation video)
+    {
+      const c = document.createElement('canvas');
+      c.width = 300;
+      c.height = 400;
+      const cg = c.getContext('2d');
+      cg.fillStyle = '#f2f1ec';
+      cg.fillRect(0, 0, 300, 400);
+      cg.fillStyle = '#2e2e2e';
+      cg.strokeStyle = '#2e2e2e';
+      cg.lineWidth = 9;
+      // the sprout: a curling stem and two leaves
+      cg.beginPath();
+      cg.moveTo(150, 250);
+      cg.bezierCurveTo(120, 220, 185, 200, 150, 160);
+      cg.stroke();
+      cg.beginPath();
+      cg.ellipse(124, 150, 26, 13, -0.6, 0, Math.PI * 2);
+      cg.fill();
+      cg.beginPath();
+      cg.ellipse(176, 132, 30, 15, 0.5, 0, Math.PI * 2);
+      cg.fill();
+      cg.font = '30px monospace';
+      cg.textAlign = 'center';
+      cg.fillText('growing fluid', 150, 320);
+      const t = new THREE.CanvasTexture(c);
+      t.colorSpace = THREE.SRGBColorSpace;
+      t.anisotropy = 4;
+      const paper = new THREE.MeshStandardMaterial({ color: 0xf2f1ec, roughness: 0.9 });
+      const card = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.2, 0.002), [paper, paper, paper, paper, new THREE.MeshStandardMaterial({ map: t, roughness: 0.9 }), paper]);
+      card.position.set(x + 0.04, 1.42, z + 0.22);
+      card.rotation.y = 0.35;
+      g.add(card);
+      g.add(chain(chainMat, new THREE.Vector3(x + 0.04, 1.52, z + 0.22), new THREE.Vector3(x + 0.04, CEIL, z + 0.24)));
+    }
 
     // the two LED bars, floor to ceiling, their light strips turned towards the plant
     for (const bar of BARS) {

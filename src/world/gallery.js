@@ -101,7 +101,7 @@ const HIT_BOXES = {
   ],
   'w16-let-it-flow': [
     [25.33, 1.15, 3.73, 0.12, 2.3, 4.0], // projection on the end wall
-    [23.61, 0.06, 3.69, 3.53, 0.14, 1.4], // the melted plastic river
+    [23.61, 0.06, 3.77, 3.58, 0.14, 1.21], // the melted plastic river
   ],
 };
 
@@ -244,10 +244,21 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       holder.add(pool);
 
       if (isScreen) {
-        // slim-bezel flat screen
-        const bez = new THREE.Mesh(new THREE.BoxGeometry(w + 0.024, h + 0.024, 0.04), bezelMat);
+        // slim-bezel flat screen, or the bare panel in its photographed frame
+        const bez = new THREE.Mesh(new THREE.BoxGeometry(w + (work.monitor ? 0 : 0.024), h + (work.monitor ? 0 : 0.024), 0.04), bezelMat);
         bez.position.z = 0.022;
         holder.add(bez);
+        if (work.monitor) {
+          // monitor.png: 2238 x 3217 px, its opening (the screen) 1863 x 2243 px, centred
+          // 16 px left of and 9.5 px above the image's centre
+          const k = h / 2243;
+          const frame = new THREE.Mesh(
+            new THREE.PlaneGeometry(2238 * k, 3217 * k),
+            new THREE.MeshStandardMaterial({ map: prepTex(loader.load(url(`${work.monitor}.webp`))), transparent: true, alphaTest: 0.4, roughness: 0.4, metalness: 0.5 }),
+          );
+          frame.position.set(16 * k, -9.5 * k, 0.045);
+          holder.add(frame);
+        }
         const mat = new THREE.ShaderMaterial({
           uniforms: {
             map: { value: null },

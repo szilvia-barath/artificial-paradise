@@ -124,9 +124,13 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   panel.addEventListener('click', (e) => { if (e.target === panel) close(); });
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 
+  // each room with the works in it
   const buildRoomsMenu = () => {
     roomsMenu.innerHTML = Object.entries(data.rooms)
-      .map(([id, r]) => `<button data-room="${id}">${esc(r.name)}<small>${esc(r.blurb)}</small></button>`)
+      .map(([id, r]) => {
+        const titles = data.works.filter((w) => w.room === id && !w.id.endsWith('-screen')).map((w) => w.title);
+        return `<button data-room="${id}">${esc(r.name)}<small>${esc(titles.join(', '))}</small></button>`;
+      })
       .join('');
   };
   buildRoomsMenu();

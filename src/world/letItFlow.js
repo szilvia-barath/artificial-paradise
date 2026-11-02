@@ -156,12 +156,12 @@ export function buildLetItFlow(manager) {
         '#include <emissivemap_fragment>',
         `#include <emissivemap_fragment>
         if (lifStrength > 0.0) {
-          // the brightest of the light around each point: the video's river and the plastic
-          // differ in outline, and in the room the light reaches all of the plastic
+          // the brightest of the light just around each point: the plastic follows the video's
+          // river closely but not to the centimetre, and in the room the light reaches all of it
           vec3 lifLight = vec3(0.1, 0.11, 0.14);
           for (int i = 0; i < 8; i++) {
             float a = float(i) * 0.7854;
-            lifLight = max(lifLight, texture2D(lifProj, letItFlowUV(vLifPos + vec3(cos(a), 0.0, sin(a)) * 0.11)).rgb);
+            lifLight = max(lifLight, texture2D(lifProj, letItFlowUV(vLifPos + vec3(cos(a), 0.0, sin(a)) * 0.06)).rgb);
           }
           lifLight = max(lifLight, texture2D(lifProj, letItFlowUV(vLifPos)).rgb) * vec3(0.92, 0.96, 1.1) * lifStrength;
           vec3 lifL = normalize((viewMatrix * vec4(lifLamp, 1.0)).xyz + vViewPosition);

@@ -170,98 +170,76 @@
   "rooms": {
     "r1": {
       "name": "1. terem",
-      "subtitle": "Festmények · Paradise Factory",
-      "blurb": "A lépcső alján: négy nagy akrilfestmény (Wrong Data Landscape Dresden, Human as Error I, III és VI) és a terem közepén a Paradise Factory hidropóniás installáció."
+      "subtitle": "Festmények · Paradise Factory"
     },
     "r2": {
       "name": "2. terem",
-      "subtitle": "Videó · bár",
-      "blurb": "A bárterem: az Artificial Paradise I és II videók, egy asztal székekkel és a kis bár, amely a megnyitón és a finisszázson működött."
+      "subtitle": "Videó · bár"
     },
     "r3": {
       "name": "3. terem",
-      "subtitle": "Festmények · nyomatok · videó",
-      "blurb": "Az Artificial Paradise giclée nyomatok, három Wrong Data Landscape festmény és a szürke falon a Wiena Wrong Landscape II 4K videó."
+      "subtitle": "Festmények · nyomatok · videó"
     },
     "r4": {
       "name": "4. terem",
-      "subtitle": "Let it Flow · videó",
-      "blurb": "Két fal és egy függöny között nyílik a 3. teremből: a Let it Flow, az oldalfalakon a Wiena Wrong Landscape I és a Natural Life."
+      "subtitle": "Let it Flow · videó"
     }
   },
   "works": {
     "w01-dresden": {
-      "medium": "akril, vászon",
-      "caption": "Sérült adatok cián és lila blokkjai csúsznak át egy drezdai lakótelepen és egy napsütötte réten; vékony piros csík fut ott, ahol a város és a mező összeér."
+      "medium": "akril, vászon"
     },
     "w02-human-as-error-vi": {
-      "medium": "akril, vászon",
-      "caption": "Félig romos panelház márványos ég alatt; az alja sűrű zöld ecsetvonásokba és türkiz interfészsávokba süllyed."
+      "medium": "akril, vászon"
     },
     "w03-paradise-factory": {
-      "medium": "installáció: hidropóniás PVC-cső, palánták, LED-lámpák, csepegtetőn tartott növény, képernyő",
-      "caption": "Salátapalánták nőnek egy fehér PVC-csőben egy LED-cső alatt, láncokon a mennyezetről lógatva. A terem közepén egy növényt egy átlátszó műanyag tartályban tartanak életben: egy felfüggesztett palackból kapja a tápoldatot, és két függőleges LED-sáv világítja meg; a falon egy kis képernyő pixeles loopot játszik."
+      "medium": "installáció: hidropóniás PVC-cső, palánták, LED-lámpák, csepegtetőn tartott növény, képernyő"
     },
     "w03-screen": {
       "title": "Paradise Factory (képernyő)",
-      "medium": "videó kis képernyőn, az installáció része",
-      "caption": "Az élére állított monitor a hidropóniás sor mellett: ipari növénygyárakban készült felvételek (függőleges állványokon növő saláta, kesztyűs kezek, ültetőkosarak és sápadt gyökerek), képsorokra tördelve."
+      "medium": "videó kis képernyőn, az installáció része"
     },
     "w04-human-as-error-iii": {
-      "medium": "akril, vászon",
-      "caption": "Pixelélesen zöld lombkorona nyel el egy panelhomlokzatot: az ablakok még ott vannak, az épület eltűnőben."
+      "medium": "akril, vászon"
     },
     "w05-human-as-error-i": {
-      "medium": "akril, vászon",
-      "caption": "Domboldali házak elkenve föld- és fűlejtővé, alul lapos lila és zöld adatblokkok vágják el őket."
+      "medium": "akril, vászon"
     },
     "w06-artificial-paradise-i": {
-      "medium": "videó, Full HD",
-      "caption": "A szingapúri Gardens by the Bay osztott képernyőn: az acél Supertree-k és a köztük futó függőhíd, pára a Cloud Forest fölött, elágazó acélkoronák az ég előtt."
+      "medium": "videó, Full HD"
     },
     "w07-artificial-paradise-ii": {
-      "medium": "videó, Full HD",
-      "caption": "Az Eden Project Cornwallban, négyfelé osztott képen: a biomok hatszögletű burka, belülről látott acélrácsuk, esőerdei növényzet és egy vízcseppes levél."
+      "medium": "videó, Full HD"
     },
     "w08-wiena-wrong-landscape-ii": {
-      "medium": "videó, 4K",
-      "caption": "Sérült képadatokból újraépített városkép: cián tornyok, magenta tömbök és elkent homlokzatok a szürke téglafalon."
+      "medium": "videó, 4K"
     },
     "w09-warsaw-g24-i": {
-      "medium": "akril, vászon",
-      "caption": "Egy varsói panelház rózsaszín és kékeszöld síkjai egy szürke, texturált növénysáv fölé halmozva."
+      "medium": "akril, vászon"
     },
     "w10-warsaw-ii": {
-      "medium": "akril, vászon",
-      "caption": "Lila torony sötét ég előtt; egy fehér fa és a ciánkék talaj alul pixelekre bomlik."
+      "medium": "akril, vászon"
     },
     "w11-artificial-paradise-i-print": {
-      "medium": "giclée nyomat",
-      "caption": "Szingapúr Supertree-i: páfrányokkal és kúszónövényekkel beültetett acéltörzsek, infrastruktúraként megépített kert."
+      "medium": "giclée nyomat"
     },
     "w12-artificial-paradise-ii-print": {
-      "medium": "giclée nyomat",
-      "caption": "Gondosan nyírt sövények mögül magasodó üvegtornyok, az eget egy glitch keni el."
+      "medium": "giclée nyomat"
     },
     "w13-artificial-paradise-iii-print": {
-      "medium": "giclée nyomat",
-      "caption": "Kunkorodó páfránylevelek fekete-fehér szobra egy növényfal előtt, blokkokra vágva."
+      "medium": "giclée nyomat"
     },
     "w14-warsaw-g24-ii": {
-      "medium": "akril, vászon",
-      "caption": "Magenta panelház halványkék alapon, a lábánál egy sötét fa pixelesedik."
+      "medium": "akril, vászon"
     },
     "w15-wiena-wrong-landscape-i": {
-      "medium": "videó, 4K",
-      "caption": "Városi part nyílt víz fölött; az épületek vörös és pasztell glitch-oszlopokba csúsznak át a hullámok fölött."
+      "medium": "videó, 4K"
     },
     "w16-let-it-flow": {
-      "medium": "installáció: két videóvetítés (falon a Siluett, padlón a Let it Flow), megolvasztott műanyag hulladék",
-      "caption": "A sötét végteremben a Siluett videó szürke fasziluetteket vetít a végfalra. A kivetített erdőből megolvasztott műanyagból álló folyó indul: ahol a falat elhagyja, kék és fehér, aztán minden színben játszik, végül egy fehér kupacban ér véget. Felülről a Let it Flow videó csillagos égboltként szórja rá a fényt."
+      "medium": "installáció: videóvetítés, műanyag hulladék"
     },
     "w17-natural-life": {
-      "medium": "videó, Full HD",
-      "caption": "Páfrányok egy erdei lejtőn, közelről filmezve, a vetítőterem fekete téglafalán."
+      "medium": "videó, Full HD"
     }
   },
   "descriptions": {

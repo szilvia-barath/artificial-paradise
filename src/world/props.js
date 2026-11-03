@@ -235,8 +235,15 @@ export function buildProps(materials) {
       glasses.setMatrixAt(i, m);
     }
     g.add(glasses);
-    const kettle = cyl(0.075, 0.095, 0.22, materials.white, 16);
-    g.add(place(kettle, 8.136, 1.03, 5.502));
+    // wine bottles where the white roll stood: dark green glass, dark foil on the neck
+    const wineMat = new THREE.MeshStandardMaterial({ color: 0x1d3a22, roughness: 0.15, metalness: 0.1 });
+    const foilMat = new THREE.MeshStandardMaterial({ color: 0x5a1420, roughness: 0.4, metalness: 0.5 });
+    for (let i = 0; i < 3; i++) {
+      const bx = 8.05 + i * 0.085;
+      g.add(place(cyl(0.037, 0.037, 0.22, wineMat, 14), bx, 1.03, 5.502));
+      g.add(place(cyl(0.014, 0.034, 0.05, wineMat, 12), bx, 1.165, 5.502));
+      g.add(place(cyl(0.014, 0.014, 0.07, foilMat, 10), bx, 1.225, 5.502));
+    }
     const bottleMat = new THREE.MeshStandardMaterial({ color: 0x3a1f16, roughness: 0.2, metalness: 0.1 });
     for (let i = 0; i < 3; i++) {
       g.add(place(cyl(0.035, 0.035, 0.24, bottleMat, 10), 9.331 + i * 0.09, 1.04, 5.51));

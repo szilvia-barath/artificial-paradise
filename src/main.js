@@ -30,7 +30,7 @@ document.body.classList.toggle('touch', isTouch);
 const canvas = document.getElementById('scene');
 const renderer = new THREE.WebGLRenderer({
   canvas,
-  antialias: false, // MSAA happens in the composer (desktop) — cheaper than a full AA backbuffer
+  antialias: false, // MSAA happens in the composer (desktop), cheaper than a full AA backbuffer
   powerPreference: 'high-performance',
   stencil: false,
   depth: false,

@@ -62,7 +62,7 @@ function drawLabel(g, work) {
   g.font = 'italic 19px Helvetica, Arial, sans-serif';
   g.fillText(fit(g, work.title.replace(/\s*\(.*\)$/, ''), 224), 16, 56);
   g.font = '14px Helvetica, Arial, sans-serif';
-  g.fillStyle = '#555';
+  g.fillStyle = '#333';
   g.fillText(fit(g, work.medium.split(':')[0], 224), 16, 84);
   g.fillText(fit(g, [work.size, work.year].filter(Boolean).join(', '), 224), 16, 106);
 }
@@ -226,7 +226,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       holder.userData.work = work;
       const isScreen = work.type === 'video';
 
-      // light pool (fake spotlight wash) — additive, so it brightens the brick behind
+      // light pool (fake spotlight wash), additive, so it brightens the brick behind
       const pool = new THREE.Mesh(
         new THREE.PlaneGeometry(w * 2.0 + 0.6, h * 1.7 + 0.8),
         new THREE.MeshBasicMaterial({
@@ -323,7 +323,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
       if (hg.label !== 'none') {
         const label = new THREE.Mesh(
           new THREE.PlaneGeometry(0.16, 0.08),
-          new THREE.MeshStandardMaterial({ map: wallText(256, 128, (g) => drawLabel(g, work), 4), roughness: 0.8, emissive: 0xffffff, emissiveIntensity: 0.15 }),
+          new THREE.MeshStandardMaterial({ map: wallText(1024, 512, (g) => { g.setTransform(4, 0, 0, 4, 0, 0); drawLabel(g, work); }, 16), roughness: 0.8, emissive: 0xffffff, emissiveIntensity: 0.15 }),
         );
         label.material.emissiveMap = label.material.map;
         const side = hg.label === 'left' ? -1 : 1;

@@ -19,8 +19,9 @@
       "preparing": "Preparing the basement…",
       "loading": "Hanging the works… {loaded}/{total}",
       "ready": "Ready",
-      "enter": "Enter",
-      "hint": "Sound on · headphones recommended",
+      "enter": "Enter without sound",
+      "enterSound": "Enter with sound",
+      "hint": "With sound: headphones recommended · M switches it on or off",
       "howtoDesk": "↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run",
       "howtoTouch": "Left stick to walk · drag to look · pinch to zoom · tap a work to view",
       "failure": "This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari."

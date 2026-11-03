@@ -78,8 +78,11 @@
         <p class="loader-meta"><span data-i18n="loader.meta1">Digital exhibition</span><br /><span data-i18n="loader.meta2">MAMŰ Gallery, Budapest · 10-31.01.2025</span></p>
         <div class="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100"><span id="progress-bar"></span></div>
         <p id="progress-label" data-i18n="loader.preparing">Preparing the basement…</p>
-        <button id="enter" class="btn-enter" disabled>|&nbsp;<span data-i18n="loader.enter">Enter</span>&nbsp;|</button>
-        <p class="hint" id="enter-hint" data-i18n="loader.hint">Sound on · headphones recommended</p>
+        <div class="enter-choice">
+          <button id="enter" class="btn-enter" disabled>|&nbsp;<span data-i18n="loader.enter">Enter without sound</span>&nbsp;|</button>
+          <button id="enter-sound" class="btn-enter btn-enter-alt" disabled>♪&nbsp;<span data-i18n="loader.enterSound">Enter with sound</span></button>
+        </div>
+        <p class="hint" id="enter-hint" data-i18n="loader.hint">With sound: headphones recommended · M switches it on or off</p>
         <div class="howto">
           <span class="desk" data-i18n="loader.howtoDesk">↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run</span>
           <span class="touch" data-i18n="loader.howtoTouch">Left stick to walk · drag to look · pinch to zoom · tap a work to view</span>

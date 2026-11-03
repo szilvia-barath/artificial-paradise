@@ -53,18 +53,20 @@ function canvasTexture(w, h, draw, anisotropy) {
 }
 
 // Wall label: number, title (without the "(screen)" suffix), medium, size and year.
+const TEXT_TINT = new THREE.Color(0.8, 0.8, 0.8);
+
 function drawLabel(g, work) {
   g.fillStyle = '#f7f6f2';
   g.fillRect(0, 0, 256, 128);
-  g.fillStyle = '#111';
-  g.font = '600 18px Helvetica, Arial, sans-serif';
-  g.fillText(`${work.no} · KristofLab`, 16, 28);
-  g.font = 'italic 19px Helvetica, Arial, sans-serif';
-  g.fillText(fit(g, work.title.replace(/\s*\(.*\)$/, ''), 224), 16, 56);
-  g.font = '14px Helvetica, Arial, sans-serif';
-  g.fillStyle = '#333';
-  g.fillText(fit(g, work.medium.split(':')[0], 224), 16, 84);
-  g.fillText(fit(g, [work.size, work.year].filter(Boolean).join(', '), 224), 16, 106);
+  g.fillStyle = '#000';
+  g.font = '700 17px Helvetica, Arial, sans-serif';
+  g.fillText(`${work.no} · KristofLab`, 12, 25);
+  g.font = 'italic 700 22px Helvetica, Arial, sans-serif';
+  g.fillText(fit(g, work.title.replace(/\s*\(.*\)$/, ''), 232), 12, 54);
+  g.font = '500 16px Helvetica, Arial, sans-serif';
+  g.fillStyle = '#1a1a1a';
+  g.fillText(fit(g, work.medium.split(':')[0], 232), 12, 84);
+  g.fillText(fit(g, [work.size, work.year].filter(Boolean).join(', '), 232), 12, 108);
 }
 
 const screenVert = /* glsl */ `
@@ -128,7 +130,7 @@ function drawTextSheet(g, data) {
   g.font = '15px Helvetica, Arial, sans-serif';
   g.fillStyle = '#444';
   g.fillText(t('wall.sheetMeta'), 36, 160);
-  let size = 14;
+  let size = 16;
   const lines = (sz) => {
     g.font = `${sz}px Helvetica, Arial, sans-serif`;
     let n = 0;
@@ -143,7 +145,7 @@ function drawTextSheet(g, data) {
     return 200 + n * sz * 1.36 + data.text.length * 10 + 60;
   };
   while (size > 10 && lines(size) > 712) size -= 0.5;
-  g.fillStyle = '#222';
+  g.fillStyle = '#000';
   g.font = `${size}px Helvetica, Arial, sans-serif`;
   let y = 200;
   for (const p of data.text) y = wrapText(g, p, 36, y, 440, size * 1.36) + 10;
@@ -199,6 +201,8 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
   const shadowTex = radialTexture('rgba(0,0,0,0.85)', 'rgba(0,0,0,0)');
   const sideMat = new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.6 });
   const wallTexts = [];
+  // wall labels and sheets drawn at 3x (2x on phones) so the letters stay sharp up close
+  const TEXT_SCALE = hdBudget > 3 ? 3 : 2;
   const wallText = (w, h, draw, anisotropy) => {
     const tex = canvasTexture(w, h, draw, anisotropy);
     wallTexts.push(tex);
@@ -321,11 +325,12 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
 
       // Wall label beside the work, at the usual 1.35 m
       if (hg.label !== 'none') {
+        // About twice the size of a real label so it reads on a screen; drawn at 3x and shown
+        // unlit, a little under white so the bloom doesn't haze over the letters.
         const label = new THREE.Mesh(
-          new THREE.PlaneGeometry(0.16, 0.08),
-          new THREE.MeshStandardMaterial({ map: wallText(1024, 512, (g) => { g.setTransform(4, 0, 0, 4, 0, 0); drawLabel(g, work); }, 16), roughness: 0.8, emissive: 0xffffff, emissiveIntensity: 0.15 }),
+          new THREE.PlaneGeometry(0.3, 0.15),
+          new THREE.MeshBasicMaterial({ map: wallText(256 * TEXT_SCALE, 128 * TEXT_SCALE, (g) => { g.setTransform(TEXT_SCALE, 0, 0, TEXT_SCALE, 0, 0); drawLabel(g, work); }, 16), color: TEXT_TINT }),
         );
-        label.material.emissiveMap = label.material.map;
         const side = hg.label === 'left' ? -1 : 1;
         label.position.set(side * (w / 2 + 0.2), 1.35 - hg.y, 0.004);
         label.userData.work = work;
@@ -357,11 +362,12 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
 
   // Exhibition texts and the room sheet (works list + plan), pinned up as in the photos
   for (const sh of data.sheets || []) {
-    const tex = wallText(512, 724, (g) => (sh.kind === 'roomsheet' ? drawRoomSheet(g, data) : drawTextSheet(g, data)), aniso);
-    const panel = new THREE.Mesh(
-      new THREE.PlaneGeometry(0.3, 0.42),
-      new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9, emissive: 0xffffff, emissiveMap: tex, emissiveIntensity: 0.18 }),
-    );
+    const tex = wallText(512 * TEXT_SCALE, 724 * TEXT_SCALE, (g) => {
+      g.setTransform(TEXT_SCALE, 0, 0, TEXT_SCALE, 0, 0);
+      if (sh.kind === 'roomsheet') drawRoomSheet(g, data);
+      else drawTextSheet(g, data);
+    }, 16);
+    const panel = new THREE.Mesh(new THREE.PlaneGeometry(0.39, 0.55), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
     const f = wallFrame(sh.face, sh.at, sh.along, 0.006);
     panel.position.set(f.x, sh.y, f.z);
     panel.rotation.y = f.rotY;

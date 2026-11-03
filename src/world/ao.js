@@ -115,8 +115,8 @@ export function applyPlanAO(materials, segments, { lowPower = false } = {}) {
     aoBounds: { value: new THREE.Vector4(B.x0, B.z0, 1 / (B.x1 - B.x0), 1 / (B.z1 - B.z0)) },
   };
   const groups = {
-    floor: ['floor', 'floorDark'],
-    wall: ['whiteBrick', 'warmBrick', 'greyBrick', 'greyBrickShade', 'darkBrick', 'dimBrick', 'projWall', 'plaster'],
+    floor: ['floor', 'floorGrey', 'floorDark'],
+    wall: ['whiteBrick', 'warmBrick', 'greyBrick', 'greyBrickShade', 'darkBrick', 'rawBrick', 'dimBrick', 'projWall', 'plaster', 'ledge'],
     ceiling: ['ceiling', 'planks'],
   };
   for (const [kind, keys] of Object.entries(groups)) for (const key of keys) patch(materials[key], kind, uniforms, { tileBump: !lowPower });

@@ -176,17 +176,17 @@ export function buildProps(materials) {
   g.add(place(box(0.03, 0.16, 0.13, materials.white), RX - 0.015, 1.62, 3.48));
 
   // Radiators (aluminium sections)
-  const radiator = (x, z, ry, w = 0.8, h = 0.85) => {
+  const radiator = (x, z, ry, w = 0.8, h = 0.85, y = 0.1, mat = materials.white) => {
     const r = new THREE.Group();
     const fins = Math.round(w / 0.08);
-    const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(0.07, h, 0.09), materials.white, fins);
+    const inst = new THREE.InstancedMesh(new THREE.BoxGeometry(0.07, h, 0.09), mat, fins);
     const m = new THREE.Matrix4();
     for (let i = 0; i < fins; i++) {
       m.makeTranslation(-w / 2 + (i + 0.5) * (w / fins), h / 2, 0);
       inst.setMatrixAt(i, m);
     }
     r.add(inst);
-    place(r, x, 0.1, z, ry);
+    place(r, x, y, z, ry);
     g.add(r);
   };
   radiator(WX + 0.08, 3.5, Math.PI / 2, 0.94);
@@ -330,10 +330,19 @@ export function buildProps(materials) {
     g.add(along(0.085, 3.75, palePipe, 25.295, 2.58, 3.725));
     dirtAlong(25.295, 2.58, 1.85, 25.295, 2.58, 5.6);
     for (const z of [2.43, 3.43, 4.46, 5.54]) g.add(along(0.1, 0.1, palePipe, 25.295, 2.58, z));
-    const top = cyl(0.1, 0.1, 4.6, pipeMat, 12);
+    // (the big one is painted white like the walls and runs the whole room, as in the lit
+    // photo of the empty room)
+    const top = cyl(0.1, 0.1, 9.5, palePipe, 12);
     top.rotation.z = Math.PI / 2;
-    g.add(place(top, 23.1, 2.56, 1.84));
-    dirtAlong(20.8, 2.56, 1.84, 25.4, 2.56, 1.84);
+    g.add(place(top, 20.65, 2.56, 1.84));
+    for (const x of [17.2, 19.6, 22.0, 24.4]) {
+      const c = cyl(0.115, 0.115, 0.09, palePipe, 12);
+      c.rotation.z = Math.PI / 2;
+      g.add(place(c, x, 2.56, 1.84));
+    }
+    dirtAlong(15.9, 2.56, 1.84, 25.4, 2.56, 1.84);
+    // a whitewashed radiator standing on the concrete ledge by the entrance
+    radiator(17.1, 1.79, 0, 0.96, 0.55, 0.46, palePipe);
 
     // gas meter by the partition (DSC_0098–0101)
     g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.427, 1.62, 1.816));

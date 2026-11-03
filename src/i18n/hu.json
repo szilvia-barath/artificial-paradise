@@ -19,8 +19,9 @@
       "preparing": "Lemegyünk a pincébe...",
       "loading": "A művek felkerülnek a falra… {loaded}/{total}",
       "ready": "Kész",
-      "enter": "Belépés",
-      "hint": "Hanggal · fejhallgatóval izgalmasabb",
+      "enter": "Belépés hang nélkül",
+      "enterSound": "Belépés hanggal",
+      "hint": "Hanggal: fejhallgatóval izgalmasabb · az M billentyű be- és kikapcsolja",
       "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · húzás egérrel: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás",
       "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · csippentés: nagyítás · koppintás egy műre: megtekintés",
       "failure": "Ez a böngésző nem tudta elindítani a 3D kiállítást (WebGL szükséges). Próbáld meg egy friss Chrome, Firefox vagy Safari böngészővel."

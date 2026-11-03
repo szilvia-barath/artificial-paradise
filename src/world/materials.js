@@ -150,6 +150,9 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     // Room 4 is nearly black in the photos and the ambient light is shared by all rooms,
     // so its surfaces are dark here; the projection wall only just shows under the video
     darkBrick: brickMat('brick-grey', 0x131418, 0.95, 1.6),
+    // Room 4's north wall is bare, unpainted brick: browner and rougher than the whitewash
+    rawBrick: brickMat('brick-warm', 0x241e18, 0.97, 2.6),
+    ledge: surface(new THREE.MeshStandardMaterial({ color: 0x2a2926, roughness: 0.95, map: concrete }), [0, 0]),
     dimBrick: brickMat('brick-white', 0x34302c, 0.95, 2.2, true),
     projWall: brickMat('brick-white', 0x645a54, 0.95, 1.2),
     vault: brickMat('brick-white', 0x191817, 0.95, 1.6),
@@ -163,6 +166,13 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
       bumpScale: 0.6,
       roughness: 0.5,
       metalness: 0.0,
+    }), [0.25, 0.25]),
+    floorGrey: surface(new THREE.MeshStandardMaterial({
+      color: 0x8c867d,
+      map: tileAlbedo,
+      bumpMap: tileBump,
+      bumpScale: 0.6,
+      roughness: 0.55,
     }), [0.25, 0.25]),
     floorDark: surface(new THREE.MeshStandardMaterial({ color: 0x151412, map: tileAlbedo, roughness: 0.62 }), [0.25, 0.25]),
     darkFloor: new THREE.MeshStandardMaterial({ color: 0x1b1a19, roughness: 0.9 }),

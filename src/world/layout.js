@@ -110,13 +110,15 @@ export const BLOCKS = [
   { x0: 9.85, x1: 10.2, z0: 4.742, z1: 6.13, y1: 2.75, mat: 'whiteBrick', faces: { nx: 'warmBrick' } },
 
   // ---------- Room 3 + Room 4 (one long room) ----------
-  // north wall: painted grey brick in Room 3, black brick in Room 4
+  // north wall: painted grey brick in Room 3, bare brick in Room 4 (lit photo of the empty room)
   { x0: 10.2, x1: 13.45, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },
   // bricked-up opening right of Wiena Wrong Landscape II, recessed 14 cm (DSC_0088–0093)
   { x0: 13.45, x1: 15.05, z0: 1.33, z1: 1.73, y1: 1.25, mat: 'greyBrick' },
   { x0: 13.45, x1: 15.05, z0: 1.33, z1: 1.59, y0: 1.25, y1: 2.9, mat: 'greyBrick', faces: { pz: 'greyBrickShade' } },
   { x0: 15.05, x1: 15.6, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },
-  { x0: 15.6, x1: 25.4 + T, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'darkBrick' },
+  { x0: 15.6, x1: 25.4 + T, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'rawBrick' },
+  // the low concrete ledge along its western half, the radiator on it
+  { x0: 15.9, x1: 20.2, z0: 1.73, z1: 2.07, y1: 0.36, mat: 'ledge' },
   // south wall: white brick
   { x0: 10.2, x1: 14.5, z0: 5.73, z1: 6.13, y1: 2.9, mat: 'whiteBrick' },
   { x0: 15.9, x1: 25.4 + T, z0: 5.73, z1: 6.13, y1: 2.9, mat: 'dimBrick' },
@@ -137,7 +139,8 @@ export const R1_WEST_OUTER = R1.west - T; // outer face of Room 1's west wall (t
 export const FLOORS = [
   { x0: R1.west - 0.1, x1: 5.6, z0: -0.1, z1: R1.D + 0.1, mat: 'floor' },
   { x0: 5.4, x1: 10, z0: 1.6, z1: 5.79, mat: 'floor' },
-  { x0: 9.85, x1: 15.75, z0: 1.6, z1: 5.79, mat: 'floor' },
+  // Room 3: the darker grey tiles of the MAMŰ photos (Kivonat, 2015)
+  { x0: 9.85, x1: 15.75, z0: 1.6, z1: 5.79, mat: 'floorGrey' },
   { x0: 15.75, x1: 25.43, z0: 1.6, z1: 5.79, mat: 'floorDark' },
   { x0: 5.85, x1: 9.85, z0: 0, z1: 1.5, mat: 'darkFloor', y: 0.002 },
 ];

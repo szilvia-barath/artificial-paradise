@@ -307,18 +307,24 @@ function updateRoom() {
 }
 
 // ---------------------------------------------------------------- enter
-function enter() {
+// The visitor chooses on the entrance card; without sound unless they ask for it.
+function enter(withSound = false) {
   entered = true;
+  audio.setMuted(!withSound);
+  soundBtn.classList.toggle('muted', !withSound);
   document.body.classList.add('entered');
   document.getElementById('loader').classList.add('gone');
   document.getElementById('hud').hidden = false;
   audio.start();
+  audio.setMuted(!withSound);
   // the videos' own sound, played from their screens
   if (audio.attachVideos(VIDEOS)) enableVideoSound();
   syncEnabled();
   post.trigger(1);
 }
-enterBtn.addEventListener('click', enter);
+const enterSoundBtn = document.getElementById('enter-sound');
+enterBtn.addEventListener('click', () => enter(false));
+enterSoundBtn.addEventListener('click', () => enter(true));
 // the "drag to look" hint goes once the visitor has looked around
 controls.onLook = () => document.body.classList.add('looked');
 
@@ -397,6 +403,7 @@ function markReady() {
   progressBar.style.width = '100%';
   setText(progressLabel, 'loader.ready');
   enterBtn.disabled = false;
+  enterSoundBtn.disabled = false;
   enterBtn.focus({ preventScroll: true });
 }
 manager.onLoad = markReady;

@@ -170,6 +170,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
   text-transform: uppercase;
   transition: background 0.2s, color 0.2s, opacity 0.3s;
 }
+.enter-choice { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.btn-enter-alt { border-style: dashed; padding: 9px 26px; font-size: 12px; letter-spacing: 0.22em; }
 .btn-enter:disabled { opacity: 0.3; cursor: progress; }
 .btn-enter:not(:disabled):hover, .btn-enter:not(:disabled):focus-visible {
   background: var(--ap-blue);

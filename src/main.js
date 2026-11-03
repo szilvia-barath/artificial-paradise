@@ -71,7 +71,7 @@ scene.add(props.group);
 scene.add(buildParadiseFactory(materials));
 const letItFlow = buildLetItFlow(manager);
 scene.add(letItFlow.group);
-applyPlanAO(materials, arch.segments); // after props and installations add their footprints
+applyPlanAO(materials, arch.segments, { lowPower }); // after props and installations add their footprints
 const lights = buildLights(scene);
 const gallery = buildGallery(data, materials, manager, renderer, { hdBudget: lowPower ? 3 : 8, videoBudget: lowPower ? 5 : 8 });
 scene.add(gallery.group);

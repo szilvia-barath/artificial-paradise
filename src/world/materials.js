@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import texMeta from '../data/textures.json';
+import { initTextures, photoTexture } from './textures.js';
 
 // Materials. Wall bricks are real textures cut from the exhibition photos
 // (scripts/make_textures.py); tiles, plaster and planks are drawn into canvases.
@@ -106,20 +107,21 @@ const BASE = import.meta.env.BASE_URL;
 export function createMaterials(renderer, manager, { lowPower = false } = {}) {
   // Strong anisotropic filtering keeps floor tiles and brick sharp at grazing angles.
   const aniso = Math.min(lowPower ? 4 : 16, renderer.capabilities.getMaxAnisotropy());
-  const loader = new THREE.TextureLoader(manager);
+  initTextures(renderer, manager);
   // Brick textures cut from the photos by scripts/make_textures.py; the json gives the
   // real size in metres of one tile so the courses come out at 7.7 cm.
-  const photoTex = (name, srgb) => {
-    const t = loader.load(`${BASE}tex/${name}.webp`);
+  const photoTex = (name, srgb) => photoTexture(name, (t) => {
     const m = texMeta[name.replace('-bump', '')];
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(1 / m.w, 1 / m.h);
     t.anisotropy = aniso;
     if (srgb) t.colorSpace = THREE.SRGBColorSpace;
-    return t;
-  };
+  });
   const bricks = {};
   for (const name of Object.keys(texMeta)) bricks[name] = { map: photoTex(name, true), bump: photoTex(`${name}-bump`, false) };
+  // Shader variation (surface.js): texture offsets are kept to whole brick courses, so the
+  // mortar lines stay straight where two offsets blend.
+  const course = (name) => [0, 1 / Math.round(texMeta[name].h / 0.077)];
 
   const tiles = tileCanvases();
   const tileAlbedo = tex(tiles.albedo, true, 1.2, aniso);
@@ -127,43 +129,46 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
   const concrete = tex(concreteCanvas(), true, 2, aniso);
   const planks = tex(planksCanvas(), true, 1, aniso);
 
-  const brickMat = (name, color, rough = 0.95, bumpScale = 2.2) =>
-    new THREE.MeshStandardMaterial({
-      color,
-      map: bricks[name].map,
-      bumpMap: bricks[name].bump,
-      bumpScale,
-      roughness: rough,
-      metalness: 0,
-    });
+  const brickMat = (name, color, rough = 0.95, bumpScale = 2.2, wash = false) => {
+    const m = new THREE.MeshStandardMaterial({ color, bumpScale, roughness: rough, metalness: 0 });
+    bricks[name].map.into(m, 'map');
+    bricks[name].bump.into(m, 'bumpMap');
+    m.userData.surface = { offset: course(name), wash };
+    return m;
+  };
+  const surface = (m, offset) => {
+    m.userData.surface = { offset };
+    return m;
+  };
 
   return {
     // walls (colours read off the photos under neutral light)
-    whiteBrick: brickMat('brick-white', 0xf4f2ec),
-    warmBrick: brickMat('brick-warm', 0xefe2bf),
+    whiteBrick: brickMat('brick-white', 0xf4f2ec, 0.95, 2.2, true),
+    warmBrick: brickMat('brick-warm', 0xefe2bf, 0.95, 2.2, true),
     greyBrick: brickMat('brick-grey', 0x7c7d83),
     greyBrickShade: brickMat('brick-grey', 0x5c5d62),
     // Room 4 is nearly black in the photos and the ambient light is shared by all rooms,
     // so its surfaces are dark here; the projection wall only just shows under the video
     darkBrick: brickMat('brick-grey', 0x131418, 0.95, 1.6),
-    dimBrick: brickMat('brick-white', 0x34302c),
+    dimBrick: brickMat('brick-white', 0x34302c, 0.95, 2.2, true),
     projWall: brickMat('brick-white', 0x645a54, 0.95, 1.2),
     vault: brickMat('brick-white', 0x191817, 0.95, 1.6),
     shaft: brickMat('brick-grey', 0x3b3c41),
-    plaster: new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.95, map: concrete }),
-    floor: new THREE.MeshStandardMaterial({
+    plaster: surface(new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.95, map: concrete }), [0, 0]),
+    // (offsets in whole 30 cm tiles keep the grout grid)
+    floor: surface(new THREE.MeshStandardMaterial({
       color: 0xbab3a8,
       map: tileAlbedo,
       bumpMap: tileBump,
       bumpScale: 0.6,
       roughness: 0.5,
       metalness: 0.0,
-    }),
-    floorDark: new THREE.MeshStandardMaterial({ color: 0x151412, map: tileAlbedo, roughness: 0.62 }),
+    }), [0.25, 0.25]),
+    floorDark: surface(new THREE.MeshStandardMaterial({ color: 0x151412, map: tileAlbedo, roughness: 0.62 }), [0.25, 0.25]),
     darkFloor: new THREE.MeshStandardMaterial({ color: 0x1b1a19, roughness: 0.9 }),
-    ceiling: new THREE.MeshStandardMaterial({ color: 0xf1f0ec, map: concrete, roughness: 1, emissive: 0x2a2a2a }),
+    ceiling: surface(new THREE.MeshStandardMaterial({ color: 0xf1f0ec, map: concrete, roughness: 1, emissive: 0x2a2a2a }), [0, 0]),
     // (lit only by bounce: the pendants shine down)
-    planks: new THREE.MeshStandardMaterial({ color: 0xe9e6df, map: planks, roughness: 0.95, emissive: 0x3a362f }),
+    planks: surface(new THREE.MeshStandardMaterial({ color: 0xe9e6df, map: planks, roughness: 0.95, emissive: 0x3a362f }), [0, 1 / 8]),
     darkCeiling: new THREE.MeshStandardMaterial({ color: 0x141414, roughness: 1 }),
     beam: new THREE.MeshStandardMaterial({ color: 0x101012, roughness: 0.6, metalness: 0.4 }),
     // furniture & fixtures
@@ -176,7 +181,7 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     wood: new THREE.MeshStandardMaterial({ color: 0x6b5442, roughness: 0.8 }),
     door: new THREE.MeshStandardMaterial({ color: 0x8c8678, roughness: 0.7 }),
     stair: new THREE.MeshStandardMaterial({ color: 0x3c3a3a, roughness: 0.9 }),
-    stairBrick: new THREE.MeshStandardMaterial({ color: 0xa8634a, roughness: 0.95, map: bricks['brick-grey'].map }),
+    stairBrick: bricks['brick-grey'].map.into(new THREE.MeshStandardMaterial({ color: 0xa8634a, roughness: 0.95 }), 'map'),
     glass: new THREE.MeshStandardMaterial({ color: 0xcfe2e8, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false }),
     clearPlastic: new THREE.MeshStandardMaterial({ color: 0xe8f0f2, roughness: 0.15, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide }),
     leaf: new THREE.MeshStandardMaterial({ color: 0x9ccf5a, roughness: 0.55, emissive: 0x1c3a0a }),

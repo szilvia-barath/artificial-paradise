@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { OBSTACLES, R1 } from './layout.js';
+import { dirtAlong } from './surface.js';
 
 // Furniture and fixtures, placed from the photos. Kept low-poly; static meshes are
 // merged per material at the end, repeated parts are instanced.
@@ -158,6 +159,7 @@ export function buildProps(materials) {
     obstacle(WX, EX, SZ - 0.49, SZ);
     obstacle(WX, WX + 0.52, SZ - 0.93, SZ - 0.43);
     // two white heating pipes on the wall just above the bench
+    dirtAlong(WX, 0.6, SZ - 0.03, EX, 0.6, SZ - 0.03);
     for (const y of [0.56, 0.63]) {
       const p = cyl(0.016, 0.016, EX - WX, materials.white, 8);
       p.rotation.z = Math.PI / 2;
@@ -210,6 +212,7 @@ export function buildProps(materials) {
   }
 
   // White pipes running up beside the doorway to Room 2 (DSC_0021)
+  dirtAlong(RX - 0.03, 0, 4.63, RX - 0.03, 2.9, 4.63);
   for (const z of [4.6, 4.66]) g.add(place(cyl(0.017, 0.017, 2.9, materials.white, 8), RX - 0.03, 1.45, z));
 
   // ================================================================ Room 2
@@ -311,8 +314,10 @@ export function buildProps(materials) {
     const low = cyl(0.03, 0.03, 9.48, pipeMat, 8);
     low.rotation.z = Math.PI / 2;
     g.add(place(low, 20.64, 0.42, 1.778));
+    dirtAlong(15.9, 0.42, 1.778, 25.38, 0.42, 1.778);
     for (const [x, y0, r] of [[18.917, 0.42, 0.03], [20.305, 1.9, 0.065], [20.976, 1.9, 0.065], [24.184, 0.42, 0.03]]) {
       g.add(place(cyl(r, r, 2.9 - y0, pipeMat, 10), x, (2.9 + y0) / 2, 1.73 + r + 0.02));
+      dirtAlong(x, y0, 1.75 + r, x, 2.9, 1.75 + r);
     }
     // the pale pipe with collars above the projection, and the dark one along the top of the
     // north wall (DSC_0113; height and thickness from the 4 m wall's scale)
@@ -323,15 +328,18 @@ export function buildProps(materials) {
       return place(m, x, y, z);
     };
     g.add(along(0.085, 3.75, palePipe, 25.295, 2.58, 3.725));
+    dirtAlong(25.295, 2.58, 1.85, 25.295, 2.58, 5.6);
     for (const z of [2.43, 3.43, 4.46, 5.54]) g.add(along(0.1, 0.1, palePipe, 25.295, 2.58, z));
     const top = cyl(0.1, 0.1, 4.6, pipeMat, 12);
     top.rotation.z = Math.PI / 2;
     g.add(place(top, 23.1, 2.56, 1.84));
+    dirtAlong(20.8, 2.56, 1.84, 25.4, 2.56, 1.84);
 
     // gas meter by the partition (DSC_0098–0101)
     g.add(place(box(0.22, 0.3, 0.16, materials.white), 16.427, 1.62, 1.816));
     g.add(place(cyl(0.025, 0.025, 0.12, new THREE.MeshStandardMaterial({ color: 0xe6c21e, roughness: 0.5 }), 8), 16.427, 1.83, 1.816));
     g.add(place(cyl(0.018, 0.018, 1.45, pipeMat, 8), 16.331, 0.72, 1.787));
+    dirtAlong(16.331, 0, 1.787, 16.331, 1.45, 1.787);
 
     // curtain bunched at the south side of the opening between Room 3 and Room 4
     const cg = new THREE.PlaneGeometry(0.55, 2.42, 18, 1);

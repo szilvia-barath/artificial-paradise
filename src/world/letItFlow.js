@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { photoTexture } from './textures.js';
 import RIVER from '../data/river.json';
 import { OBSTACLES } from './layout.js';
 import { createVideo } from './video.js';
@@ -132,13 +133,13 @@ export function buildLetItFlow(manager) {
   // ---------------------------------------------------------------- the river
   const riverMat = new THREE.MeshStandardMaterial({
     color: new THREE.Color(AMBIENT, AMBIENT, AMBIENT),
-    map: srgb(loader.load(`${BASE}tex/river.webp`)),
-    normalMap: loader.load(`${BASE}tex/river-normal.webp`),
     normalScale: new THREE.Vector2(1, 1),
     roughness: 0.34,
     metalness: 0,
     alphaTest: 0.5,
   });
+  photoTexture('river', srgb).into(riverMat, 'map');
+  photoTexture('river-normal', () => {}).into(riverMat, 'normalMap');
   const projUniform = { value: null };
   const projStrength = { value: 0 };
   // The floor projection lands on the plastic: its light takes the plastic's colour, falls

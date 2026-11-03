@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { ROOMS, OBSTACLES } from './layout.js';
+import { SURFACE_PARS, SURFACE_FRAG, antiTileBump, surfaceUniforms } from './surface.js';
 
 // Baked ambient occlusion from the floor plan, the cheap way to ground the rooms without
 // real-time shadows. One small texture over the plan holds, per point on the floor:
@@ -88,22 +89,28 @@ const FRAG = /* glsl */ `
   diffuseColor.rgb *= aoK;
 `;
 
-function patch(material, kind, uniforms) {
+function patch(material, kind, uniforms, { tileBump }) {
+  const surf = material.userData.surface || { offset: [0, 0] };
   material.defines = { ...material.defines, AO_KIND: KIND[kind] };
+  if (surf.wash) material.defines.SURF_WASH = '';
+  const own = { surfOffset: { value: new THREE.Vector2(...surf.offset) } };
   material.onBeforeCompile = (shader) => {
-    Object.assign(shader.uniforms, uniforms);
+    Object.assign(shader.uniforms, uniforms, own);
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nvarying vec3 vAoPos;')
       .replace('#include <project_vertex>', '#include <project_vertex>\nvAoPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
-    shader.fragmentShader = shader.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vAoPos;\nuniform sampler2D aoPlan;\nuniform vec4 aoBounds;')
-      .replace('#include <map_fragment>', `#include <map_fragment>\n${FRAG}`);
+    let frag = shader.fragmentShader
+      .replace('#include <common>', `#include <common>\nvarying vec3 vAoPos;\nuniform sampler2D aoPlan;\nuniform vec4 aoBounds;\n${SURFACE_PARS}`)
+      .replace('#include <map_fragment>', `${SURFACE_FRAG}\n${FRAG}`);
+    if (tileBump) frag = frag.replace('#include <bumpmap_pars_fragment>', antiTileBump(THREE.ShaderChunk.bumpmap_pars_fragment));
+    shader.fragmentShader = frag;
   };
 }
 
 // Bake once the walls and furniture exist, then patch the room materials.
-export function applyPlanAO(materials, segments) {
+export function applyPlanAO(materials, segments, { lowPower = false } = {}) {
   const uniforms = {
+    ...surfaceUniforms(),
     aoPlan: { value: bake(segments) },
     aoBounds: { value: new THREE.Vector4(B.x0, B.z0, 1 / (B.x1 - B.x0), 1 / (B.z1 - B.z0)) },
   };
@@ -112,5 +119,5 @@ export function applyPlanAO(materials, segments) {
     wall: ['whiteBrick', 'warmBrick', 'greyBrick', 'greyBrickShade', 'darkBrick', 'dimBrick', 'projWall', 'plaster'],
     ceiling: ['ceiling', 'planks'],
   };
-  for (const [kind, keys] of Object.entries(groups)) for (const key of keys) patch(materials[key], kind, uniforms);
+  for (const [kind, keys] of Object.entries(groups)) for (const key of keys) patch(materials[key], kind, uniforms, { tileBump: !lowPower });
 }

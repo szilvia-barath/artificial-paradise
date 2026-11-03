@@ -73,7 +73,7 @@ const letItFlow = buildLetItFlow(manager);
 scene.add(letItFlow.group);
 applyPlanAO(materials, arch.segments); // after props and installations add their footprints
 const lights = buildLights(scene);
-const gallery = buildGallery(data, materials, manager, renderer, { hdBudget: lowPower ? 3 : 8, videoBudget: lowPower ? 2 : 3 });
+const gallery = buildGallery(data, materials, manager, renderer, { hdBudget: lowPower ? 3 : 8, videoBudget: lowPower ? 5 : 8 });
 scene.add(gallery.group);
 
 const controls = new FirstPersonControls(camera, canvas, arch.segments);

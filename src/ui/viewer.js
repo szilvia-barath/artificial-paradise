@@ -73,12 +73,13 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
       const src = `https://drive.google.com/file/d/${drive}/preview`;
       if (frame.getAttribute('src') !== src) frame.setAttribute('src', src);
     } else frame.removeAttribute('src');
-    const loop = vids && vids.loop && !drive;
+    const clip = vids && (vids.viewer || vids.loop);
+    const loop = clip && !drive;
     video.hidden = !loop;
     if (loop) {
-      if (video.getAttribute('src') !== `${base}${vids.loop}`) {
+      if (video.getAttribute('src') !== `${base}${clip}`) {
         video.poster = `${base}${w.image}.webp`;
-        video.src = `${base}${vids.loop}`;
+        video.src = `${base}${clip}`;
       }
       video.muted = !!(isMuted && isMuted());
       video.play().catch(() => {});

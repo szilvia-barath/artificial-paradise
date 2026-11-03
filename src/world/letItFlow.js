@@ -155,6 +155,8 @@ export function buildLetItFlow(manager) {
       .replace(
         '#include <emissivemap_fragment>',
         `#include <emissivemap_fragment>
+        // the plastic shows its own colours, as in the artist's composite (PLANE javított.png)
+        totalEmissiveRadiance += diffuseColor.rgb / ${AMBIENT.toFixed(3)} * 0.62 * (0.55 + 0.45 * max(dot(normal, normalize((viewMatrix * vec4(lifLamp, 1.0)).xyz + vViewPosition)), 0.0));
         if (lifStrength > 0.0) {
           // the brightest of the light just around each point: the plastic follows the video's
           // river closely but not to the centimetre, and in the room the light reaches all of it
@@ -168,7 +170,7 @@ export function buildLetItFlow(manager) {
           vec3 lifH = normalize(lifL + normalize(vViewPosition));
           float lifDiff = 0.22 + 0.78 * max(dot(normal, lifL), 0.0);
           float lifSpec = pow(max(dot(normal, lifH), 0.0), 42.0);
-          totalEmissiveRadiance += lifLight * (diffuseColor.rgb / ${AMBIENT.toFixed(3)} * lifDiff + 0.3 * lifSpec);
+          totalEmissiveRadiance += lifLight * (diffuseColor.rgb / ${AMBIENT.toFixed(3)} * lifDiff * 0.45 + 0.25 * lifSpec);
         }`,
       );
   };

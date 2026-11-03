@@ -25,6 +25,20 @@ function play(v) {
   });
 }
 
+// The video elements sit in the page, invisible: phone browsers (iOS Safari above all)
+// may not decode a video that is not in the document, and the screen stays black.
+let shelf = null;
+function shelve(el) {
+  if (!shelf) {
+    shelf = document.createElement('div');
+    shelf.setAttribute('aria-hidden', 'true');
+    shelf.style.cssText = 'position:fixed;left:0;top:0;width:2px;height:2px;overflow:hidden;opacity:0.01;pointer-events:none;z-index:-1';
+    document.body.appendChild(shelf);
+  }
+  el.style.cssText = 'width:2px;height:2px';
+  shelf.appendChild(el);
+}
+
 export function createVideo(src, { pos = null, sound = false, near = 1.2, work = null } = {}) {
   const el = document.createElement('video');
   el.muted = true;
@@ -33,6 +47,7 @@ export function createVideo(src, { pos = null, sound = false, near = 1.2, work =
   el.preload = 'none';
   el.setAttribute('muted', '');
   el.setAttribute('playsinline', '');
+  shelve(el);
   const tex = new THREE.VideoTexture(el);
   tex.colorSpace = THREE.SRGBColorSpace;
   const v = { el, tex, pos, sound, near, work, ready: false, wanted: false };

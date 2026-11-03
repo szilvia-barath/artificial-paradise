@@ -13,7 +13,7 @@ left = towards the end wall (east), image up = south; the wall tip touches the w
 The relief is read from the photo: soft lumps from the shape and the broad light and shade,
 folds from the finer shading, thickness growing from the thin strip at the wall (~3 cm) to
 the white heap at the far end (~10 cm, as in the documentation video). Creases are baked
-dark into the colour, because the plastic is lit by the projection alone.
+lightly into the colour.
 Outputs: river.webp (colour + alpha), river-normal.webp, river-height.png; writes the
 river's place and size, the video frame (projection) and the areas visitors can't walk
 into (obstacles) to river.json."""
@@ -78,7 +78,8 @@ detailed = h + (0.005 * folds + 0.002 * fine) * edge * m
 blur = gauss(detailed, PPM * 0.012)
 cavity = np.clip((blur - detailed) / 0.006, 0, 1)
 wide = np.clip((gauss(detailed, PPM * 0.04) - detailed) / 0.02, 0, 1)
-shade = (1 - 0.6 * cavity) * (1 - 0.3 * wide)
+# kept light, so the plastic keeps the colours of the composite
+shade = (1 - 0.25 * cavity) * (1 - 0.1 * wide)
 
 rgb = Image.fromarray(np.clip(crop[..., :3] * shade[..., None], 0, 255).astype(np.uint8))
 alpha = Image.fromarray((gauss(m.astype(np.float32), 1.1) * 255).astype(np.uint8))

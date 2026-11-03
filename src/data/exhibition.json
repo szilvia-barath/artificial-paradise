@@ -1,5 +1,5 @@
 {
-  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen.",
+  "_readme": "Language-neutral exhibition data: official titles, sizes, years, images and where each work hangs. All visitor-facing texts are in src/i18n/en.json and hu.json. Videos: 'video.loop' is the short silent loop played on the screen in 3D (public/video, cut from the artist's files); 'video.full' are the full videos on Google Drive, played in the artwork viewer. 'desc' names the artist's text in 'descriptions' in the i18n files; 'situ' lists a work's installation photos. 'contacts' fills the Contact panel: an entry with an empty 'href' stays hidden until it is filled in. 'monitor' is the photographed frame (with its rods) drawn around a screen; its opening is the screen. 'video.viewer' is played in the artwork viewer instead of the loop.",
   "meta": {
     "title": "Artificial Paradise",
     "digitalBy": "Szilvia Barath",
@@ -417,13 +417,8 @@
       },
       "video": {
         "loop": "video/w16-projection.mp4",
-        "full": [
-          {
-            "drive": "1w6FBdA-9nx4xS9f_AXqebwbZHS15tmpz",
-            "label": "documentation"
-          }
-        ],
-        "sound": true
+        "sound": true,
+        "viewer": "video/w16-documentation.mp4"
       },
       "desc": "let-it-flow",
       "situ": [

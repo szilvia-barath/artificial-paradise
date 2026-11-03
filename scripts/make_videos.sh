@@ -12,7 +12,7 @@ enc() { # file, output name, start s, duration s, filter, fps, crf, [sound gain 
   # Sound: the gain evens out the very quiet field recordings a little (the limiter
   # keeps peaks below -2 dBFS), short fades hide the seam where the loop restarts.
   if [ -n "${8:-}" ]; then
-    audio=(-af "volume=$8dB,alimiter=limit=0.79:level=false,afade=t=in:d=0.6,afade=t=out:st=$(echo "$4 - 0.8" | bc):d=0.8"
+    audio=(-af "volume=$8dB,alimiter=limit=0.79:level=false,afade=t=in:d=0.6,afade=t=out:st=$(awk "BEGIN { print $4 - 0.8 }"):d=0.8"
       -c:a aac -b:a 96k -ar 48000 -ac 2)
   fi
   ffmpeg -v error -y -ss "$3" -t "$4" -i "$SRC/$1" "${audio[@]}" -vf "$5,fps=$6,format=yuv420p" \
@@ -48,6 +48,22 @@ enc_fade() { # file, output name, start s, duration s, filter, fps, crf
     [b]trim=$x,setpts=PTS-STARTPTS[body];
     [body][head]xfade=transition=fade:duration=$x:offset=$(awk "BEGIN { print $4 - $x }"),format=yuv420p[v]" -map '[v]' -an     -c:v libx264 -profile:v high -preset slow -crf "$7" -movflags +faststart "$OUT/$2.mp4"
 }
+# A short video with its sound: the picture dissolves and the sound crossfades over the seam.
+enc_loop() { # file, output name, start s, duration s, filter, fps, crf, sound gain dB
+  local x=1 # dissolve, s
+  local end; end=$(awk "BEGIN { print $4 + $x }")
+  ffmpeg -v error -y -ss "$3" -t "$end" -i "$SRC/$1" -filter_complex "
+    [0:v]$5,fps=$6,format=yuv420p,split[a][b];
+    [a]trim=0:$x,setpts=PTS-STARTPTS[vh];
+    [b]trim=$x,setpts=PTS-STARTPTS[vb];
+    [vb][vh]xfade=transition=fade:duration=$x:offset=$(awk "BEGIN { print $4 - $x }"),format=yuv420p[v];
+    [0:a]volume=$8dB,alimiter=limit=0.79:level=false,asplit=3[head][body][tail];
+    [head]atrim=0:$x,asetpts=PTS-STARTPTS,afade=t=in:d=$x[h];
+    [tail]atrim=$4:$end,asetpts=PTS-STARTPTS,afade=t=out:d=$x[t];
+    [h][t]amerge=inputs=2,pan=stereo|c0=c0+c2|c1=c1+c3[join];
+    [body]atrim=$x:$4,asetpts=PTS-STARTPTS[rest];
+    [join][rest]concat=n=2:v=0:a=1[a]" -map '[v]' -map '[a]'     -c:a aac -b:a 96k -ar 48000 -ac 2     -c:v libx264 -profile:v high -preset slow -crf "$7"     -x264-params "bframes=0:no-fast-pskip=1:no-dct-decimate=1:aq-mode=3"     -movflags +faststart "$OUT/$2.mp4"
+}
 # with sound: Singapore and The Eden Project as they are (about -24 and -26 LUFS), the
 # quiet Natural life and Siluett (about -47 and -46 LUFS) raised by 15 dB
 enc "artifical paradise_singapore.mp4" w06-artificial-paradise-i 30 40 "scale=960:540" 30 30 -2
@@ -60,7 +76,9 @@ enc "Natural life, Full Hd, video, 2024 .mp4" w17-natural-life 30 40 "scale=960:
 # the Paradise Factory monitor stands on its side: the footage turned counter-clockwise is
 # upright on it, as in the documentation video, and cropped to the panel (0.831 wide to 1 high)
 enc "paradise factory_.mp4" w03-screen 20 45 "transpose=2,crop=1024:1232,scale=532:640" 25 30
-# Siluett's picture is one 25.8 s cycle repeated 16 times, so a single cycle is all of it
-enc_cycle "Siluett.mp4" w16-projection 25.8 25.8 "scale=1600:900:flags=lanczos" 25 25 15
+# the trees on the end wall: the owner's 10 s cut of the projection (Drive file 12Oa73Oi...)
+enc_loop "trees_new.mp4" w16-projection 0 9 "scale=1600:900:flags=lanczos" 25 24 0
+# shown in the artwork viewer: the documentation video of the installation
+enc "Let it flow 2025 MAMU.mp4" w16-documentation 0 8.8 "scale=1280:720:flags=lanczos" 25 25 0
 # the black point is raised so the video's faint haze stays off the dark floor, as in the photos
 enc_fade "Let it flow_ok.mp4" w16-floor 10 40 "scale=1280:720:flags=lanczos,colorlevels=rimin=0.07:gimin=0.07:bimin=0.09" 25 27

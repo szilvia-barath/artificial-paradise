@@ -441,7 +441,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     if (upgradeTimer <= 0) {
       upgradeTimer = 0.4;
       upgrade(camera, zoom);
-      scheduleVideos(videos, camera.position, videoBudget, 9);
+      scheduleVideos(videos, camera.position, videoBudget, 16);
     }
     for (const s of screens) {
       const u = s.mat.uniforms;

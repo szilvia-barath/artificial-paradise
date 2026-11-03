@@ -13,15 +13,20 @@
       "language": "Language",
       "contact": "Contact"
     },
+    "soundAsk": {
+      "question": "Visit with sound?",
+      "hint": "Headphones recommended · M switches it on or off any time",
+      "off": "Without sound",
+      "on": "With sound"
+    },
     "loader": {
       "meta1": "Digital exhibition",
       "meta2": "MAMŰ Gallery, Budapest · 10-31.01.2025",
       "preparing": "Preparing the basement…",
       "loading": "Hanging the works… {loaded}/{total}",
       "ready": "Ready",
-      "enter": "Enter without sound",
-      "enterSound": "Enter with sound",
-      "hint": "With sound: headphones recommended · M switches it on or off",
+      "enter": "Enter",
+      "hint": "Sound: headphones recommended",
       "howtoDesk": "↑↓ or the scroll wheel to walk · ←→ to turn · drag to look · +/− to zoom · click a work to view · Shift to run",
       "howtoTouch": "Left stick to walk · drag to look · pinch to zoom · tap a work to view",
       "failure": "This browser could not start the 3D exhibition (WebGL is needed). Try a recent Chrome, Firefox or Safari."

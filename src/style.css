@@ -170,8 +170,13 @@ button { font: inherit; color: inherit; cursor: pointer; }
   text-transform: uppercase;
   transition: background 0.2s, color 0.2s, opacity 0.3s;
 }
-.enter-choice { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-.btn-enter-alt { border-style: dashed; padding: 9px 26px; font-size: 12px; letter-spacing: 0.22em; }
+.btn-enter-alt { border-style: dashed; }
+.sound-ask { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; background: rgba(8, 8, 10, 0.55); }
+.sound-ask[hidden] { display: none; }
+.sound-ask-card { background: #fbfbf9; color: var(--ap-blue); padding: 28px 32px; max-width: min(420px, calc(100vw - 32px)); text-align: center; font-family: var(--mono); }
+.sound-ask-card > p:first-child { font-size: 15px; letter-spacing: 0.12em; text-transform: uppercase; margin: 0; }
+.sound-ask-btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 20px; }
+.sound-ask-btns .btn-enter { padding: 11px 22px; font-size: 12px; letter-spacing: 0.2em; }
 .btn-enter:disabled { opacity: 0.3; cursor: progress; }
 .btn-enter:not(:disabled):hover, .btn-enter:not(:disabled):focus-visible {
   background: var(--ap-blue);

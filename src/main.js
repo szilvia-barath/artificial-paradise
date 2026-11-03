@@ -307,24 +307,42 @@ function updateRoom() {
 }
 
 // ---------------------------------------------------------------- enter
-// The visitor chooses on the entrance card; without sound unless they ask for it.
-function enter(withSound = false) {
+// The walk starts without sound; a pop-up after entering offers to switch it on.
+const soundAsk = document.getElementById('sound-ask');
+function setSound(on) {
+  audio.setMuted(!on);
+  soundBtn.classList.toggle('muted', !on);
+}
+soundAsk.addEventListener('click', (e) => {
+  const b = e.target.closest('[data-sound]');
+  if (!b && e.target !== soundAsk) return;
+  setSound(b ? b.dataset.sound === 'on' : false);
+  soundAsk.hidden = true;
+  blockers.panel = false;
+  syncEnabled();
+});
+soundAsk.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') soundAsk.click();
+});
+function enter(ask = true) {
   entered = true;
-  audio.setMuted(!withSound);
-  soundBtn.classList.toggle('muted', !withSound);
+  setSound(false);
   document.body.classList.add('entered');
   document.getElementById('loader').classList.add('gone');
   document.getElementById('hud').hidden = false;
   audio.start();
-  audio.setMuted(!withSound);
+  audio.setMuted(true);
   // the videos' own sound, played from their screens
   if (audio.attachVideos(VIDEOS)) enableVideoSound();
+  if (ask) {
+    soundAsk.hidden = false;
+    blockers.panel = true;
+    soundAsk.querySelector('[data-sound="off"]').focus({ preventScroll: true });
+  }
   syncEnabled();
   post.trigger(1);
 }
-const enterSoundBtn = document.getElementById('enter-sound');
-enterBtn.addEventListener('click', () => enter(false));
-enterSoundBtn.addEventListener('click', () => enter(true));
+enterBtn.addEventListener('click', () => enter());
 // the "drag to look" hint goes once the visitor has looked around
 controls.onLook = () => document.body.classList.add('looked');
 
@@ -403,7 +421,6 @@ function markReady() {
   progressBar.style.width = '100%';
   setText(progressLabel, 'loader.ready');
   enterBtn.disabled = false;
-  enterSoundBtn.disabled = false;
   enterBtn.focus({ preventScroll: true });
 }
 manager.onLoad = markReady;

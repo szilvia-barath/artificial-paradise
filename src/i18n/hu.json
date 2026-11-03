@@ -13,15 +13,20 @@
       "language": "Nyelv",
       "contact": "Kapcsolat"
     },
+    "soundAsk": {
+      "question": "Hanggal nézed a kiállítást?",
+      "hint": "Fejhallgatóval izgalmasabb · az M billentyűvel bármikor be- és kikapcsolhatod",
+      "off": "Hang nélkül",
+      "on": "Hanggal"
+    },
     "loader": {
       "meta1": "Digitális kiállítás",
       "meta2": "MAMŰ Galéria, Budapest · 2025. 01. 10-31.",
       "preparing": "Lemegyünk a pincébe...",
       "loading": "A művek felkerülnek a falra… {loaded}/{total}",
       "ready": "Kész",
-      "enter": "Belépés hang nélkül",
-      "enterSound": "Belépés hanggal",
-      "hint": "Hanggal: fejhallgatóval izgalmasabb · az M billentyű be- és kikapcsolja",
+      "enter": "Belépés",
+      "hint": "Hanggal: fejhallgatóval izgalmasabb",
       "howtoDesk": "↑↓ vagy görgő: séta · ←→: fordulás · húzás egérrel: körülnézés · +/−: nagyítás · kattintás egy műre: megtekintés · Shift: futás",
       "howtoTouch": "Bal oldali kar: séta · húzás: körülnézés · csippentés: nagyítás · koppintás egy műre: megtekintés",
       "failure": "Ez a böngésző nem tudta elindítani a 3D kiállítást (WebGL szükséges). Próbáld meg egy friss Chrome, Firefox vagy Safari böngészővel."

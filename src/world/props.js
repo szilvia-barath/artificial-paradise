@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
 import { dirtAlong } from './surface.js';
+import { PLANT, BARS } from './paradiseFactory.js';
 
 // Furniture and fixtures, placed from the photos. Kept low-poly; static meshes are
 // merged per material at the end, repeated parts are instanced.
@@ -49,6 +50,38 @@ function wireGridMaterial() {
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
   t.repeat.set(4, 4);
   return new THREE.MeshStandardMaterial({ color: 0x141416, roughness: 0.5, metalness: 0.4, alphaMap: t, alphaTest: 0.5, side: THREE.DoubleSide });
+}
+
+// Perforated grey steel sheet (the bench fronts in _artificial paradise 01 - 02): round holes
+// on an 8 mm grid, one texture tile = 25 cm, so UVs in metres repeat it 4 times a metre.
+function perforatedMaterial() {
+  const S = 256;
+  const c = document.createElement('canvas');
+  c.width = c.height = S;
+  const g = c.getContext('2d');
+  g.fillStyle = '#a3a5aa'; // lit from above only, the vertical sheet reads darker
+  g.fillRect(0, 0, S, S);
+  g.fillStyle = '#26272b';
+  const pitch = S / 32; // 32 holes per 25 cm
+  for (let y = pitch / 2; y < S; y += pitch) {
+    for (let x = pitch / 2; x < S; x += pitch) {
+      g.beginPath();
+      g.arc(x, y, pitch * 0.3, 0, Math.PI * 2);
+      g.fill();
+    }
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(4, 4);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.anisotropy = 8;
+  return new THREE.MeshStandardMaterial({ map: t, roughness: 0.55, metalness: 0.15 });
+}
+
+// A cable lying along a path of points (on the floor, down a wall).
+function cable(mat, pts, r = 0.004) {
+  const curve = new THREE.CatmullRomCurve3(pts.map(([x, y, z]) => new THREE.Vector3(x, y, z)));
+  return new THREE.Mesh(new THREE.TubeGeometry(curve, Math.max(12, pts.length * 10), r, 5, false), mat);
 }
 
 // Folding wire chair as in Room 2 (DSC_0056–0059). Faces +z at ry = 0.
@@ -149,9 +182,35 @@ export function buildProps(materials) {
     }
   }
 
-  // Grey bench along the south wall, turning up the west wall (the L on the plan)
+  // Grey bench along the south wall, turning up the west wall (the L on the plan): a dark
+  // board on a box faced with perforated steel sheet in panels (_artificial paradise 01 - 02)
   {
     const H = 0.45;
+    const perf = perforatedMaterial();
+    const seamMat = new THREE.MeshStandardMaterial({ color: 0x3a3b3f, roughness: 0.5, metalness: 0.5 });
+    // a perforated panel face: from a to b along the floor (x, z), facing out by (nx, nz)
+    const face = (ax, az, bx, bz, nx, nz) => {
+      const len = Math.hypot(bx - ax, bz - az);
+      const geo = new THREE.PlaneGeometry(len, H - 0.05);
+      const uv = geo.attributes.uv;
+      for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * len, uv.getY(i) * (H - 0.05));
+      const m = new THREE.Mesh(geo, perf);
+      m.position.set((ax + bx) / 2 + nx * 0.002, 0.02 + (H - 0.05) / 2, (az + bz) / 2 + nz * 0.002);
+      m.rotation.y = Math.atan2(nx, nz);
+      g.add(m);
+      // panel seams every ~60 cm
+      const n = Math.max(1, Math.round(len / 0.6));
+      for (let k = 1; k < n; k++) {
+        const t = k / n;
+        const s = new THREE.Mesh(new THREE.BoxGeometry(0.008, H - 0.05, 0.004), seamMat);
+        s.position.set(ax + (bx - ax) * t + nx * 0.003, 0.02 + (H - 0.05) / 2, az + (bz - az) * t + nz * 0.003);
+        s.rotation.y = Math.atan2(nx, nz);
+        g.add(s);
+      }
+    };
+    face(WX + 0.47, SZ - 0.43, EX - 0.02, SZ - 0.43, 0, -1); // long front
+    face(WX + 0.47, SZ - 0.87, WX + 0.47, SZ - 0.43, 1, 0); // front of the return
+    face(WX, SZ - 0.87, WX + 0.47, SZ - 0.87, 0, -1); // end of the return
     g.add(slab(materials.bench, WX, EX - 0.02, 0, H - 0.03, SZ - 0.43, SZ));
     g.add(slab(materials.benchTop, WX, EX, H - 0.03, H, SZ - 0.47, SZ));
     g.add(slab(materials.bench, WX, WX + 0.47, 0, H - 0.03, SZ - 0.87, SZ - 0.43));
@@ -229,6 +288,39 @@ export function buildProps(materials) {
     p.rotation.x = Math.PI / 2;
     g.add(place(p, WX + 0.03, 0.06, 4.8));
     dirtAlong(WX + 0.03, 0.06, 3.5, WX + 0.03, 0.06, 6.1);
+  }
+
+  // Cables on the floor (_artificial paradise 01 - 02): the screen's black lead down the wall
+  // to its adapter, two white power strips, and leads on to the plant's pump and the LED
+  // bars; a white lead comes down the wall from the little sensor beside the window
+  {
+    const Y = 0.005; // lying on the floor
+    const black = materials.black;
+    const white = materials.white;
+    const screenZ = 5.23;
+    const ad = [0.62, 4.98]; // the screen's adapter
+    const p1 = [1.02, 4.62]; // power strips
+    const p2 = [1.42, 4.3];
+    g.add(cable(black, [[WX + 0.03, 1.14, screenZ], [WX + 0.035, 0.6, screenZ + 0.01], [WX + 0.04, Y + 0.02, screenZ + 0.02], [0.15, Y, 5.12], [0.4, Y, 5.1], [ad[0] - 0.05, Y, ad[1]]]));
+    g.add(place(box(0.11, 0.035, 0.065, black), ad[0], 0.0175, ad[1], 0.3));
+    g.add(cable(black, [[ad[0] + 0.05, Y, ad[1] - 0.02], [0.78, Y, 4.92], [0.86, Y, 4.7], [p1[0] - 0.12, Y, p1[1] + 0.03]], 0.003));
+    for (const [[x, z], ry] of [[p1, 0.6], [p2, -0.4]]) {
+      g.add(place(box(0.3, 0.04, 0.055, white), x, 0.02, z, ry));
+      for (const o of [-0.06, 0.04]) g.add(place(box(0.035, 0.045, 0.035, black), x + Math.cos(ry) * o, 0.06, z - Math.sin(ry) * o, ry));
+    }
+    // strip to strip, and the first strip to the wall socket by the radiator
+    g.add(cable(white, [[p1[0] + 0.12, Y, p1[1] - 0.07], [1.15, Y, 4.42], [1.08, Y, 4.33], [p2[0] - 0.13, Y, p2[1] - 0.05]], 0.0045));
+    g.add(cable(white, [[p1[0] - 0.1, Y, p1[1] + 0.06], [0.55, Y, 4.5], [0.2, Y, 4.42], [WX + 0.04, Y + 0.02, 4.4], [WX + 0.03, 0.28, 4.4]], 0.0045));
+    g.add(place(box(0.03, 0.08, 0.08, white), WX + 0.015, 0.3, 4.4));
+    // from the second strip to the pump in the plant's water box and to the foot of each LED bar
+    g.add(cable(black, [[p2[0] + 0.12, Y, p2[1] - 0.04], [1.7, Y, 4.12], [1.85, Y, 3.95], [PLANT.x - 0.15, Y, PLANT.z + 0.12], [PLANT.x - 0.1, 0.1, PLANT.z + 0.05]], 0.003));
+    for (const [i, bar] of BARS.entries()) {
+      g.add(cable(i ? white : black, [[p2[0] + 0.1, Y, p2[1] + 0.02], [1.65 + i * 0.2, Y, 4.35 - i * 0.05], [bar.x - 0.15, Y, bar.z + 0.1], [bar.x - 0.02, Y, bar.z], [bar.x - 0.02, 0.15, bar.z]], 0.003));
+    }
+    // the sensor beside the first window and its lead down the pier
+    const sensorZ = R1_NICHES[1].z0 - 0.08;
+    g.add(place(cyl(0.035, 0.035, 0.05, white, 16).rotateZ(Math.PI / 2), WX + 0.025, 2.3, sensorZ));
+    g.add(cable(white, [[WX + 0.02, 2.27, sensorZ], [WX + 0.02, 1.2, sensorZ - 0.01], [WX + 0.025, Y + 0.02, sensorZ - 0.02], [0.2, Y, 5.25], [0.5, Y, 4.85], [p1[0] - 0.13, Y, p1[1] + 0.01]], 0.0045));
   }
 
   // White pipes running up beside the doorway to Room 2 (DSC_0021)

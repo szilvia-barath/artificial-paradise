@@ -23,7 +23,7 @@ const A = P(0.84, 4.51); // south-west end of the channel, by the monitor
 const B = P(1.64, 2.72); // north-east end, beside the plant
 export const PIPE = { a: A, b: B, y: 1.0 };
 export const PLANT = P(1.8, 3.42);
-const BARS = [P(1.9, 3.14), P(2.0, 3.7)];
+export const BARS = [P(1.9, 3.14), P(2.0, 3.7)];
 const CEIL = 3.0;
 
 function rng(seed) {

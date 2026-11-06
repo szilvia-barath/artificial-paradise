@@ -69,12 +69,33 @@ const ARCH = 2.15;
 // Blocks lower than 1.2 m still collide (counters, half walls); y0 > 1.2 (lintels) don't.
 const T = 0.4; // outer wall thickness
 
+// Room 1's street wall (_artificial paradise 01 - 02): each high window sits at the back of a
+// niche that runs from the floor to a lintel at 2.6 m, its radiator below it. Measured on the
+// photo against the radiators and the 30 cm floor tiles.
+export const R1_NICHES = [
+  { z0: 2.98, z1: 4.08, win: { z: 3.58, w: 0.92 } }, // the one with the round vent
+  { z0: 5.52, z1: 6.54, win: { z: 5.97, w: 0.84 } }, // above the small radiator by the bench
+];
+export const NICHE = { depth: 0.22, top: 2.6, sill: 1.7 };
+function streetWall(z0, z1) {
+  const out = [];
+  let z = z0;
+  for (const n of R1_NICHES) {
+    out.push({ x0: R1.west - T, x1: R1.west, z0: z, z1: n.z0, y1: 3.0, mat: 'whiteBrick' });
+    out.push({ x0: R1.west - T, x1: R1.west - NICHE.depth, z0: n.z0, z1: n.z1, y1: NICHE.top, mat: 'whiteBrick' });
+    out.push({ x0: R1.west - T, x1: R1.west, z0: n.z0, z1: n.z1, y0: NICHE.top, y1: 3.0, mat: 'whiteBrick' });
+    z = n.z1;
+  }
+  out.push({ x0: R1.west - T, x1: R1.west, z0: z, z1: z1, y1: 3.0, mat: 'whiteBrick' });
+  return out;
+}
+
 export const BLOCKS = [
   // ---------- Room 1 ----------
   // Layout from the 360° panorama (camera solved from the corners, the four canvases of
   // known size and the floor line); overall size from R1 above.
-  // west wall (street side), with the opening the stairs climb through
-  { x0: R1.west - T, x1: R1.west, z0: 1.95, z1: R1.D + T, y1: 3.0, mat: 'whiteBrick' },
+  // west wall (street side), with the opening the stairs climb through and the two window niches
+  ...streetWall(1.95, R1.D + T),
   { x0: R1.west - T, x1: R1.west, z0: -T, z1: 0, y1: 3.0, mat: 'whiteBrick' },
   // north wall
   { x0: R1.west - T, x1: R1.east, z0: -T, z1: 0, y1: 3.0, mat: 'whiteBrick' },

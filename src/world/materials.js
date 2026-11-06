@@ -197,7 +197,8 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     leaf: new THREE.MeshStandardMaterial({ color: 0x9ccf5a, roughness: 0.55, emissive: 0x1c3a0a }),
     led: new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 4, 4.2) }),
     warmBulb: new THREE.MeshBasicMaterial({ color: new THREE.Color(5, 3.6, 2) }),
-    windowGlass: new THREE.MeshStandardMaterial({ color: 0x1c2430, emissive: 0x18243a, roughness: 0.2, metalness: 0.3 }),
+    // frosted basement glass in daylight, pale lilac as in the photos
+    windowGlass: new THREE.MeshStandardMaterial({ color: 0xd9d5e6, emissive: 0x9894ad, roughness: 0.7 }),
     curtain: new THREE.MeshStandardMaterial({ color: 0xcdc7bb, roughness: 1, side: THREE.DoubleSide }),
     paper: new THREE.MeshStandardMaterial({ color: 0xf6f5f1, roughness: 0.9 }),
   };

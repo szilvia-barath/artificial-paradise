@@ -243,13 +243,15 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
         holder.add(bez);
         if (work.monitor) {
           // monitor.png: 2238 x 3217 px, its opening (the screen) 1863 x 2243 px, centred
-          // 16 px left of and 9.5 px above the image's centre
+          // 16 px left of and 9.5 px above the image's centre; the opening is fitted to the
+          // screen (the photographed panel is a little narrower than the drawing)
+          const kx = w / 1863;
           const k = h / 2243;
           const frame = new THREE.Mesh(
-            new THREE.PlaneGeometry(2238 * k, 3217 * k),
+            new THREE.PlaneGeometry(2238 * kx, 3217 * k),
             new THREE.MeshStandardMaterial({ map: prepTex(loader.load(url(`${work.monitor}.webp`))), transparent: true, alphaTest: 0.4, roughness: 0.4, metalness: 0.5 }),
           );
-          frame.position.set(16 * k, -9.5 * k, 0.045);
+          frame.position.set(16 * kx, -9.5 * k, 0.045);
           holder.add(frame);
         }
         const mat = new THREE.ShaderMaterial({
@@ -262,7 +264,17 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
           vertexShader: screenVert,
           fragmentShader: screenFrag,
         });
-        const screen = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat);
+        const screenGeo = new THREE.PlaneGeometry(w, h);
+        // footage of another shape is cropped to the screen, not stretched
+        if (work.mediaAspect) {
+          const s = w / h / work.mediaAspect;
+          const uv = screenGeo.attributes.uv;
+          for (let i = 0; i < uv.count; i++) {
+            if (s < 1) uv.setX(i, 0.5 + (uv.getX(i) - 0.5) * s);
+            else uv.setY(i, 0.5 + (uv.getY(i) - 0.5) / s);
+          }
+        }
+        const screen = new THREE.Mesh(screenGeo, mat);
         screen.position.z = 0.0425;
         screen.userData.work = work;
         holder.add(screen);

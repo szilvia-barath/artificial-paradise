@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
-import { OBSTACLES, R1 } from './layout.js';
+import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
 import { dirtAlong } from './surface.js';
 
 // Furniture and fixtures, placed from the photos. Kept low-poly; static meshes are
@@ -189,26 +189,46 @@ export function buildProps(materials) {
     place(r, x, y, z, ry);
     g.add(r);
   };
-  radiator(WX + 0.08, 3.5, Math.PI / 2, 0.94);
-  radiator(WX + 0.08, SZ - 1.09, Math.PI / 2, 0.42);
+  // the two on the street wall stand in the window niches
+  const NX = WX - NICHE.depth; // back of the niches
+  radiator(NX + 0.07, 3.53, Math.PI / 2, 0.94);
+  radiator(NX + 0.07, SZ - 1.09, Math.PI / 2, 0.42);
   radiator(EX - 0.08, 5.59, -Math.PI / 2, 0.94);
 
-  // High basement windows on the street wall (night: dark glass): the one with the
-  // round vent beside the stairs, the other above the small radiator by the bench
-  for (const [z, w] of [[3.69, 0.81], [SZ - 1.06, 0.75]]) {
-    const y0 = 1.78;
-    const y1 = 2.56;
-    g.add(slab(materials.whiteBrick, WX - 0.4, WX + 0.06, y0 - 0.06, y0, z - w / 2 - 0.06, z + w / 2 + 0.06)); // sill
-    g.add(slab(materials.white, WX - 0.05, WX + 0.02, y0, y1, z - w / 2, z + w / 2)); // frame
-    g.add(slab(materials.windowGlass, WX + 0.02, WX + 0.03, y0 + 0.05, y1 - 0.05, z - w / 2 + 0.05, z + w / 2 - 0.05));
-    for (let k = 1; k < 4; k++) g.add(slab(materials.white, WX + 0.03, WX + 0.045, y0 + 0.05, y1 - 0.05, z - w / 2 + (k * w) / 4 - 0.012, z - w / 2 + (k * w) / 4 + 0.012));
-    g.add(slab(materials.white, WX + 0.03, WX + 0.045, (y0 + y1) / 2 - 0.012, (y0 + y1) / 2 + 0.012, z - w / 2 + 0.05, z + w / 2 - 0.05));
+  // High basement windows at the back of the niches (_artificial paradise 01 - 02): a thick
+  // white frame from the sill to the lintel, frosted daylight glass behind a grille of grey
+  // bars (4 x 5 panes), a stepped sill below
+  const barMat = new THREE.MeshStandardMaterial({ color: 0x55585f, roughness: 0.6, metalness: 0.3 });
+  for (const { win: { z, w } } of R1_NICHES) {
+    const y0 = NICHE.sill;
+    const y1 = NICHE.top;
+    const f = 0.055; // frame width
+    g.add(slab(materials.white, NX, NX + 0.05, y0, y1, z - w / 2, z + w / 2)); // frame
+    g.add(slab(materials.windowGlass, NX + 0.05, NX + 0.052, y0 + f, y1 - f, z - w / 2 + f, z + w / 2 - f));
+    for (let k = 1; k < 4; k++) {
+      const bz = z - w / 2 + f + (k * (w - 2 * f)) / 4;
+      g.add(slab(barMat, NX + 0.052, NX + 0.066, y0 + f, y1 - f, bz - 0.01, bz + 0.01));
+    }
+    for (let k = 1; k < 5; k++) {
+      const by = y0 + f + (k * (y1 - y0 - 2 * f)) / 5;
+      g.add(slab(barMat, NX + 0.052, NX + 0.066, by - 0.01, by + 0.01, z - w / 2 + f, z + w / 2 - f));
+    }
+    // the sill: two shallow steps out to the face of the wall
+    g.add(slab(materials.white, NX, WX - 0.08, y0 - 0.04, y0, z - w / 2 - 0.02, z + w / 2 + 0.02));
+    g.add(slab(materials.white, NX, WX, y0 - 0.09, y0 - 0.04, z - w / 2 - 0.02, z + w / 2 + 0.02));
   }
-  // the round vent in the first window
+  // the round vent in the window by the stairs
   {
-    const vent = cyl(0.075, 0.075, 0.02, new THREE.MeshStandardMaterial({ color: 0x2a3550, roughness: 0.4 }), 20);
+    const vent = cyl(0.067, 0.067, 0.02, new THREE.MeshStandardMaterial({ color: 0x2a3550, roughness: 0.4 }), 20);
     vent.rotation.z = Math.PI / 2;
-    g.add(place(vent, WX + 0.05, 2.36, 3.62));
+    g.add(place(vent, NX + 0.075, 2.27, R1_NICHES[0].win.z));
+  }
+  // the heating pipe along the foot of the street wall, between the radiators
+  {
+    const p = cyl(0.016, 0.016, 2.6, materials.white, 8);
+    p.rotation.x = Math.PI / 2;
+    g.add(place(p, WX + 0.03, 0.06, 4.8));
+    dirtAlong(WX + 0.03, 0.06, 3.5, WX + 0.03, 0.06, 6.1);
   }
 
   // White pipes running up beside the doorway to Room 2 (DSC_0021)

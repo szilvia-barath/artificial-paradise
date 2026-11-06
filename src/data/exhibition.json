@@ -107,10 +107,10 @@
       "hang": {
         "face": "+x",
         "at": -0.15,
-        "along": 5.29,
-        "y": 1.35,
-        "w": 0.3324,
-        "h": 0.4
+        "along": 5.23,
+        "y": 1.33,
+        "w": 0.282,
+        "h": 0.369
       },
       "video": {
         "loop": "video/w03-screen.mp4",
@@ -122,7 +122,8 @@
         ]
       },
       "desc": "paradise-factory",
-      "monitor": "img/monitor-frame"
+      "monitor": "img/monitor-frame",
+      "mediaAspect": 0.8313
     },
     {
       "id": "w04-human-as-error-iii",

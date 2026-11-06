@@ -67,7 +67,7 @@
       "image": "img/w03-paradise-factory",
       "photo": "_01_panorama",
       "anchor": {
-        "x": 1.85,
+        "x": 2.08,
         "y": 1.1,
         "z": 3.66
       },
@@ -412,13 +412,13 @@
       "image": "img/w16-let-it-flow-a",
       "photo": "DSC_0113",
       "anchor": {
-        "x": 23.61,
+        "x": 23.03,
         "y": 0.3,
-        "z": 3.77
+        "z": 3.62
       },
       "view": {
-        "x": 19.9,
-        "z": 4.6
+        "x": 18.3,
+        "z": 4.9
       },
       "video": {
         "loop": "video/w16-projection.mp4",

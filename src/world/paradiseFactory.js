@@ -12,9 +12,11 @@ import { OBSTACLES, R1 } from './layout.js';
 //    rack, the artist's own 3D model, fed from a hanging bottle, between two
 //    floor-to-ceiling LED bars standing north and south of it.
 // Positions are in the panorama's solved frame (camera bearings exact, distances from
-// the floor line and the channel's 1 m height), scaled to the measured room.
-
-const sx = R1.W / 4.5;
+// the floor line and the channel's 1 m height), scaled to the measured room, and across the
+// room to the artist's measure: the installation is 2.5 x 2.5 m, from the screen on the
+// window wall to the far LED bar (2.5 m) and from the channel's north end to the screen.
+const BAR_HALF = 0.0175; // half the LED bar's width
+const sx = (2.5 - BAR_HALF) / 2.0; // the far bar stands at 2.0 in the panorama frame
 const sz = R1.D / 6.55;
 const P = (x, z) => ({ x: R1.west + x * sx, z: z * sz });
 const A = P(0.84, 4.51); // south-west end of the channel, by the monitor
@@ -329,7 +331,7 @@ export function buildParadiseFactory(materials, manager) {
       const post = new THREE.Group();
       post.position.set(bar.x, 0, bar.z);
       post.rotation.y = toPlant;
-      post.add(new THREE.Mesh(new THREE.BoxGeometry(0.035, CEIL - 0.02, 0.025), materials.black).translateY(CEIL / 2));
+      post.add(new THREE.Mesh(new THREE.BoxGeometry(BAR_HALF * 2, CEIL - 0.02, 0.025), materials.black).translateY(CEIL / 2));
       post.add(new THREE.Mesh(new THREE.BoxGeometry(0.022, CEIL - 0.12, 0.006), materials.led).translateY(CEIL / 2).translateZ(0.014));
       g.add(post);
     }

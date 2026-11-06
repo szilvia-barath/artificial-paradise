@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { wallFrame, ROOMS } from './layout.js';
 import { PLANT, PIPE } from './paradiseFactory.js';
+import RIVER from '../data/river.json';
 import { t } from '../i18n.js';
 import { createVideo, scheduleVideos } from './video.js';
 
@@ -90,7 +91,8 @@ const HIT_BOXES = {
   ],
   'w16-let-it-flow': [
     [25.33, 1.15, 3.73, 0.12, 2.3, 4.0], // projection on the end wall
-    [23.61, 0.06, 3.77, 3.58, 0.14, 1.21], // the melted plastic river
+    // the melted plastic river
+    [RIVER.xTop - RIVER.lengthM / 2, 0.06, RIVER.zLeft + RIVER.widthM / 2, RIVER.lengthM, 0.14, RIVER.widthM],
   ],
 };
 

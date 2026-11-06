@@ -26,7 +26,8 @@ const WALL_GAIN = 1.3; // the file's trees are mid grey; a projector in the dark
 const WALL_TINT = new THREE.Color(0.88, 1, 1); // the lamp is cool in the photos
 const FLOOR_TINT = new THREE.Color(1, 1.12, 1.32);
 const FLOOR_PEAK = 0.34; // the black floor returns far less of the lamp than white plastic does
-const LAMP = new THREE.Vector3(23.6, 2.8, 3.7); // over the river
+// over the middle of the river
+const LAMP = new THREE.Vector3(RIVER.xTop - RIVER.lengthM / 2, 2.8, RIVER.zLeft + RIVER.widthM / 2);
 const AMBIENT = 0.14; // the little room light the plastic gets besides the projection
 const P = RIVER.projection;
 

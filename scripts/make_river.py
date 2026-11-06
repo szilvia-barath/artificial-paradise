@@ -5,10 +5,10 @@
 
 The composite is cut out (alpha) and laid out in the frame of the floor video Let it Flow
 (both 16:9), on the video's own river, so placing the frame places the plastic and the two
-coincide. Scale: 606 px/m, at which its plastic covers the same area as in the first
-composite (PLANE copy.png, 1100 px/m from its 30 cm floor tiles); the frame is then 5.28 m
-long, and the river 3.5 m, as measured on DSC_0113 and _artificial paradise 04 - 01. Image
-left = towards the end wall (east), image up = south; the wall tip touches the wall.
+coincide. Scale: the installation is 4 x 7 m (the artist's measure), so the frame is 7 m
+long and, at 16:9, 3.94 m wide: the room's full width, centred across it. The plastic
+scales with it (about 4.7 m long). Image left = towards the end wall (east), image up =
+south; the wall tip touches the wall.
 
 The relief is read from the photo: soft lumps from the shape and the broad light and shade,
 folds from the finer shading, thickness growing from the thin strip at the wall (~3 cm) to
@@ -24,16 +24,17 @@ from scipy import ndimage as ndi
 
 Image.MAX_IMAGE_PIXELS = None
 src, outdir, meta_path = sys.argv[1], sys.argv[2], sys.argv[3]
-PPM = 605.8                    # image pixels per metre
+FRAME_M = 7.0                  # length of the floor video's frame on the floor, metres
 WALL_X = 25.38                 # room x of the wall tip
-Z_CENTRE = 3.85                # room z of the frame's centre (the tip at z 4.25, as in 04 - 01)
+Z_CENTRE = 3.73                # room z of the frame's centre: the middle of the 4 m room
 HMAX = 0.13                    # thickest lumps, metres
 CELL = 0.008                   # geometry grid, metres
-k = PPM / 1100                 # filter sizes below were tuned at 1100 px/m
+k = 605.8 / 1100               # filter sizes in image pixels, as tuned on this composite
 gauss = ndi.gaussian_filter
 
 full = np.asarray(Image.open(src)).astype(np.float32)
 FH, FW = full.shape[:2]
+PPM = FW / FRAME_M             # image pixels per metre
 mask = ndi.binary_opening(full[..., 3] > 127, iterations=2)
 lab, n = ndi.label(mask)
 sizes = ndi.sum(mask, lab, range(1, n + 1))

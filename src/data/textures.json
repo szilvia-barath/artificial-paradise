@@ -1,17 +1,20 @@
 {
  "brick-warm": {
-  "w": 0.795,
-  "h": 1.575,
-  "photo": "DSC_0061"
+  "w": 1.088,
+  "h": 2.156,
+  "courses": 28,
+  "source": "Drive folder 1i0rrs-Q1zXtG1YnOwbJPMsl5C3N5Fq5C, bump derived from the colour"
  },
  "brick-grey": {
-  "w": 1.205,
-  "h": 0.55,
-  "photo": "DSC_0087"
+  "w": 2.363,
+  "h": 1.078,
+  "courses": 14,
+  "source": "Drive folder 1i0rrs-Q1zXtG1YnOwbJPMsl5C3N5Fq5C, bump derived from the colour"
  },
  "brick-white": {
-  "w": 1.3,
-  "h": 0.88,
-  "photo": "DSC_0074"
+  "w": 1.595,
+  "h": 1.078,
+  "courses": 14,
+  "source": "Drive folder 1i0rrs-Q1zXtG1YnOwbJPMsl5C3N5Fq5C, bump as supplied"
  }
 }

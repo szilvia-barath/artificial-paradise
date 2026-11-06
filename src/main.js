@@ -68,7 +68,7 @@ const arch = buildArchitecture(materials);
 scene.add(arch.group);
 const props = buildProps(materials);
 scene.add(props.group);
-scene.add(buildParadiseFactory(materials));
+scene.add(buildParadiseFactory(materials, manager));
 const letItFlow = buildLetItFlow(manager);
 scene.add(letItFlow.group);
 applyPlanAO(materials, arch.segments, { lowPower }); // after props and installations add their footprints

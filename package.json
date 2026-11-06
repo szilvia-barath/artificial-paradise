@@ -9,14 +9,19 @@
     "build": "vite build",
     "preview": "vite preview",
     "images": "node scripts/optimize-images.mjs",
-    "textures": "python3 scripts/make_textures.py"
+    "textures": "node scripts/make_bricks.mjs",
+    "plant": "node scripts/make_plant.mjs"
   },
   "dependencies": {
     "postprocessing": "^6.39.5",
     "three": "^0.186.1"
   },
   "devDependencies": {
+    "@gltf-transform/core": "^4.5.1",
+    "@gltf-transform/extensions": "^4.5.1",
+    "@gltf-transform/functions": "^4.5.1",
     "ktx2-encoder": "^0.6.0",
+    "meshoptimizer": "^0.22.0",
     "sharp": "^0.35.5",
     "vite": "^8.3.5"
   }

@@ -2,8 +2,9 @@ import * as THREE from 'three';
 import texMeta from '../data/textures.json';
 import { initTextures, photoTexture } from './textures.js';
 
-// Materials. Wall bricks are real textures cut from the exhibition photos
-// (scripts/make_textures.py); tiles, plaster and planks are drawn into canvases.
+// Materials. Wall bricks are the redrawn brick patterns from the Drive folder, scaled so a
+// course is 7.7 cm as measured in the gallery (src/data/textures.json); tiles, plaster and
+// planks are drawn into canvases.
 // Everything is tiled per metre (geometry UVs are in metres, see uvMetres()).
 
 function rng(seed) {
@@ -108,8 +109,7 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
   // Strong anisotropic filtering keeps floor tiles and brick sharp at grazing angles.
   const aniso = Math.min(lowPower ? 4 : 16, renderer.capabilities.getMaxAnisotropy());
   initTextures(renderer, manager);
-  // Brick textures cut from the photos by scripts/make_textures.py; the json gives the
-  // real size in metres of one tile so the courses come out at 7.7 cm.
+  // The json gives the real size in metres of one brick tile and its number of courses.
   const photoTex = (name, srgb) => photoTexture(name, (t) => {
     const m = texMeta[name.replace('-bump', '')];
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
@@ -121,7 +121,7 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
   for (const name of Object.keys(texMeta)) bricks[name] = { map: photoTex(name, true), bump: photoTex(`${name}-bump`, false) };
   // Shader variation (surface.js): texture offsets are kept to whole brick courses, so the
   // mortar lines stay straight where two offsets blend.
-  const course = (name) => [0, 1 / Math.round(texMeta[name].h / 0.077)];
+  const course = (name) => [0, 1 / (texMeta[name].courses || Math.round(texMeta[name].h / 0.077))];
 
   const tiles = tileCanvases();
   const tileAlbedo = tex(tiles.albedo, true, 1.2, aniso);
@@ -195,8 +195,6 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     glass: new THREE.MeshStandardMaterial({ color: 0xcfe2e8, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false }),
     clearPlastic: new THREE.MeshStandardMaterial({ color: 0xe8f0f2, roughness: 0.15, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide }),
     leaf: new THREE.MeshStandardMaterial({ color: 0x9ccf5a, roughness: 0.55, emissive: 0x1c3a0a }),
-    zzLeaf: new THREE.MeshStandardMaterial({ color: 0x3f7a2c, roughness: 0.35, metalness: 0.05, side: THREE.DoubleSide }),
-    zzStem: new THREE.MeshStandardMaterial({ color: 0x6f9a3e, roughness: 0.5 }),
     led: new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 4, 4.2) }),
     warmBulb: new THREE.MeshBasicMaterial({ color: new THREE.Color(5, 3.6, 2) }),
     windowGlass: new THREE.MeshStandardMaterial({ color: 0x1c2430, emissive: 0x18243a, roughness: 0.2, metalness: 0.3 }),

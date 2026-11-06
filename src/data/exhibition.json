@@ -87,7 +87,8 @@
             "label": "documentation"
           }
         ]
-      }
+      },
+      "size": "250 × 250 cm"
     },
     {
       "id": "w03-screen",
@@ -135,7 +136,7 @@
       "photo": "DSC_0029",
       "hang": {
         "face": "-z",
-        "at": 7.0,
+        "at": 7,
         "along": 1.34,
         "y": 1.4,
         "w": 1.2,
@@ -155,7 +156,7 @@
       "photo": "DSC_0026",
       "hang": {
         "face": "-z",
-        "at": 7.0,
+        "at": 7,
         "along": 3.57,
         "y": 1.38,
         "w": 1.2,
@@ -189,7 +190,8 @@
           }
         ],
         "sound": true
-      }
+      },
+      "desc": "artificial-paradise-videos"
     },
     {
       "id": "w07-artificial-paradise-ii",
@@ -221,14 +223,15 @@
           }
         ],
         "sound": true
-      }
+      },
+      "desc": "artificial-paradise-videos"
     },
     {
       "id": "w08-wiena-wrong-landscape-ii",
       "no": 8,
       "room": "r3",
       "type": "video",
-      "title": "Wiena Wrong Landscape II",
+      "title": "Wiena Wrong Landscape I",
       "year": "2023",
       "image": "img/w08-wiena-wrong-landscape-ii",
       "photo": "DSC_0089",
@@ -287,8 +290,7 @@
         "along": 5.236,
         "y": 1.5,
         "w": 0.5,
-        "h": 0.8,
-        "label": "none"
+        "h": 0.8
       },
       "desc": "landscape"
     },
@@ -309,7 +311,8 @@
         "y": 1.55,
         "w": 0.5,
         "h": 0.5
-      }
+      },
+      "desc": "artificial-paradise-prints"
     },
     {
       "id": "w12-artificial-paradise-ii-print",
@@ -328,7 +331,8 @@
         "y": 1.55,
         "w": 0.5,
         "h": 0.5
-      }
+      },
+      "desc": "artificial-paradise-prints"
     },
     {
       "id": "w13-artificial-paradise-iii-print",
@@ -347,7 +351,8 @@
         "y": 1.55,
         "w": 0.5,
         "h": 0.5
-      }
+      },
+      "desc": "artificial-paradise-prints"
     },
     {
       "id": "w14-warsaw-g24-ii",
@@ -374,7 +379,7 @@
       "no": 15,
       "room": "r4",
       "type": "video",
-      "title": "Wiena Wrong Landscape I",
+      "title": "Wiena Wrong Landscape II",
       "year": "2023",
       "image": "img/w15-wiena-wrong-landscape-i",
       "photo": "DSC_0120",
@@ -424,7 +429,8 @@
       "situ": [
         "img/w16-let-it-flow-a",
         "img/w16-let-it-flow-b"
-      ]
+      ],
+      "size": "400 × 700 cm"
     },
     {
       "id": "w17-natural-life",
@@ -452,7 +458,8 @@
           }
         ],
         "sound": true
-      }
+      },
+      "desc": "natural-life"
     }
   ],
   "sheets": [

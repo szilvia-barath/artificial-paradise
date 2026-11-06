@@ -1,5 +1,6 @@
 // KTX2 (Basis Universal) versions of the photo textures in public/tex, which the GPU keeps
-// compressed (ETC1S, about a sixth of the memory of the decoded .webp), with mipmaps. The// normal map uses Basis' normal-map mode. The .webp files stay as the fallback.
+// compressed (ETC1S, about a sixth of the memory of the decoded .webp), with mipmaps. The
+// normal map uses Basis' normal-map mode. The .webp files stay as the fallback.
 // Also copies three's Basis transcoder to public/basis for KTX2Loader.
 //   node scripts/make_ktx2.mjs
 import { readFile, writeFile, mkdir, copyFile } from 'node:fs/promises';

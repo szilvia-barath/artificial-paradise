@@ -21,11 +21,12 @@ npm run preview    # serve dist/
 - `scripts/make_river.py`: rebuilds the melted plastic river of Let it Flow from the artist's top-down image.
 - `src/world/layout.js`: floor plan (wall blocks, doorways, ceilings).
 - `npm run images` re-cuts the images listed in `scripts/crops.json`: the reproductions and installation photos from `reproductions/` (the room folders from the exhibition's Drive folder, not in git), the rest from the original photos (DSC_*.JPG must be in the repo root).
-- `npm run textures` re-cuts the brick wall textures from the photos (Python 3 with Pillow and NumPy).
+- `npm run textures -- <folder>` makes the brick wall textures from the redrawn patterns (the Drive folder's `brick-*-color.png` / `-bump.png`), sized for 7.7 cm courses, and their KTX2 versions.
+- `npm run plant -- <file.glb>` prepares the artist's 3D model of the Paradise Factory plant (`public/models/paradise-factory-plant.glb`).
 
 ## Languages
 
-English and Hungarian, switched from the navbar without reloading (the in-world wall labels and text sheets are redrawn too). The first visit follows the browser language; `?lang=en` / `?lang=hu` links open a given language, and a choice made in the navbar is remembered.
+English and Hungarian, switched from the navbar without reloading (the in-world text sheets are redrawn too). The first visit follows the browser language; `?lang=en` / `?lang=hu` links open a given language, and a choice made in the navbar is remembered.
 
 ## Deploy
 

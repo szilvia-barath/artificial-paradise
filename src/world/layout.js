@@ -112,7 +112,7 @@ export const BLOCKS = [
   // ---------- Room 3 + Room 4 (one long room) ----------
   // north wall: painted grey brick in Room 3, bare brick in Room 4 (lit photo of the empty room)
   { x0: 10.2, x1: 13.45, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },
-  // bricked-up opening right of Wiena Wrong Landscape II, recessed 14 cm (DSC_0088–0093)
+  // bricked-up opening right of #8 Wiena Wrong Landscape I, recessed 14 cm (DSC_0088–0093)
   { x0: 13.45, x1: 15.05, z0: 1.33, z1: 1.73, y1: 1.25, mat: 'greyBrick' },
   { x0: 13.45, x1: 15.05, z0: 1.33, z1: 1.59, y0: 1.25, y1: 2.9, mat: 'greyBrick', faces: { pz: 'greyBrickShade' } },
   { x0: 15.05, x1: 15.6, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },

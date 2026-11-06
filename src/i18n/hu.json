@@ -170,7 +170,7 @@
       "© OpenStreetMap-közreműködők (ODbL)"
     ]
   ],
-  "behindTheScenes": "Az alaprajz a galéria saját teremlapja alapján készült, teljes hossza egyezik az épület OpenStreetMap-körvonalával. A termek 360°-os panorámafotók alapján vannak felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik a terem mérete, az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falak téglái a fotókból vannak kivágva: egy szkript a 7,7 cm-es téglasorokból számolja ki a méretarányt, kiszűri a galéria világítását, és a fugák mentén illeszti a foltokat, hogy hézagmentesen ismétlődjenek. A festmények és a nyomatok a művész saját reprodukciói, a képernyőkön a művész videói futnak, a saját hangjukkal. A Paradise Factory és a Let it Flow műanyag folyója a fotók alapján készült modell. Three.js és Vite, backend nélkül; a terem alapzaját Web Audio szintetizálja.",
+  "behindTheScenes": "Az alaprajz a galéria saját teremlapja alapján készült, teljes hossza egyezik az épület OpenStreetMap-körvonalával. A termek 360°-os panorámafotók alapján vannak felmérve: a kamera helyzetét a sarkokból és a négy ismert méretű vászonból visszaszámolva kirajzolódik a terem mérete, az ajtó körüli falmélyedés, valamint az ablakok, a képernyő és a növény helye. Minden festmény a megadott vászonméretben és a mért magasságban lóg. A falakon újrarajzolt téglaminták láthatók, a galériában mért 7,7 cm-es téglasorokhoz méretezve. A festmények és a nyomatok a művész saját reprodukciói, a képernyőkön a művész videói futnak, a saját hangjukkal. A Paradise Factory növénye a művész saját 3D-modellje; az installáció többi része és a Let it Flow műanyag folyója a fotók alapján készült modell. Three.js és Vite, backend nélkül; a terem alapzaját Web Audio szintetizálja.",
   "rooms": {
     "r1": {
       "name": "1. terem",
@@ -275,9 +275,30 @@
         "A tárgyegyüttes a „folyás” és a „hulladékáramlás” kettősségére épül: a Tisza mint természetes vízfolyam és a műanyag mint mesterségesen létrehozott, de már kontrollálhatatlan anyagi folyamat egymásra rétegződik. A hulladék nem eltűnik, hanem új formát keres – a hőpisztollyal történő olvasztás során a talált tárgyak részben elveszítik eredeti funkciójukat, miközben új, átmeneti plasztikai állapotba kerülnek. Így a „használhatatlan” anyagok új műtárgyként értelmeződnek újra.",
         "A Let it Flow így nem csupán egy installáció, hanem egy anyagkörforgást követő vizuális protokoll: a szennyezésből származó tárgyak újrakontextualizálása, amelyben a természetes és mesterséges rendszerek határai elmosódnak."
       ]
+    },
+    "artificial-paradise-videos": {
+      "heading": "A videókról",
+      "text": [
+        "Az Artificial Paradise című sorozathoz kapcsolódó két videómunka a mesterséges természeti környezetek és az ember által létrehozott ökoszisztémák világát vizsgálja. Az egyik videó Szingapúr futurisztikus parkjaira és vertikális kertjeire koncentrál, míg a másik a cornwalli Eden Project hatalmas, mesterséges biomjainak világát dolgozza fel.",
+        "A videókban a természet és az ipari civilizáció hangjai keverednek: mesterségesen létrehozott természethangok, valamint gyári zajok visszafelé lejátszott és átalakított hangfelvételei alkotnak egy sajátos, idegenszerű hangkörnyezetet. A képi világ töredezett, időnként osztott képernyős megjelenítéssel, visszafelé lejátszott felvételekkel és megváltoztatott időbeli folyamatokkal bontja meg a megszokott valóságérzékelést.",
+        "A két videó egy lehetséges jövő vízióját fogalmazza meg, amelyben a természet már nem feltétlenül önálló ökológiai rendszerként, hanem ember által tervezett, fenntartott és szabályozott környezetként létezik. A mesterséges paradicsom így egyszerre válik a természet megőrzésének ígéretévé és annak elvesztésére utaló, bizonytalan jövőképévé."
+      ]
+    },
+    "artificial-paradise-prints": {
+      "heading": "A sorozatról",
+      "text": [
+        "Az Artificial Paradise című sorozat a nagyvárosi környezetben létrehozott mesterséges természeti terek jelenségét vizsgálja. A világ különböző pontjain található monumentális parkok, vertikális kertek és építészeti struktúrák – amelyek a természetet a városi infrastruktúra részévé teszik – egyszerre jelennek meg a természethez való visszatérés kísérleteiként és annak mesterséges helyettesítőiként.",
+        "A sorozat egy lehetséges jövőképet vetít előre, amelyben az urbanizáció, a klímaváltozás és az emberi tevékenység következtében a természetes környezet egyre inkább háttérbe szorul, és az ember már csak mesterségesen létrehozott, gondosan szabályozott ökoszisztémákkal találkozik. Ebben az összefüggésben a Paradise nem feltétlenül egy ideális állapotot jelöl, hanem egy ellentmondásos utópiát: a természet megőrzésének és egyúttal elvesztésének szimbólumát."
+      ]
+    },
+    "natural-life": {
+      "heading": "A műről",
+      "text": [
+        "A Natural Life című videómunka a Let It Flow projekt részeként egy kőfal repedéseiből előtörő páfrányok és mohák apró, ismétlődő életjelenségét mutatja be. A videóloop a természet egy elszigetelt szeletét jeleníti meg, amely a mesterséges és épített környezetben is képes megkapaszkodni és fennmaradni. A munka a projektben megjelenő, részben a Tisza folyóból származó műanyaghulladékból, illetve saját háztartási hulladékból megolvasztott plasztikobjektumok ellenpontjaként jelenik meg. A két anyagi és vizuális világ egymás mellé helyezése a természet és az emberi tevékenység által létrehozott környezetszennyezés ellentmondására irányítja a figyelmet. A Natural Life így egyfajta pszeudotermészeti jelképként értelmezhető: a természet törékeny jelenlétét idézi meg egy olyan környezetben, amelyet egyre inkább az ember által hátrahagyott anyagok határoznak meg."
+      ]
     }
   },
-  "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról származnak",
+  "source": "A címek, méretek, technikák és évszámok a galériában kifüggesztett teremlapról származnak, a művész javításaival",
   "tourIntro": "Le a lépcsőn, a MAMŰ pincéjébe: KristofLab Artificial Paradise című kiállítása, 2025. január 10-31.",
   "openingSpeech": {
     "author": "Zemlényi-Kovács Barnabás",

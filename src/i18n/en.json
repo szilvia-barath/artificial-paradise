@@ -172,7 +172,7 @@
       "© OpenStreetMap contributors (ODbL)"
     ]
   ],
-  "behindTheScenes": "The floor plan is traced from the gallery's own room sheet and its overall length matches the building's outline on OpenStreetMap. Rooms are measured from 360° panorama photos: solving the camera position from the corners and the four canvases of known size gives the room's real size, the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls is cut from the photographs: a script measures the 7.7 cm brick courses for scale, divides out the gallery lighting and stitches each patch so it tiles along the mortar joints. The paintings and prints are the artist’s own reproductions, and the screens play the artist's videos with their own sound. Paradise Factory and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
+  "behindTheScenes": "The floor plan is traced from the gallery's own room sheet and its overall length matches the building's outline on OpenStreetMap. Rooms are measured from 360° panorama photos: solving the camera position from the corners and the four canvases of known size gives the room's real size, the recess around the doorway and where the windows, the screen and the plant stood. Every painting hangs at its listed canvas size and measured height. The brick on the walls uses redrawn brick patterns, scaled so each course is 7.7 cm as measured in the gallery. The paintings and prints are the artist’s own reproductions, and the screens play the artist's videos with their own sound. The plant of Paradise Factory is the artist's own 3D model; the rest of the installation and the plastic river of Let it Flow are modelled from the photos. Three.js and Vite, no backend; the room tone is synthesised with Web Audio.",
   "rooms": {
     "r1": {
       "name": "Room 1",
@@ -277,9 +277,30 @@
         "The assemblage is built upon the duality of “flow” and “waste circulation”: the Tisza as a natural watercourse and plastic as an artificially produced yet now uncontrollable material process become layered onto one another. Waste does not disappear; instead, it searches for a new form. Through melting with a heat gun, the found objects partially lose their original function while entering a new, transitional plastic state. In this way, “useless” materials are reinterpreted as artworks.",
         "Let it Flow is therefore not merely an installation, but a visual protocol following cycles of material circulation: a recontextualization of objects originating from pollution, in which the boundaries between natural and artificial systems become increasingly blurred."
       ]
+    },
+    "artificial-paradise-videos": {
+      "heading": "About the videos",
+      "text": [
+        "The two video works connected to the Artificial Paradise series explore artificially constructed natural environments and human-engineered ecosystems. One video focuses on the futuristic parks and vertical gardens of Singapore, while the other examines the vast artificial biomes of the Eden Project in Cornwall, Scotland.",
+        "The soundscapes combine elements of nature and industrial civilisation. Artificially created nature sounds are mixed with recordings of factory noises, manipulated and played backwards, creating an unfamiliar and uncanny acoustic environment. The visual structure is fragmented through split-screen compositions, reversed footage and altered temporal sequences, disrupting the viewer's conventional perception of reality.",
+        "Together, the two videos envision a possible future in which nature no longer exists primarily as an autonomous ecological system, but rather as an environment designed, maintained and controlled by humans. The artificial paradise thus becomes both a promise of nature's preservation and an unsettling vision of its eventual disappearance."
+      ]
+    },
+    "artificial-paradise-prints": {
+      "heading": "About the series",
+      "text": [
+        "The Artificial Paradise series explores the phenomenon of artificially constructed natural environments within contemporary urban spaces. Monumental parks, vertical gardens and architectural structures found in cities around the world – integrating nature into the urban infrastructure – appear both as attempts to reconnect with nature and as artificial substitutes for it.",
+        "The series envisions a possible future in which urbanisation, climate change and human activity increasingly displace natural environments, leaving humanity to encounter nature primarily through artificially constructed and carefully controlled ecosystems. In this context, Paradise does not necessarily represent an ideal state, but rather a paradoxical utopia: a symbol of both the preservation and the gradual loss of nature."
+      ]
+    },
+    "natural-life": {
+      "heading": "About the work",
+      "text": [
+        "The video work Natural Life, presented as part of the Let It Flow project, depicts a small, recurring fragment of life: ferns and moss growing out of the cracks of a stone wall. The video loop captures an isolated glimpse of nature, suggesting its ability to take root and survive even within artificial and built environments. The work acts as a visual counterpoint to the plastic objects presented in the installation, made partly from plastic waste collected from the Tisza River and partly from the artist's own household waste. By juxtaposing these two material and visual worlds, the work draws attention to the contradiction between nature and the environmental pollution generated by human activity. Natural Life can thus be interpreted as a kind of pseudo-natural symbol, evoking the fragile presence of nature in an environment increasingly shaped by the materials and waste left behind by humanity."
+      ]
     }
   },
-  "source": "Titles, sizes, media and years from the room sheet displayed in the gallery",
+  "source": "Titles, sizes, media and years from the room sheet displayed in the gallery, with corrections from the artist",
   "tourIntro": "Down the stairs into the basement of MAMŰ: Artificial Paradise by KristofLab, 10-31 January 2025.",
   "openingSpeech": {
     "author": "Barnabás Zemlényi-Kovács",

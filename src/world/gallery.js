@@ -52,22 +52,9 @@ function canvasTexture(w, h, draw, anisotropy) {
   return tex;
 }
 
-// Wall label: number, title (without the "(screen)" suffix), medium, size and year.
+// The text sheets are shown unlit, a little under white so the bloom doesn't haze over
+// the letters.
 const TEXT_TINT = new THREE.Color(0.8, 0.8, 0.8);
-
-function drawLabel(g, work) {
-  g.fillStyle = '#f7f6f2';
-  g.fillRect(0, 0, 256, 128);
-  g.fillStyle = '#000';
-  g.font = '700 17px Helvetica, Arial, sans-serif';
-  g.fillText(`${work.no} · KristofLab`, 12, 25);
-  g.font = 'italic 700 22px Helvetica, Arial, sans-serif';
-  g.fillText(fit(g, work.title.replace(/\s*\(.*\)$/, ''), 232), 12, 54);
-  g.font = '500 16px Helvetica, Arial, sans-serif';
-  g.fillStyle = '#1a1a1a';
-  g.fillText(fit(g, work.medium.split(':')[0], 232), 12, 84);
-  g.fillText(fit(g, [work.size, work.year].filter(Boolean).join(', '), 232), 12, 108);
-}
 
 const screenVert = /* glsl */ `
   varying vec2 vUv;
@@ -201,7 +188,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
   const shadowTex = radialTexture('rgba(0,0,0,0.85)', 'rgba(0,0,0,0)');
   const sideMat = new THREE.MeshStandardMaterial({ color: 0xf4f3ef, roughness: 0.6 });
   const wallTexts = [];
-  // wall labels and sheets drawn at 3x (2x on phones) so the letters stay sharp up close
+  // the sheets are drawn at 3x (2x on phones) so the letters stay sharp up close
   const TEXT_SCALE = hdBudget > 3 ? 3 : 2;
   const wallText = (w, h, draw, anisotropy) => {
     const tex = canvasTexture(w, h, draw, anisotropy);
@@ -321,21 +308,6 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
           front.needsUpdate = true;
         });
         lazy.push({ work, front, pos: new THREE.Vector3(f.x, hg.y, f.z), loaded: false });
-      }
-
-      // Wall label beside the work, at the usual 1.35 m
-      if (hg.label !== 'none') {
-        // About twice the size of a real label so it reads on a screen; drawn at 3x and shown
-        // unlit, a little under white so the bloom doesn't haze over the letters.
-        const label = new THREE.Mesh(
-          new THREE.PlaneGeometry(0.3, 0.15),
-          new THREE.MeshBasicMaterial({ map: wallText(256 * TEXT_SCALE, 128 * TEXT_SCALE, (g) => { g.setTransform(TEXT_SCALE, 0, 0, TEXT_SCALE, 0, 0); drawLabel(g, work); }, 16), color: TEXT_TINT }),
-        );
-        const side = hg.label === 'left' ? -1 : 1;
-        label.position.set(side * (w / 2 + 0.2), 1.35 - hg.y, 0.004);
-        label.userData.work = work;
-        holder.add(label);
-        hitMeshes.push(label);
       }
 
       group.add(holder);
@@ -472,7 +444,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
     }
   };
 
-  // Redraw the wall labels and sheets in the current language.
+  // Redraw the sheets in the current language.
   const relabel = () => {
     for (const tex of wallTexts) tex.redraw();
   };

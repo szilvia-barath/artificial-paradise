@@ -77,6 +77,27 @@ export const R1_NICHES = [
   { z0: 5.52, z1: 6.54, win: { z: 5.97, w: 0.84 } }, // above the small radiator by the bench
 ];
 export const NICHE = { depth: 0.22, top: 2.6, sill: 1.7 };
+function room3NorthWall() {
+  const D = 0.22; // depth of the niches
+  const z0 = 1.33;
+  const z1 = 1.73;
+  const g = (x0, x1, y0, y1, zFront = z1, faces) => ({ x0, x1, z0, z1: zFront, y0, y1, mat: 'greyBrick', faces });
+  // the niches' sides stay in shade in the photos: they get the darker paint
+  const out = [g(10.2, 10.6, 0, 2.9, z1, { px: 'greyBrickReveal' })];
+  // [x0, x1, sill height, sill height at the east end, width of the steps]
+  for (const [x0, x1, sill, low, stepW] of [[10.6, 11.65, 1.27, 0.97, 0.18], [13.45, 15.05, 1.63, 1.08, 0.36]]) {
+    out.push(g(x0, x1, 0, 2.9, z1 - D)); // the bricked-up back
+    const steps = Math.round((sill - low) / 0.077 / 2); // toothing: two courses a step
+    const flat = x1 - stepW;
+    out.push(g(x0, flat, 0, sill));
+    for (let k = 0; k < steps; k++) {
+      const a = flat + (k * stepW) / steps;
+      out.push(g(a, a + stepW / steps, 0, sill - ((k + 1) * (sill - low)) / steps, z1, { nx: 'greyBrickReveal' }));
+    }
+  }
+  out.push(g(11.65, 13.45, 0, 2.9, z1, { nx: 'greyBrickReveal', px: 'greyBrickReveal' }), g(15.05, 15.6, 0, 2.9, z1, { nx: 'greyBrickReveal' }));
+  return out;
+}
 function streetWall(z0, z1) {
   const out = [];
   let z = z0;
@@ -132,11 +153,10 @@ export const BLOCKS = [
 
   // ---------- Room 3 + Room 4 (one long room) ----------
   // north wall: painted grey brick in Room 3, bare brick in Room 4 (lit photo of the empty room)
-  { x0: 10.2, x1: 13.45, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },
-  // bricked-up opening right of #8 Wiena Wrong Landscape I, recessed 14 cm (DSC_0088–0093)
-  { x0: 13.45, x1: 15.05, z0: 1.33, z1: 1.73, y1: 1.25, mat: 'greyBrick' },
-  { x0: 13.45, x1: 15.05, z0: 1.33, z1: 1.59, y0: 1.25, y1: 2.9, mat: 'greyBrick', faces: { pz: 'greyBrickShade' } },
-  { x0: 15.05, x1: 15.6, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'greyBrick' },
+  // Room 3's north wall (DSC_0086–0093): two old openings bricked up 22 cm back, one
+  // either side of the pier that carries #8; they run up to the ceiling and their sills
+  // drop in toothed steps towards the east
+  ...room3NorthWall(),
   { x0: 15.6, x1: 25.4 + T, z0: 1.33, z1: 1.73, y1: 2.9, mat: 'rawBrick' },
   // the low concrete ledge along its western half, the radiator on it
   { x0: 15.9, x1: 20.2, z0: 1.73, z1: 2.07, y1: 0.36, mat: 'ledge' },

@@ -38,6 +38,10 @@ enc_cycle() { # file, output name, start s, cycle s, filter, fps, crf, sound gai
     -x264-params "keyint=infinite:scenecut=0:bframes=0:no-fast-pskip=1:no-dct-decimate=1:aq-mode=3:aq-strength=1.2:deblock=-2,-2" \
     -movflags +faststart "$OUT/$2.mp4"
 }
+# Picture only, for very slight motion: no B-frames, no skipped or decimated blocks.
+enc_subtle() { # file, output name, start s, duration s, filter, fps, crf
+  ffmpeg -v error -y -ss "$3" -t "$4" -i "$SRC/$1" -an -vf "$5,fps=$6,format=yuv420p"     -c:v libx264 -profile:v high -preset slow -crf "$7"     -x264-params "bframes=0:no-fast-pskip=1:no-dct-decimate=1:aq-mode=3:aq-strength=1.2:deblock=-2,-2"     -movflags +faststart "$OUT/$2.mp4"
+}
 # Picture only, for a video that never repeats: the end dissolves into the start, so the
 # loop has no jump.
 enc_fade() { # file, output name, start s, duration s, filter, fps, crf
@@ -70,7 +74,9 @@ enc "artifical paradise_singapore.mp4" w06-artificial-paradise-i 30 40 "scale=96
 enc "artifical paradise_The Eden Project_sound.mp4" w07-artificial-paradise-ii 0 58 "scale=960:540" 30 30 0
 # silent: the Wiena files have no sound track, Paradise Factory and Let it flow a silent one
 # the cyan Wiena hangs in Room 3 (#8), the red one in Room 4 (#15); the TVs stretched 4:3 to 16:9
-enc "Wiena Wrong Landscape NFT 2023.mp4" w08-wiena-wrong-landscape-ii 0 37.6 "scale=960:720" 25 30
+# the cyan Wiena barely moves (only the grass in the lower half sways): at the usual settings
+# the encoder drops that motion and the screen looks frozen, so no skipped blocks and a lower crf
+enc_subtle "Wiena Wrong Landscape NFT 2023.mp4" w08-wiena-wrong-landscape-ii 0 37.6 "scale=960:720:flags=lanczos" 25 26
 enc "Wiena Wrong Landscape NFT - 2 2023.mp4" w15-wiena-wrong-landscape-i 0 37.6 "scale=960:720" 25 30
 enc "Natural life, Full Hd, video, 2024 .mp4" w17-natural-life 30 40 "scale=960:540" 25 30 15
 # the Paradise Factory monitor stands on its side: the footage turned counter-clockwise is

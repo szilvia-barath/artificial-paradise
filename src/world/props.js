@@ -249,33 +249,58 @@ export function buildProps(materials) {
   radiator(NX + 0.07, SZ - 1.09, Math.PI / 2, 0.42);
   radiator(EX - 0.08, 5.59, -Math.PI / 2, 0.94);
 
-  // High basement windows at the back of the niches (_artificial paradise 01 - 02): a thick
-  // white frame from the sill to the lintel, frosted daylight glass behind a grille of grey
-  // bars (4 x 5 panes), a stepped sill below
-  const barMat = new THREE.MeshStandardMaterial({ color: 0x55585f, roughness: 0.6, metalness: 0.3 });
-  for (const { win: { z, w } } of R1_NICHES) {
+  // High basement windows at the back of the niches (_artificial paradise 01 - 02 and the
+  // close-up of the window by the stairs): a thick white frame with an inner sash, frosted
+  // grey-blue glass, reeded in its lower part, the grille outside showing through it only
+  // faintly, a boxed white lintel above and a stepped sill below
+  const barMat = new THREE.MeshStandardMaterial({ color: 0x737a8c, roughness: 0.7, emissive: 0x2c3040 });
+  for (const { z0: nz0, z1: nz1, win: { z, w } } of R1_NICHES) {
     const y0 = NICHE.sill;
-    const y1 = NICHE.top;
-    const f = 0.055; // frame width
+    const y1 = NICHE.top - 0.03;
+    const f = 0.07; // outer frame
+    const s = 0.035; // inner sash
     g.add(slab(materials.white, NX, NX + 0.05, y0, y1, z - w / 2, z + w / 2)); // frame
-    g.add(slab(materials.windowGlass, NX + 0.05, NX + 0.052, y0 + f, y1 - f, z - w / 2 + f, z + w / 2 - f));
-    for (let k = 1; k < 4; k++) {
-      const bz = z - w / 2 + f + (k * (w - 2 * f)) / 4;
-      g.add(slab(barMat, NX + 0.052, NX + 0.066, y0 + f, y1 - f, bz - 0.01, bz + 0.01));
-    }
+    g.add(slab(materials.white, NX + 0.05, NX + 0.07, y0 + f - s, y1 - f + s, z - w / 2 + f - s, z + w / 2 - f + s)); // sash
+    const gy0 = y0 + f;
+    const gy1 = y1 - f;
+    const split = gy0 + (gy1 - gy0) * 0.42;
+    g.add(slab(materials.reededGlass, NX + 0.07, NX + 0.072, gy0, split, z - w / 2 + f, z + w / 2 - f));
+    g.add(slab(materials.windowGlass, NX + 0.07, NX + 0.072, split, gy1, z - w / 2 + f, z + w / 2 - f));
     for (let k = 1; k < 5; k++) {
-      const by = y0 + f + (k * (y1 - y0 - 2 * f)) / 5;
-      g.add(slab(barMat, NX + 0.052, NX + 0.066, by - 0.01, by + 0.01, z - w / 2 + f, z + w / 2 - f));
+      const bz = z - w / 2 + f + (k * (w - 2 * f)) / 5;
+      g.add(slab(barMat, NX + 0.072, NX + 0.075, gy0, gy1, bz - 0.006, bz + 0.006));
     }
+    for (let k = 1; k < 4; k++) {
+      const by = gy0 + (k * (gy1 - gy0)) / 4;
+      g.add(slab(barMat, NX + 0.072, NX + 0.075, by - 0.006, by + 0.006, z - w / 2 + f, z + w / 2 - f));
+    }
+    // the boxed lintel across the top of the niche, standing a little proud of the wall
+    g.add(slab(materials.white, WX - 0.25, WX + 0.04, NICHE.top - 0.03, NICHE.top + 0.13, nz0 - 0.03, nz1 + 0.03));
     // the sill: two shallow steps out to the face of the wall
     g.add(slab(materials.white, NX, WX - 0.08, y0 - 0.04, y0, z - w / 2 - 0.02, z + w / 2 + 0.02));
     g.add(slab(materials.white, NX, WX, y0 - 0.09, y0 - 0.04, z - w / 2 - 0.02, z + w / 2 + 0.02));
   }
-  // the round vent in the window by the stairs
+  // the round vent in the window by the stairs: a blue mesh disc in a white ring
   {
-    const vent = cyl(0.067, 0.067, 0.02, new THREE.MeshStandardMaterial({ color: 0x2a3550, roughness: 0.4 }), 20);
-    vent.rotation.z = Math.PI / 2;
-    g.add(place(vent, NX + 0.075, 2.27, R1_NICHES[0].win.z));
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const vg = c.getContext('2d');
+    vg.fillStyle = '#3d5cc4';
+    vg.fillRect(0, 0, 64, 64);
+    vg.strokeStyle = 'rgba(15,20,45,0.85)';
+    vg.lineWidth = 1.4;
+    for (let i = 2; i < 64; i += 5) {
+      vg.beginPath(); vg.moveTo(i, 0); vg.lineTo(i, 64); vg.stroke();
+      vg.beginPath(); vg.moveTo(0, i); vg.lineTo(64, i); vg.stroke();
+    }
+    const vt = new THREE.CanvasTexture(c);
+    vt.colorSpace = THREE.SRGBColorSpace;
+    const vent = new THREE.Mesh(new THREE.CircleGeometry(0.067, 28), new THREE.MeshStandardMaterial({ map: vt, roughness: 0.5, emissive: 0x101830 }));
+    vent.rotation.y = Math.PI / 2;
+    g.add(place(vent, NX + 0.078, 2.27, R1_NICHES[0].win.z));
+    const ring = cyl(0.074, 0.074, 0.012, materials.white, 28);
+    ring.rotation.z = Math.PI / 2;
+    g.add(place(ring, NX + 0.07, 2.27, R1_NICHES[0].win.z));
   }
   // the heating pipe along the foot of the street wall, between the radiators
   {
@@ -372,7 +397,7 @@ export function buildProps(materials) {
     table.add(place(cyl(0.21, 0.23, 0.018, gloss, 32), 0, 0.009, 0));
     g.add(place(table, 8.292, 0, 2.272));
     obstacle(7.98, 8.603, 1.987, 2.557);
-    g.add(place(wireChair(materials, gridMat), 7.169, 0, 2.063, 0.1));
+    g.add(place(wireChair(materials, gridMat, true), 7.169, 0, 2.063, 0.1));
     obstacle(6.92, 7.419, 1.844, 2.291);
     g.add(place(wireChair(materials, gridMat, true), 8.967, 0, 2.557, -1.9));
     obstacle(8.707, 9.227, 2.319, 2.794);

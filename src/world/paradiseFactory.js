@@ -269,10 +269,17 @@ export function buildParadiseFactory(materials, manager) {
           o.geometry.setAttribute('color', new THREE.BufferAttribute(lin, col.itemSize));
         }
         const clear = o.material.transparent;
+        // as photographed: the storage boxes read as clear but solid plastic (a little more
+        // opaque than in the model, with a sheen), the frame as bright brushed aluminium
+        if (o.name === 'plastic' && col) {
+          const c = o.geometry.attributes.color;
+          for (let i = 0; i < c.count; i++) c.setW(i, Math.min(0.8, 0.22 + c.getW(i) * 0.9));
+        }
+        const look = { plastic: [0.18, 0], hardware: [0.32, 0.35], water: [0.05, 0] }[o.name];
         o.material = new THREE.MeshStandardMaterial({
           vertexColors: true,
-          roughness: o.material.roughness,
-          metalness: o.material.metalness,
+          roughness: look ? look[0] : o.material.roughness,
+          metalness: look ? look[1] : o.material.metalness,
           side: o.material.side,
           transparent: clear,
           depthWrite: !clear,
@@ -280,6 +287,17 @@ export function buildParadiseFactory(materials, manager) {
         if (clear) o.renderOrder = 1; // the boxes and water after the plant inside them
       });
       rig.add(gltf.scene);
+      // the white plastic corner joints of the aluminium frame (photo of the box)
+      const joint = new THREE.MeshStandardMaterial({ color: 0xf0f0ec, roughness: 0.45 });
+      for (const y of [0.19, 0.49, 0.6]) {
+        for (const jx of [-0.177, 0.177]) {
+          for (const jz of [-0.132, 0.132]) {
+            const j = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.035, 0.04), joint);
+            j.position.set(jx, y, jz);
+            rig.add(j);
+          }
+        }
+      }
     });
 
     // drip feed: an upturned plastic bottle on chains, a clear line down into the box

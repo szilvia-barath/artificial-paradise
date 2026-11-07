@@ -98,6 +98,53 @@ function wornConcreteCanvas(seed = 23) {
   return c;
 }
 
+// Bare, unpainted old brick (the stair's open side in the panorama): 25 x 6.5 cm bricks in
+// stretcher bond, each its own red-brown, some scorched darker, in recessed grey-beige
+// mortar. One tile is 1 x 0.462 m (6 courses of 7.7 cm); `bump` holds the mortar joints.
+function bareBrickCanvases(seed = 41) {
+  const W = 512;
+  const H = 236; // 512 px per metre
+  const rand = rng(seed);
+  const colour = canvas(W);
+  colour.height = H;
+  const bump = canvas(W);
+  bump.height = H;
+  const a = colour.getContext('2d');
+  const b = bump.getContext('2d');
+  a.fillStyle = '#8f877b';
+  a.fillRect(0, 0, W, H);
+  b.fillStyle = '#000';
+  b.fillRect(0, 0, W, H);
+  const course = H / 6;
+  const len = W / 4; // 25 cm
+  const joint = 5; // about 1 cm
+  for (let r = 0; r < 6; r++) {
+    const off = (r % 2) * (len / 2);
+    for (let i = -1; i < 5; i++) {
+      const x = i * len + off + joint / 2;
+      const y = r * course + joint / 2;
+      const hue = 8 + rand() * 14;
+      const light = 27 + rand() * 12 - (rand() < 0.2 ? 8 : 0);
+      a.fillStyle = `hsl(${hue}, ${20 + rand() * 16}%, ${light}%)`;
+      a.fillRect(x, y, len - joint, course - joint);
+      // old mortar smeared over the brick faces and edges
+      for (let k = 0; k < 4; k++) {
+        a.fillStyle = `rgba(150,140,125,${0.1 + rand() * 0.25})`;
+        a.fillRect(x + rand() * (len - joint) * 0.8, y + (rand() < 0.5 ? 0 : course - joint - 4), 8 + rand() * 30, 2 + rand() * 4);
+      }
+      // worn, chipped faces
+      for (let k = 0; k < 14; k++) {
+        a.fillStyle = rand() < 0.5 ? `rgba(40,20,12,${0.08 + rand() * 0.14})` : `rgba(200,160,130,${0.08 + rand() * 0.14})`;
+        a.fillRect(x + rand() * (len - joint), y + rand() * (course - joint), 2 + rand() * 9, 1 + rand() * 4);
+      }
+      b.fillStyle = '#fff';
+      b.fillRect(x + 1, y + 1, len - joint - 2, course - joint - 2);
+    }
+  }
+  speckle(a, W, rand, 6000, 0.1);
+  return { colour, bump };
+}
+
 function tex(c, srgb, repeatMetres = 1, maxAniso = 4) {
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
@@ -153,6 +200,10 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
   const concrete = tex(concreteCanvas(), true, 2, aniso);
   const planks = tex(planksCanvas(), true, 1, aniso);
   const worn = tex(wornConcreteCanvas(), true, 1, aniso);
+  const bare = bareBrickCanvases();
+  const bareMap = tex(bare.colour, true, 1, aniso);
+  const bareBump = tex(bare.bump, false, 1, aniso);
+  for (const t of [bareMap, bareBump]) t.repeat.set(1, 1 / 0.462);
 
   const brickMat = (name, color, rough = 0.95, bumpScale = 2.2, wash = false) => {
     const m = new THREE.MeshStandardMaterial({ color, bumpScale, roughness: rough, metalness: 0 });
@@ -171,7 +222,7 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     whiteBrick: brickMat('brick-white', 0xf4f2ec, 0.95, 2.2, true),
     warmBrick: brickMat('brick-warm', 0xefe2bf, 0.95, 2.2, true),
     greyBrick: brickMat('brick-grey', 0x7c7d83),
-    greyBrickShade: brickMat('brick-grey', 0x5c5d62),
+    greyBrickReveal: brickMat('brick-grey', 0x4d4e53), // the shaded sides of Room 3's niches
     // Room 4 is nearly black in the photos and the ambient light is shared by all rooms,
     // so its surfaces are dark here; the projection wall only just shows under the video
     darkBrick: brickMat('brick-grey', 0x131418, 0.95, 1.6),
@@ -217,20 +268,16 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     door: new THREE.MeshStandardMaterial({ color: 0x8c8678, roughness: 0.7 }),
     // the stairs (panorama): worn grey concrete treads, a band of bare red brick along the
     // open side
-    stair: new THREE.MeshStandardMaterial({ color: 0x8a8580, map: worn, roughness: 0.92 }),
-    stairBrick: (() => {
-      const m = new THREE.MeshStandardMaterial({ color: 0xb07a60, roughness: 0.96, bumpScale: 2.4 });
-      bricks['brick-warm'].map.into(m, 'map');
-      bricks['brick-warm'].bump.into(m, 'bumpMap');
-      return m;
-    })(),
+    stair: new THREE.MeshStandardMaterial({ color: 0xcfc8be, map: worn, roughness: 0.9 }),
+    stairBrick: new THREE.MeshStandardMaterial({ map: bareMap, bumpMap: bareBump, bumpScale: 3, roughness: 0.95 }),
     glass: new THREE.MeshStandardMaterial({ color: 0xcfe2e8, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false }),
     clearPlastic: new THREE.MeshStandardMaterial({ color: 0xe8f0f2, roughness: 0.15, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide }),
     leaf: new THREE.MeshStandardMaterial({ color: 0x9ccf5a, roughness: 0.55, emissive: 0x1c3a0a }),
     led: new THREE.MeshBasicMaterial({ color: new THREE.Color(4, 4, 4.2) }),
     warmBulb: new THREE.MeshBasicMaterial({ color: new THREE.Color(5, 3.6, 2) }),
-    // frosted basement glass in daylight, pale lilac as in the photos
-    windowGlass: new THREE.MeshStandardMaterial({ color: 0xd9d5e6, emissive: 0x9894ad, roughness: 0.7 }),
+    // frosted, grey-blue basement glass (the window by the stairs, close up)
+    windowGlass: new THREE.MeshStandardMaterial({ color: 0x9aa1b3, emissive: 0x4a5064, roughness: 0.65 }),
+    reededGlass: new THREE.MeshStandardMaterial({ color: 0xb4bac8, emissive: 0x5a6074, roughness: 0.5 }),
     curtain: new THREE.MeshStandardMaterial({ color: 0xcdc7bb, roughness: 1, side: THREE.DoubleSide }),
     paper: new THREE.MeshStandardMaterial({ color: 0xf6f5f1, roughness: 0.9 }),
   };

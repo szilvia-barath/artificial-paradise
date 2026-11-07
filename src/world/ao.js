@@ -116,7 +116,7 @@ export function applyPlanAO(materials, segments, { lowPower = false } = {}) {
   };
   const groups = {
     floor: ['floor', 'floorGrey', 'floorDark'],
-    wall: ['whiteBrick', 'warmBrick', 'greyBrick', 'greyBrickShade', 'darkBrick', 'rawBrick', 'dimBrick', 'projWall', 'plaster', 'ledge'],
+    wall: ['whiteBrick', 'warmBrick', 'greyBrick', 'greyBrickReveal', 'darkBrick', 'rawBrick', 'dimBrick', 'projWall', 'plaster', 'ledge'],
     ceiling: ['ceiling', 'planks'],
   };
   for (const [kind, keys] of Object.entries(groups)) for (const key of keys) patch(materials[key], kind, uniforms, { tileBump: !lowPower });

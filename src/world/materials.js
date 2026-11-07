@@ -111,7 +111,7 @@ function bareBrickCanvases(seed = 41) {
   bump.height = H;
   const a = colour.getContext('2d');
   const b = bump.getContext('2d');
-  a.fillStyle = '#8f877b';
+  a.fillStyle = '#c9c1b4';
   a.fillRect(0, 0, W, H);
   b.fillStyle = '#000';
   b.fillRect(0, 0, W, H);
@@ -123,9 +123,9 @@ function bareBrickCanvases(seed = 41) {
     for (let i = -1; i < 5; i++) {
       const x = i * len + off + joint / 2;
       const y = r * course + joint / 2;
-      const hue = 8 + rand() * 14;
-      const light = 27 + rand() * 12 - (rand() < 0.2 ? 8 : 0);
-      a.fillStyle = `hsl(${hue}, ${20 + rand() * 16}%, ${light}%)`;
+      const hue = 12 + rand() * 12;
+      const light = 48 + rand() * 10 - (rand() < 0.15 ? 7 : 0);
+      a.fillStyle = `hsl(${hue}, ${24 + rand() * 14}%, ${light}%)`;
       a.fillRect(x, y, len - joint, course - joint);
       // old mortar smeared over the brick faces and edges
       for (let k = 0; k < 4; k++) {

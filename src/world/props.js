@@ -178,8 +178,56 @@ export function buildProps(materials) {
       mortar.rotation.z = angle;
       g.add(mortar);
       const n = Math.floor(len / 0.077);
-      const brickMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.93 });
-      const bricks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.065, 0.12, 0.25), brickMat, n);
+      // old, soft, sand-faced brick: a pitted, dusty face with chips and mortar left on it
+      // (one small texture on every face, tinted per brick), and worn, uneven edges
+      const face = document.createElement('canvas');
+      face.width = face.height = 128;
+      const fg = face.getContext('2d');
+      fg.fillStyle = '#e6ddd3';
+      fg.fillRect(0, 0, 128, 128);
+      let sd = 7;
+      const fr = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+      for (let k = 0; k < 40; k++) {
+        fg.fillStyle = fr() < 0.5 ? `rgba(255,248,238,${0.12 + fr() * 0.25})` : `rgba(150,110,90,${0.08 + fr() * 0.15})`;
+        fg.beginPath();
+        fg.ellipse(fr() * 128, fr() * 128, 6 + fr() * 26, 4 + fr() * 14, fr() * 3, 0, Math.PI * 2);
+        fg.fill();
+      }
+      for (let k = 0; k < 900; k++) {
+        fg.fillStyle = `rgba(70,45,35,${0.15 + fr() * 0.35})`;
+        fg.fillRect(fr() * 128, fr() * 128, 1 + fr() * 2, 1 + fr() * 2);
+      }
+      for (let k = 0; k < 10; k++) {
+        // chips and mortar crumbs at the edges
+        const x = fr() < 0.5 ? fr() * 14 : 114 + fr() * 14;
+        fg.fillStyle = fr() < 0.6 ? `rgba(240,236,228,${0.5 + fr() * 0.4})` : `rgba(110,80,64,${0.35 + fr() * 0.3})`;
+        fg.fillRect(x, fr() * 128, 3 + fr() * 8, 3 + fr() * 12);
+      }
+      const faceTex = new THREE.CanvasTexture(face);
+      faceTex.colorSpace = THREE.SRGBColorSpace;
+      const faceBump = new THREE.CanvasTexture(face);
+      const brickMat = new THREE.MeshStandardMaterial({ color: 0xffffff, map: faceTex, bumpMap: faceBump, bumpScale: 1.5, roughness: 0.97 });
+      const brickGeo = new THREE.BoxGeometry(0.065, 0.12, 0.25, 2, 3, 6);
+      {
+        // round off and nick the edges: vertices on two faces at once are pulled in a little
+        const pos = brickGeo.attributes.position;
+        const hx = 0.0325;
+        const hy = 0.06;
+        const hz = 0.125;
+        for (let i = 0; i < pos.count; i++) {
+          const x = pos.getX(i);
+          const y = pos.getY(i);
+          const z = pos.getZ(i);
+          const ex = Math.abs(Math.abs(x) - hx) < 1e-4;
+          const ey = Math.abs(Math.abs(y) - hy) < 1e-4;
+          const ez = Math.abs(Math.abs(z) - hz) < 1e-4;
+          if (ex + ey + ez < 2) continue;
+          const k = 0.75 + 0.25 * Math.abs(Math.sin(x * 913 + y * 577 + z * 311)); // same on every face
+          pos.setXYZ(i, ex ? x - Math.sign(x) * 0.006 * k : x, ey ? y - Math.sign(y) * 0.007 * k : y, ez ? z - Math.sign(z) * 0.008 * k : z);
+        }
+        brickGeo.computeVertexNormals();
+      }
+      const bricks = new THREE.InstancedMesh(brickGeo, brickMat, n);
       const q2 = new THREE.Quaternion();
       const e2 = new THREE.Euler();
       const c = new THREE.Color();
@@ -191,7 +239,8 @@ export function buildProps(materials) {
         m.compose(new THREE.Vector3(p.x, p.y, zc + r(i + 9) * 0.012), q2, new THREE.Vector3(1, 1, 1));
         bricks.setMatrixAt(i, m);
         const t = Math.abs(r(i + 11));
-        c.setHSL(0.03 + t * 0.035, 0.3 + Math.abs(r(i + 13)) * 0.18, 0.25 + Math.abs(r(i + 17)) * 0.12 - (t > 0.85 ? 0.07 : 0), THREE.SRGBColorSpace);
+        // faded, dusty orange-pink, a few scorched a shade deeper
+        c.setHSL(0.035 + t * 0.03, 0.26 + Math.abs(r(i + 13)) * 0.14, 0.52 + Math.abs(r(i + 17)) * 0.1 - (t > 0.88 ? 0.08 : 0), THREE.SRGBColorSpace);
         // old whitewash left on some of them
         if (Math.abs(r(i + 19)) > 0.84) c.lerp(new THREE.Color(0xd9d3c8), 0.45 + Math.abs(r(i + 23)) * 0.3);
         bricks.setColorAt(i, c);

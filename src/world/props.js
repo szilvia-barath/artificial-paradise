@@ -161,6 +161,32 @@ export function buildProps(materials) {
     const stringer = new THREE.Mesh(sg, materials.whiteBrick);
     stringer.position.z = width;
     g.add(stringer);
+    // damp stains on the wall the flight runs along, rising from the treads (close-up):
+    // a strip following the steps, 0.6 m tall, on the face of the north wall
+    {
+      const sh = new THREE.Shape();
+      sh.moveTo(foot, 0);
+      for (let i = 0; i < inRoom; i++) {
+        sh.lineTo(foot - run * i, rise * (i + 1));
+        sh.lineTo(foot - run * (i + 1), rise * (i + 1));
+      }
+      sh.lineTo(WX, rise * inRoom + 0.6);
+      sh.lineTo(foot, rise + 0.6);
+      sh.lineTo(foot, 0);
+      const geo = new THREE.ShapeGeometry(sh);
+      // UVs: along the wall in metres, upwards measured from the tread line
+      const pos = geo.attributes.position;
+      const uv = geo.attributes.uv;
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i);
+        const base = ((foot - x) / run) * rise;
+        uv.setXY(i, x, pos.getY(i) - base);
+      }
+      const stain = new THREE.Mesh(geo, materials.stairStain);
+      stain.position.z = 0.003;
+      stain.renderOrder = 1;
+      g.add(stain);
+    }
     // the brick-on-edge coping: one brick every 7.7 cm along the slope, each showing its
     // 6.5 x 12 cm end on the side, in its own red-brown, set a little irregularly in pale
     // mortar, overhanging the whitewashed wall on both sides
@@ -183,7 +209,14 @@ export function buildProps(materials) {
       const face = document.createElement('canvas');
       face.width = face.height = 128;
       const fg = face.getContext('2d');
-      fg.fillStyle = '#e6ddd3';
+      fg.fillStyle = '#f0eae2';
+      fg.fillRect(0, 0, 128, 128);
+      // the darker, brownish stain in the middle of each brick (close-ups)
+      const stain = fg.createRadialGradient(64, 64, 4, 64, 64, 46);
+      stain.addColorStop(0, 'rgba(120,88,66,0.42)');
+      stain.addColorStop(0.6, 'rgba(130,98,74,0.22)');
+      stain.addColorStop(1, 'rgba(130,98,74,0)');
+      fg.fillStyle = stain;
       fg.fillRect(0, 0, 128, 128);
       let sd = 7;
       const fr = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
@@ -197,7 +230,7 @@ export function buildProps(materials) {
         fg.fillStyle = `rgba(70,45,35,${0.15 + fr() * 0.35})`;
         fg.fillRect(fr() * 128, fr() * 128, 1 + fr() * 2, 1 + fr() * 2);
       }
-      for (let k = 0; k < 10; k++) {
+      for (let k = 0; k < 26; k++) {
         // chips and mortar crumbs at the edges
         const x = fr() < 0.5 ? fr() * 14 : 114 + fr() * 14;
         fg.fillStyle = fr() < 0.6 ? `rgba(240,236,228,${0.5 + fr() * 0.4})` : `rgba(110,80,64,${0.35 + fr() * 0.3})`;
@@ -240,7 +273,7 @@ export function buildProps(materials) {
         bricks.setMatrixAt(i, m);
         const t = Math.abs(r(i + 11));
         // faded, dusty orange-pink, a few scorched a shade deeper
-        c.setHSL(0.035 + t * 0.03, 0.26 + Math.abs(r(i + 13)) * 0.14, 0.52 + Math.abs(r(i + 17)) * 0.1 - (t > 0.88 ? 0.08 : 0), THREE.SRGBColorSpace);
+        c.setHSL(0.04 + t * 0.03, 0.22 + Math.abs(r(i + 13)) * 0.12, 0.6 + Math.abs(r(i + 17)) * 0.1 - (t > 0.9 ? 0.07 : 0), THREE.SRGBColorSpace);
         // old whitewash left on some of them
         if (Math.abs(r(i + 19)) > 0.84) c.lerp(new THREE.Color(0xd9d3c8), 0.45 + Math.abs(r(i + 23)) * 0.3);
         bricks.setColorAt(i, c);

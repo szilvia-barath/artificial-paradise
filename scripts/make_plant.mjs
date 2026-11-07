@@ -4,6 +4,9 @@
 //  - its 463 parts, coloured per part but without materials, get one of four materials by
 //    name (plant, hardware, clear plastic, water) and are joined into one mesh per material;
 //  - normals are computed (flat for the frame, boxes and hoses, smooth for leaves and roots);
+//  - it is matched to the photographed rig: the aluminium uprights stop at the top frame
+//    (0.6 m) instead of running on to 1.5 m, the two fittings on the plant box's rim are red,
+//    the pump's hose is clear like the others, the water is brownish with the roots in it;
 //  - it is turned from Z-up to the glTF Y-up and compressed with meshopt.
 //   node scripts/make_plant.mjs <source .glb> [public/models/paradise-factory-plant.glb]
 import { NodeIO } from '@gltf-transform/core';
@@ -16,7 +19,7 @@ if (!src) throw new Error('usage: node scripts/make_plant.mjs <source .glb> [out
 
 const CLASSES = [
   ['water', /water_surface/],
-  ['plastic', /samla|return_hose/],
+  ['plastic', /samla|hose/],
   ['plant', /^zz_/],
   ['hardware', /./], // frame, feet, bolts, pump, its hose and the bulkheads
 ];
@@ -32,6 +35,32 @@ const mats = {
   plastic: doc.createMaterial('plastic').setRoughnessFactor(0.12).setMetallicFactor(0).setDoubleSided(true).setAlphaMode('BLEND'),
   water: doc.createMaterial('water').setRoughnessFactor(0.05).setMetallicFactor(0).setDoubleSided(true).setAlphaMode('BLEND'),
 };
+// as photographed (the rig's close-up and the documentation video)
+const TOP = 0.612; // the top of the frame, metres (model z is up)
+const paint = (re, rgba) => {
+  for (const mesh of root.listMeshes()) {
+    if (!re.test(mesh.getName())) continue;
+    for (const prim of mesh.listPrimitives()) {
+      const col = prim.getAttribute('COLOR_0');
+      for (let i = 0; i < col.getCount(); i++) col.setElement(i, rgba.map((v) => v / 255));
+    }
+  }
+};
+for (const mesh of root.listMeshes()) {
+  if (!/^aluminium_upright/.test(mesh.getName())) continue;
+  for (const prim of mesh.listPrimitives()) {
+    const pos = prim.getAttribute('POSITION');
+    const v = [];
+    for (let i = 0; i < pos.getCount(); i++) {
+      pos.getElement(i, v);
+      if (v[2] > TOP) pos.setElement(i, [v[0], v[1], TOP]);
+    }
+  }
+}
+paint(/upper_tank_bulkhead/, [196, 38, 30, 255]); // red fittings on the rim
+paint(/pump_to_upper_tank_hose/, [205, 222, 226, 160]); // clear hose
+paint(/water_surface/, [150, 128, 92, 150]); // brownish water
+
 const counts = {};
 for (const mesh of root.listMeshes()) {
   const kind = CLASSES.find(([, re]) => re.test(mesh.getName()))[0];

@@ -268,7 +268,7 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     door: new THREE.MeshStandardMaterial({ color: 0x8c8678, roughness: 0.7 }),
     // the stairs (panorama): worn grey concrete treads, a band of bare red brick along the
     // open side
-    stair: new THREE.MeshStandardMaterial({ color: 0xcfc8be, map: worn, roughness: 0.9 }),
+    stair: new THREE.MeshStandardMaterial({ color: 0x8e8b86, map: worn, roughness: 0.9 }), // dark, worn
     stairBrick: new THREE.MeshStandardMaterial({ map: bareMap, bumpMap: bareBump, bumpScale: 3, roughness: 0.95 }),
     glass: new THREE.MeshStandardMaterial({ color: 0xcfe2e8, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false }),
     clearPlastic: new THREE.MeshStandardMaterial({ color: 0xe8f0f2, roughness: 0.15, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide }),

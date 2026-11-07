@@ -131,8 +131,9 @@ export function buildProps(materials) {
   const SZ = R1.D;
 
   // Stairs along the north wall, rising west through the wall into the stair shaft
-  // (DSC_0013–0016, panorama). Treads are worn grey concrete, the open side a whitewashed
-  // brick stringer with a band of bare red brick along its top, and a black railing.
+  // (DSC_0013–0016, panorama, close-ups of the flight). Treads are dark, worn concrete; the
+  // open side is a whitewashed brick wall topped by a row of bare bricks set on edge, square
+  // to the slope, with a little brick pier at its foot; a black railing.
   {
     const run = 0.26;
     const rise = 0.19;
@@ -160,13 +161,48 @@ export function buildProps(materials) {
     const stringer = new THREE.Mesh(sg, materials.whiteBrick);
     stringer.position.z = width;
     g.add(stringer);
-    // a band of bare red brick along the top edge of the open side (panorama)
-    const len = Math.hypot(run * inRoom, rise * inRoom);
-    const BAND = 0.24;
-    const coping = new THREE.Mesh(uvMetres(new THREE.BoxGeometry(len, BAND, 0.17), len, BAND), materials.stairBrick);
-    coping.position.set(foot - (run * inRoom) / 2 + 0.02, (rise * inRoom) / 2 + rise / 2 + 0.135 - BAND / 2, width + 0.075);
-    coping.rotation.z = -Math.atan2(rise, run);
-    g.add(coping);
+    // the brick-on-edge coping: one brick every 7.7 cm along the slope, each showing its
+    // 6.5 x 12 cm end on the side, in its own red-brown, set a little irregularly in pale
+    // mortar, overhanging the whitewashed wall on both sides
+    {
+      const len = Math.hypot(run * inRoom, rise * inRoom);
+      const L = Math.hypot(run, rise);
+      const d = new THREE.Vector2(-run / L, rise / L); // up the slope
+      const nrm = new THREE.Vector2(rise / L, run / L); // square to it, upwards
+      const angle = -Math.atan2(rise, run);
+      const zc = width + 0.075;
+      const base = (s) => new THREE.Vector2(foot, rise + 0.06).addScaledVector(d, s);
+      const mortar = box(len, 0.1, 0.235, new THREE.MeshStandardMaterial({ color: 0xcfc8ba, roughness: 1 }));
+      const mc = base(len / 2).addScaledVector(nrm, 0.045);
+      mortar.position.set(mc.x, mc.y, zc);
+      mortar.rotation.z = angle;
+      g.add(mortar);
+      const n = Math.floor(len / 0.077);
+      const brickMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.93 });
+      const bricks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.065, 0.12, 0.25), brickMat, n);
+      const q2 = new THREE.Quaternion();
+      const e2 = new THREE.Euler();
+      const c = new THREE.Color();
+      const r = (k) => (Math.sin(k * 12.9898) * 43758.5453) % 1; // fixed jitter per brick
+      for (let i = 0; i < n; i++) {
+        const p = base((i + 0.5) * 0.077).addScaledVector(nrm, 0.055 + Math.abs(r(i + 1)) * 0.008);
+        e2.set(r(i + 7) * 0.03, r(i + 3) * 0.02, angle + r(i + 5) * 0.05);
+        q2.setFromEuler(e2);
+        m.compose(new THREE.Vector3(p.x, p.y, zc + r(i + 9) * 0.012), q2, new THREE.Vector3(1, 1, 1));
+        bricks.setMatrixAt(i, m);
+        const t = Math.abs(r(i + 11));
+        c.setHSL(0.03 + t * 0.035, 0.3 + Math.abs(r(i + 13)) * 0.18, 0.25 + Math.abs(r(i + 17)) * 0.12 - (t > 0.85 ? 0.07 : 0), THREE.SRGBColorSpace);
+        // old whitewash left on some of them
+        if (Math.abs(r(i + 19)) > 0.84) c.lerp(new THREE.Color(0xd9d3c8), 0.45 + Math.abs(r(i + 23)) * 0.3);
+        bricks.setColorAt(i, c);
+      }
+      g.add(bricks);
+      // the little brick pier the coping starts from, at the foot of the flight
+      const pier = new THREE.Mesh(uvMetres(new THREE.BoxGeometry(0.26, 0.36, 0.27), 0.26, 0.36), materials.stairBrick);
+      pier.position.set(foot + 0.09, 0.18, zc);
+      g.add(pier);
+      obstacle(foot - 0.04, foot + 0.22, width - 0.06, width + 0.21);
+    }
     // railing posts + handrail
     const railH = 0.9;
     const top = (x) => ((foot - x) / run) * rise + rise + 0.06;

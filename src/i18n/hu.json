@@ -66,6 +66,7 @@
       }
     },
     "viewer": {
+      "artistSite": "A művész honlapján",
       "close": "Bezárás",
       "loading": "betöltés…",
       "exhibitionText": "Kiállítási szöveg",

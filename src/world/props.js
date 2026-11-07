@@ -2,7 +2,8 @@ import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 import { OBSTACLES, R1, R1_NICHES, NICHE } from './layout.js';
 import { dirtAlong } from './surface.js';
-import { PLANT, BARS } from './paradiseFactory.js';
+import { uvMetres } from './materials.js';
+import { PLANT, BARS, BAR_BOTTOM } from './paradiseFactory.js';
 
 // Furniture and fixtures, placed from the photos. Kept low-poly; static meshes are
 // merged per material at the end, repeated parts are instanced.
@@ -41,15 +42,17 @@ function wireGridMaterial() {
   const g = c.getContext('2d');
   g.clearRect(0, 0, 64, 64);
   g.strokeStyle = '#fff';
-  g.lineWidth = 2.2;
+  g.lineWidth = 1.6;
   for (let i = 0; i <= 64; i += 8) {
     g.beginPath(); g.moveTo(i, 0); g.lineTo(i, 64); g.stroke();
     g.beginPath(); g.moveTo(0, i); g.lineTo(64, i); g.stroke();
   }
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
-  t.repeat.set(4, 4);
-  return new THREE.MeshStandardMaterial({ color: 0x141416, roughness: 0.5, metalness: 0.4, alphaMap: t, alphaTest: 0.5, side: THREE.DoubleSide });
+  t.repeat.set(5, 5);
+  t.anisotropy = 8;
+  // alpha to coverage keeps the wires as wires at a distance instead of a solid panel
+  return new THREE.MeshStandardMaterial({ color: 0x141416, roughness: 0.45, metalness: 0.5, alphaMap: t, alphaTest: 0.35, alphaToCoverage: true, side: THREE.DoubleSide });
 }
 
 // Perforated grey steel sheet (the bench fronts in _artificial paradise 01 - 02): round holes
@@ -104,8 +107,10 @@ function wireChair(materials, gridMat, cushion = false) {
   }
   c.add(rod(materials.black, V(-0.21, 0.89, -0.22), V(0.21, 0.89, -0.22), 0.008));
   if (cushion) {
-    const k = box(0.4, 0.05, 0.38, new THREE.MeshStandardMaterial({ color: 0xd9cdb3, roughness: 1 }));
-    k.position.set(0, 0.48, 0.02);
+    // a thin cream fabric seat pad tied to the frame (DSC_0059, DSC_0083)
+    const k = new THREE.Mesh(new THREE.CylinderGeometry(0.5, 0.5, 0.028, 24), new THREE.MeshStandardMaterial({ color: 0xd8ceb6, roughness: 1 }));
+    k.scale.set(0.38, 1, 0.36);
+    k.position.set(0, 0.47, 0.02);
     c.add(k);
   }
   return c;
@@ -126,8 +131,8 @@ export function buildProps(materials) {
   const SZ = R1.D;
 
   // Stairs along the north wall, rising west through the wall into the stair shaft
-  // (DSC_0013–0016, panorama). Treads are dark, the open side is a white brick
-  // stringer with a red-brick coping and a black railing.
+  // (DSC_0013–0016, panorama). Treads are worn grey concrete, the open side a whitewashed
+  // brick stringer with a band of bare red brick along its top, and a black railing.
   {
     const run = 0.26;
     const rise = 0.19;
@@ -155,10 +160,11 @@ export function buildProps(materials) {
     const stringer = new THREE.Mesh(sg, materials.whiteBrick);
     stringer.position.z = width;
     g.add(stringer);
-    // red brick coping along the top edge
+    // a band of bare red brick along the top edge of the open side (panorama)
     const len = Math.hypot(run * inRoom, rise * inRoom);
-    const coping = box(len, 0.07, 0.17, materials.stairBrick);
-    coping.position.set(foot - (run * inRoom) / 2 + 0.02, (rise * inRoom) / 2 + rise / 2 + 0.1, width + 0.075);
+    const BAND = 0.24;
+    const coping = new THREE.Mesh(uvMetres(new THREE.BoxGeometry(len, BAND, 0.17), len, BAND), materials.stairBrick);
+    coping.position.set(foot - (run * inRoom) / 2 + 0.02, (rise * inRoom) / 2 + rise / 2 + 0.135 - BAND / 2, width + 0.075);
     coping.rotation.z = -Math.atan2(rise, run);
     g.add(coping);
     // railing posts + handrail
@@ -169,17 +175,6 @@ export function buildProps(materials) {
     }
     g.add(rod(materials.black, new THREE.Vector3(foot - 0.15, top(foot - 0.15) + railH, width + 0.075), new THREE.Vector3(WX - 0.1, top(WX - 0.1) + railH, width + 0.075), 0.02));
     obstacle(WX - 0.4, foot + 0.02, 0, width + 0.16);
-    // folding chairs stacked on the steps against the north wall
-    for (let k = 0; k < 2; k++) {
-      for (let j = 0; j < 4; j++) {
-        const x = foot - 0.65 - k * 0.55;
-        const step = Math.floor((foot - x) / run);
-        const ch = wireChair(materials, gridMat);
-        place(ch, x, rise * (step + 1) + j * 0.05, 0.32 + j * 0.035, -Math.PI / 2);
-        ch.rotation.z = 0.04 * j;
-        g.add(ch);
-      }
-    }
   }
 
   // Grey bench along the south wall, turning up the west wall (the L on the plan): a dark
@@ -312,10 +307,10 @@ export function buildProps(materials) {
     g.add(cable(white, [[p1[0] + 0.12, Y, p1[1] - 0.07], [1.15, Y, 4.42], [1.08, Y, 4.33], [p2[0] - 0.13, Y, p2[1] - 0.05]], 0.0045));
     g.add(cable(white, [[p1[0] - 0.1, Y, p1[1] + 0.06], [0.55, Y, 4.5], [0.2, Y, 4.42], [WX + 0.04, Y + 0.02, 4.4], [WX + 0.03, 0.28, 4.4]], 0.0045));
     g.add(place(box(0.03, 0.08, 0.08, white), WX + 0.015, 0.3, 4.4));
-    // from the second strip to the pump in the plant's water box and to the foot of each LED bar
+    // from the second strip to the pump in the plant's water box and up to the foot of each LED bar
     g.add(cable(black, [[p2[0] + 0.12, Y, p2[1] - 0.04], [1.7, Y, 4.12], [1.85, Y, 3.95], [PLANT.x - 0.15, Y, PLANT.z + 0.12], [PLANT.x - 0.1, 0.1, PLANT.z + 0.05]], 0.003));
     for (const [i, bar] of BARS.entries()) {
-      g.add(cable(i ? white : black, [[p2[0] + 0.1, Y, p2[1] + 0.02], [1.65 + i * 0.2, Y, 4.35 - i * 0.05], [bar.x - 0.15, Y, bar.z + 0.1], [bar.x - 0.02, Y, bar.z], [bar.x - 0.02, 0.15, bar.z]], 0.003));
+      g.add(cable(i ? white : black, [[p2[0] + 0.1, Y, p2[1] + 0.02], [1.65 + i * 0.2, Y, 4.35 - i * 0.05], [bar.x - 0.15, Y, bar.z + 0.1], [bar.x - 0.02, Y, bar.z], [bar.x - 0.015, BAR_BOTTOM * 0.5, bar.z], [bar.x - 0.01, BAR_BOTTOM, bar.z]], 0.003));
     }
     // the sensor beside the first window and its lead down the pier
     const sensorZ = R1_NICHES[1].z0 - 0.08;
@@ -368,9 +363,13 @@ export function buildProps(materials) {
 
     // round black café table and the folding wire chairs under Artificial Paradise II
     const table = new THREE.Group();
-    table.add(place(cyl(0.3, 0.3, 0.025, materials.black, 32), 0, 0.75, 0));
-    table.add(place(cyl(0.03, 0.03, 0.74, materials.black, 10), 0, 0.37, 0));
-    table.add(place(cyl(0.2, 0.22, 0.025, materials.black, 24), 0, 0.012, 0));
+    // (DSC_0059, DSC_0083: a glossy black round top on a single black column and round foot)
+    const gloss = new THREE.MeshStandardMaterial({ color: 0x0d0d0f, roughness: 0.22, metalness: 0.2 });
+    table.add(place(cyl(0.3, 0.3, 0.02, gloss, 40), 0, 0.75, 0));
+    table.add(place(cyl(0.3, 0.29, 0.012, materials.black, 40), 0, 0.734, 0));
+    table.add(place(cyl(0.022, 0.022, 0.7, gloss, 14), 0, 0.38, 0));
+    table.add(place(cyl(0.022, 0.06, 0.05, gloss, 14), 0, 0.04, 0));
+    table.add(place(cyl(0.21, 0.23, 0.018, gloss, 32), 0, 0.009, 0));
     g.add(place(table, 8.292, 0, 2.272));
     obstacle(7.98, 8.603, 1.987, 2.557);
     g.add(place(wireChair(materials, gridMat), 7.169, 0, 2.063, 0.1));
@@ -398,9 +397,16 @@ export function buildProps(materials) {
     g.add(slab(materials.white, 6.027, 7.024, 2.02, 2.08, 5.682, 5.73));
     g.add(place(box(0.12, 0.02, 0.04, materials.steel), 6.837, 1.02, 5.673));
 
-    // gate in front of the storage alcove (DSC_0058–0060), with lumber stored behind
-    for (let x = 8.811; x < 9.829; x += 0.11) g.add(slab(materials.white, x, x + 0.016, 0.05, 2.08, 1.58, 1.6));
-    for (const y of [0.05, 1.0, 2.06]) g.add(slab(materials.white, 8.769, 9.84, y, y + 0.025, 1.57, 1.61));
+    // grille in front of the storage alcove (DSC_0058–0060): dark galvanised steel, round
+    // rods ending in points above the top bar, three flat bars; lumber stored behind
+    {
+      const steel = new THREE.MeshStandardMaterial({ color: 0x4a4c50, roughness: 0.55, metalness: 0.6 });
+      for (let x = 8.86; x < 9.82; x += 0.16) {
+        g.add(rod(steel, new THREE.Vector3(x, 0.06, 1.59), new THREE.Vector3(x, 2.0, 1.59), 0.008, 6));
+        g.add(place(new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.05, 6), steel), x, 2.025, 1.59));
+      }
+      for (const y of [0.25, 1.05, 1.86]) g.add(slab(steel, 8.78, 9.83, y, y + 0.035, 1.575, 1.582));
+    }
     for (let i = 0; i < 5; i++) {
       const b = box(0.12, 2.0, 0.025, materials.wood);
       place(b, 8.915 + i * 0.17, 1.0, 0.25 + i * 0.06);
@@ -427,21 +433,68 @@ export function buildProps(materials) {
     low.rotation.z = Math.PI / 2;
     g.add(place(low, 20.64, 0.42, 1.778));
     dirtAlong(15.9, 0.42, 1.778, 25.38, 0.42, 1.778);
-    for (const [x, y0, r] of [[18.917, 0.42, 0.03], [20.305, 1.9, 0.065], [20.976, 1.9, 0.065], [24.184, 0.42, 0.03]]) {
+    for (const [x, y0, r] of [[18.917, 0.42, 0.03], [24.184, 0.42, 0.03]]) {
       g.add(place(cyl(r, r, 2.9 - y0, pipeMat, 10), x, (2.9 + y0) / 2, 1.73 + r + 0.02));
       dirtAlong(x, y0, 1.75 + r, x, 2.9, 1.75 + r);
     }
+    // a second low pipe above the first (DSC_0109)
+    const low2 = cyl(0.028, 0.028, 9.48, pipeMat, 8);
+    low2.rotation.z = Math.PI / 2;
+    g.add(place(low2, 20.64, 0.66, 1.776));
+    // the two big drain pipes coming down from the top pipe (DSC_0109, DSC_0111): one
+    // straight down to an elbow into the wall at about 1 m, the other joining it at a slant
+    {
+      const r = 0.065;
+      const z = 1.73 + r + 0.02;
+      const V = (x, y) => new THREE.Vector3(x, y, z);
+      const parts = [[V(20.305, 2.9), V(20.305, 1.05)], [V(20.976, 2.9), V(20.976, 2.0)], [V(20.976, 2.0), V(20.37, 1.42)]];
+      for (const [a, b] of parts) g.add(rod(pipeMat, a, b, r, 12));
+      // bottom elbow: a short bend turning into the wall
+      g.add(place(cyl(r, r, 0.12, pipeMat, 12).rotateX(Math.PI / 2), 20.305, 1.0, z - 0.05));
+      for (const y of [2.2, 1.65]) g.add(place(cyl(r + 0.012, r + 0.012, 0.06, pipeMat, 12), 20.305, y, z));
+      g.add(place(cyl(r + 0.012, r + 0.012, 0.06, pipeMat, 12), 20.976, 2.25, z));
+      dirtAlong(20.305, 1.0, z, 20.305, 2.9, z);
+      dirtAlong(20.976, 2.0, z, 20.976, 2.9, z);
+    }
+    // small black box with a light and a round camera high on the north wall, right of the
+    // drains (DSC_0109, DSC_0111)
+    g.add(place(box(0.11, 0.24, 0.1, materials.black), 22.75, 2.28, 1.79));
+    g.add(place(box(0.04, 0.03, 0.04, materials.led), 22.77, 2.42, 1.8));
+    g.add(place(new THREE.Mesh(new THREE.SphereGeometry(0.045, 12, 8), materials.black), 22.48, 2.22, 1.77));
     // the pale pipe with collars above the projection, and the dark one along the top of the
     // north wall (DSC_0113; height and thickness from the 4 m wall's scale)
     const palePipe = new THREE.MeshStandardMaterial({ color: 0x3f3c37, roughness: 0.65 });
+    // the pipe over the projection is white paint; the projector lights it (DSC_0113–0114)
+    const endPipe = new THREE.MeshStandardMaterial({ color: 0x8e8a83, roughness: 0.6 });
     const along = (r, len, mat, x, y, z) => {
       const m = cyl(r, r, len, mat, 14);
       m.rotation.x = Math.PI / 2;
       return place(m, x, y, z);
     };
-    g.add(along(0.085, 3.75, palePipe, 25.295, 2.58, 3.725));
+    g.add(along(0.085, 3.75, endPipe, 25.295, 2.58, 3.725));
     dirtAlong(25.295, 2.58, 1.85, 25.295, 2.58, 5.6);
-    for (const z of [2.43, 3.43, 4.46, 5.54]) g.add(along(0.1, 0.1, palePipe, 25.295, 2.58, z));
+    for (const z of [2.43, 3.43, 4.46, 5.54]) g.add(along(0.1, 0.1, endPipe, 25.295, 2.58, z));
+    // its branch near the north corner, slanting up and then straight into the ceiling
+    g.add(rod(endPipe, new THREE.Vector3(25.295, 2.58, 2.62), new THREE.Vector3(25.295, 2.76, 2.42), 0.075, 12));
+    g.add(rod(endPipe, new THREE.Vector3(25.295, 2.74, 2.42), new THREE.Vector3(25.295, 2.92, 2.42), 0.075, 12));
+
+    // the dark conduit along the middle of the ceiling with four LED floodlights on it, the
+    // projector hanging at its west end (DSC_0111, DSC_0113, DSC_0114)
+    {
+      const x0 = 17.48;
+      const x1 = 23.9;
+      g.add(slab(materials.black, x0, x1, 2.665, 2.72, 3.69, 3.76));
+      const lampFace = new THREE.MeshStandardMaterial({ color: 0x9a9b9e, roughness: 0.4, metalness: 0.3 });
+      for (const [x, tilt, side] of [[19.1, 0.7, 1], [20.4, 0.55, -1], [21.75, 0.7, 1], [23.0, 0.6, -1]]) {
+        const f = new THREE.Group();
+        f.add(place(box(0.13, 0.035, 0.11, materials.black), 0, 0, 0));
+        f.add(place(box(0.11, 0.004, 0.09, lampFace), 0, -0.019, 0));
+        f.add(place(box(0.02, 0.06, 0.02, materials.black), 0, 0.04, 0));
+        f.rotation.z = tilt; // tipped towards the end wall
+        f.rotation.x = side * 0.25;
+        g.add(place(f, x, 2.6, 3.725 + side * 0.03));
+      }
+    }
     // (the big one is painted white like the walls and runs the whole room, as in the lit
     // photo of the empty room)
     const top = cyl(0.1, 0.1, 9.5, palePipe, 12);

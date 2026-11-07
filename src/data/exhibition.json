@@ -31,7 +31,11 @@
         "w": 1.6,
         "h": 1.4
       },
-      "desc": "landscape"
+      "desc": "landscape",
+      "link": {
+        "en": "https://kristoflab.com/en/wrong-data-series-2/",
+        "hu": "https://kristoflab.com/wrong-data-series/"
+      }
     },
     {
       "id": "w02-human-as-error-vi",
@@ -55,7 +59,11 @@
         "x": 3.1,
         "z": 2.2
       },
-      "desc": "human-as-error"
+      "desc": "human-as-error",
+      "link": {
+        "en": "https://kristoflab.com/en/human-as-error-2/",
+        "hu": "https://kristoflab.com/human-as-error/"
+      }
     },
     {
       "id": "w03-paradise-factory",
@@ -81,12 +89,7 @@
         "img/w03-paradise-factory-c"
       ],
       "video": {
-        "full": [
-          {
-            "drive": "1BfU8xxBOmY8v9S-iKBYXGh44sbsZroXj",
-            "label": "documentation"
-          }
-        ]
+        "viewer": "video/w03-documentation.mp4"
       },
       "size": "250 × 250 cm"
     },
@@ -143,7 +146,11 @@
         "w": 1.2,
         "h": 0.9
       },
-      "desc": "human-as-error"
+      "desc": "human-as-error",
+      "link": {
+        "en": "https://kristoflab.com/en/human-as-error-2/",
+        "hu": "https://kristoflab.com/human-as-error/"
+      }
     },
     {
       "id": "w05-human-as-error-i",
@@ -163,7 +170,11 @@
         "w": 1.2,
         "h": 0.9
       },
-      "desc": "human-as-error"
+      "desc": "human-as-error",
+      "link": {
+        "en": "https://kristoflab.com/en/human-as-error-2/",
+        "hu": "https://kristoflab.com/human-as-error/"
+      }
     },
     {
       "id": "w06-artificial-paradise-i",
@@ -253,7 +264,11 @@
           }
         ]
       },
-      "desc": "landscape"
+      "desc": "landscape",
+      "link": {
+        "en": "https://kristoflab.com/en/wrong-data-series-2/",
+        "hu": "https://kristoflab.com/wrong-data-series/"
+      }
     },
     {
       "id": "w09-warsaw-g24-i",
@@ -273,7 +288,11 @@
         "w": 0.4,
         "h": 0.75
       },
-      "desc": "landscape"
+      "desc": "landscape",
+      "link": {
+        "en": "https://kristoflab.com/en/wrong-data-series-2/",
+        "hu": "https://kristoflab.com/wrong-data-series/"
+      }
     },
     {
       "id": "w10-warsaw-ii",
@@ -293,7 +312,11 @@
         "w": 0.5,
         "h": 0.8
       },
-      "desc": "landscape"
+      "desc": "landscape",
+      "link": {
+        "en": "https://kristoflab.com/en/wrong-data-series-2/",
+        "hu": "https://kristoflab.com/wrong-data-series/"
+      }
     },
     {
       "id": "w11-artificial-paradise-i-print",
@@ -373,7 +396,11 @@
         "w": 0.4,
         "h": 0.75
       },
-      "desc": "landscape"
+      "desc": "landscape",
+      "link": {
+        "en": "https://kristoflab.com/en/wrong-data-series-2/",
+        "hu": "https://kristoflab.com/wrong-data-series/"
+      }
     },
     {
       "id": "w15-wiena-wrong-landscape-i",
@@ -401,7 +428,11 @@
           }
         ]
       },
-      "desc": "landscape"
+      "desc": "landscape",
+      "link": {
+        "en": "https://kristoflab.com/en/wrong-data-series-2/",
+        "hu": "https://kristoflab.com/wrong-data-series/"
+      }
     },
     {
       "id": "w16-let-it-flow",
@@ -431,7 +462,11 @@
         "img/w16-let-it-flow-a",
         "img/w16-let-it-flow-b"
       ],
-      "size": "400 × 700 cm"
+      "size": "400 × 700 cm",
+      "link": {
+        "en": "https://kristoflab.com/en/let-it-flow-2024/",
+        "hu": "https://kristoflab.com/let-it-flow-hu/"
+      }
     },
     {
       "id": "w17-natural-life",
@@ -460,7 +495,11 @@
         ],
         "sound": true
       },
-      "desc": "natural-life"
+      "desc": "natural-life",
+      "link": {
+        "en": "https://kristoflab.com/en/let-it-flow-2024/",
+        "hu": "https://kristoflab.com/let-it-flow-hu/"
+      }
     }
   ],
   "sheets": [

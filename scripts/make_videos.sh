@@ -80,5 +80,7 @@ enc "paradise factory_.mp4" w03-screen 20 45 "transpose=2,crop=1024:1232,scale=5
 enc_loop "trees_new.mp4" w16-projection 0 9 "scale=1600:900:flags=lanczos" 25 24 0
 # shown in the artwork viewer: the documentation video of the installation
 enc "Let it flow 2025 MAMU.mp4" w16-documentation 0 8.8 "scale=1280:720:flags=lanczos" 25 25 0
+# shown in the artwork viewer for Paradise Factory: its documentation video, whole, with sound
+enc "paradise factory 2025 installation.mp4" w03-documentation 0 73.04 "scale=1280:720:flags=lanczos" 25 29 0
 # the black point is raised so the video's faint haze stays off the dark floor, as in the photos
 enc_fade "Let it flow_ok.mp4" w16-floor 10 40 "scale=1280:720:flags=lanczos,colorlevels=rimin=0.07:gimin=0.07:bimin=0.09" 25 27

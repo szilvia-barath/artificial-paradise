@@ -74,6 +74,30 @@ function concreteCanvas(seed = 11) {
   return c;
 }
 
+// Worn concrete for the stair treads (panorama): grey-brown, darker where feet wear it, with
+// chips and dust; drawn once, 1 m per tile.
+function wornConcreteCanvas(seed = 23) {
+  const size = 256;
+  const rand = rng(seed);
+  const c = canvas(size);
+  const g = c.getContext('2d');
+  g.fillStyle = '#857e75';
+  g.fillRect(0, 0, size, size);
+  for (let i = 0; i < 90; i++) {
+    const v = 95 + rand() * 60;
+    g.fillStyle = `rgba(${v},${v - 6},${v - 12},${0.12 + rand() * 0.2})`;
+    g.beginPath();
+    g.ellipse(rand() * size, rand() * size, 8 + rand() * 40, 5 + rand() * 22, rand() * 3, 0, Math.PI * 2);
+    g.fill();
+  }
+  for (let i = 0; i < 160; i++) {
+    g.fillStyle = `rgba(30,26,22,${0.25 + rand() * 0.4})`;
+    g.fillRect(rand() * size, rand() * size, 1 + rand() * 4, 1 + rand() * 3);
+  }
+  speckle(g, size, rand, 9000, 0.12);
+  return c;
+}
+
 function tex(c, srgb, repeatMetres = 1, maxAniso = 4) {
   const t = new THREE.CanvasTexture(c);
   t.wrapS = t.wrapT = THREE.RepeatWrapping;
@@ -128,6 +152,7 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
   const tileBump = tex(tiles.bump, false, 1.2, aniso);
   const concrete = tex(concreteCanvas(), true, 2, aniso);
   const planks = tex(planksCanvas(), true, 1, aniso);
+  const worn = tex(wornConcreteCanvas(), true, 1, aniso);
 
   const brickMat = (name, color, rough = 0.95, bumpScale = 2.2, wash = false) => {
     const m = new THREE.MeshStandardMaterial({ color, bumpScale, roughness: rough, metalness: 0 });
@@ -190,8 +215,15 @@ export function createMaterials(renderer, manager, { lowPower = false } = {}) {
     steel: new THREE.MeshStandardMaterial({ color: 0x9a9ca0, roughness: 0.35, metalness: 0.8 }),
     wood: new THREE.MeshStandardMaterial({ color: 0x6b5442, roughness: 0.8 }),
     door: new THREE.MeshStandardMaterial({ color: 0x8c8678, roughness: 0.7 }),
-    stair: new THREE.MeshStandardMaterial({ color: 0x3c3a3a, roughness: 0.9 }),
-    stairBrick: bricks['brick-grey'].map.into(new THREE.MeshStandardMaterial({ color: 0xa8634a, roughness: 0.95 }), 'map'),
+    // the stairs (panorama): worn grey concrete treads, a band of bare red brick along the
+    // open side
+    stair: new THREE.MeshStandardMaterial({ color: 0x8a8580, map: worn, roughness: 0.92 }),
+    stairBrick: (() => {
+      const m = new THREE.MeshStandardMaterial({ color: 0xb07a60, roughness: 0.96, bumpScale: 2.4 });
+      bricks['brick-warm'].map.into(m, 'map');
+      bricks['brick-warm'].bump.into(m, 'bumpMap');
+      return m;
+    })(),
     glass: new THREE.MeshStandardMaterial({ color: 0xcfe2e8, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false }),
     clearPlastic: new THREE.MeshStandardMaterial({ color: 0xe8f0f2, roughness: 0.15, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide }),
     leaf: new THREE.MeshStandardMaterial({ color: 0x9ccf5a, roughness: 0.55, emissive: 0x1c3a0a }),

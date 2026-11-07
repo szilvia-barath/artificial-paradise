@@ -1,6 +1,6 @@
-import { t } from '../i18n.js';
+import { t, lang } from '../i18n.js';
 
-// Artwork overlay: large image (for the video works, the loop with its sound, and on
+// Artwork overlay: a link to the work on kristoflab.com where it has a page; large image (for the video works, the loop with its sound, and on
 // request the full video or video documentation from Google Drive), caption, the artist's
 // text on the work or its series, exhibition text, prev/next, "in situ" photos, and a
 // "walk to this work" shortcut.
@@ -21,6 +21,7 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
   const loading = el.querySelector('.viewer-loading');
   const title = document.getElementById('viewer-title');
   const meta = document.getElementById('viewer-meta');
+  const site = document.getElementById('viewer-site');
   const caption = document.getElementById('viewer-caption');
   const desc = document.getElementById('viewer-desc');
   const room = document.getElementById('viewer-room');
@@ -49,6 +50,13 @@ export function setupViewer(data, { onOpen, onClose, onGoto, onMedia, isMuted })
     room.textContent = `${data.rooms[w.room].name} · ${t('viewer.no', { no: w.no })}`;
     title.textContent = w.title;
     meta.innerHTML = `${esc(data.meta.artist)}<br />${esc([w.medium, w.size, w.year].filter(Boolean).join(', '))}`;
+    // the work (or its series) on the artist's own website, in the site's language
+    const link = w.link && (w.link[lang()] || w.link.en);
+    site.hidden = !link;
+    if (link) {
+      site.href = link;
+      site.textContent = `${t('viewer.artistSite')} ↗`;
+    }
     caption.textContent = w.caption || '';
     caption.hidden = !w.caption;
     const d = w.desc && data.descriptions[w.desc];

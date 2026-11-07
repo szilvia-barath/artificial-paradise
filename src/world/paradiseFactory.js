@@ -24,6 +24,7 @@ const B = P(1.64, 2.72); // north-east end, beside the plant
 export const PIPE = { a: A, b: B, y: 1.0 };
 export const PLANT = P(1.8, 3.42);
 export const BARS = [P(1.9, 3.14), P(2.0, 3.7)];
+export const BAR_BOTTOM = 0.64; // the LED bars end level with the top of the plant's box
 const CEIL = 3.0;
 
 function rng(seed) {
@@ -167,13 +168,15 @@ export function buildParadiseFactory(materials, manager) {
       new THREE.Vector3(0.05, -0.98, -len / 2 + 0.35),
     ]);
     line.add(new THREE.Mesh(new THREE.TubeGeometry(drop, 20, 0.005, 5, false), materials.clearPlastic));
-    // LED tube 20 cm above: dark housing, glowing diffuser underneath
-    const led = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.022, len - 0.06), materials.black);
-    led.position.y = 0.2;
-    line.add(led);
-    const diff = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.008, len - 0.1), materials.led);
-    diff.position.y = 0.186;
-    line.add(diff);
+    // two LED tubes 20 cm above, side by side: dark housing, glowing diffuser underneath
+    for (const sx of [-0.045, 0.045]) {
+      const led = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.022, len - 0.06), materials.black);
+      led.position.set(sx, 0.2, 0);
+      line.add(led);
+      const diff = new THREE.Mesh(new THREE.BoxGeometry(0.022, 0.008, len - 0.1), materials.led);
+      diff.position.set(sx, 0.186, 0);
+      line.add(diff);
+    }
     // chains to the ceiling: channel and lamp hang separately, near each end
     const world = (lx, ly, lz) => new THREE.Vector3(lx, ly, lz).applyAxisAngle(new THREE.Vector3(0, 1, 0), yaw).add(line.position);
     for (const z of [-len / 2 + 0.2, len / 2 - 0.2]) {
@@ -208,6 +211,32 @@ export function buildParadiseFactory(materials, manager) {
       }
     }
     line.add(leaves);
+    // the seedlings stand in brown expanded-clay pebbles filling the channel (documentation video)
+    {
+      const pebbleMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.85 });
+      const geo = new THREE.IcosahedronGeometry(0.0065, 0);
+      const across = 7;
+      const alongN = Math.round((len - 0.04) / 0.011);
+      const pebbles = new THREE.InstancedMesh(geo, pebbleMat, across * alongN);
+      const c = new THREE.Color();
+      let n = 0;
+      for (let i = 0; i < alongN; i++) {
+        for (let j = 0; j < across; j++) {
+          const s = 0.75 + rand() * 0.6;
+          e.set(rand() * 6, rand() * 6, rand() * 6);
+          q.setFromEuler(e);
+          m4.compose(
+            new THREE.Vector3(-w + 0.008 + ((j + rand() * 0.7) / across) * (2 * w - 0.016), h + 0.002 + rand() * 0.004, -len / 2 + 0.02 + ((i + rand()) / alongN) * (len - 0.04)),
+            q,
+            new THREE.Vector3(s, s * (0.75 + rand() * 0.3), s),
+          );
+          pebbles.setMatrixAt(n, m4);
+          c.setHSL(0.055 + rand() * 0.03, 0.45 + rand() * 0.15, 0.22 + rand() * 0.14, THREE.SRGBColorSpace);
+          pebbles.setColorAt(n++, c);
+        }
+      }
+      line.add(pebbles);
+    }
     // keep visitors out from under the line: small boxes along its diagonal
     for (let i = 0; i < 6; i++) {
       const p = new THREE.Vector3().copy(a).lerp(b, (i + 0.5) / 6);
@@ -325,14 +354,16 @@ export function buildParadiseFactory(materials, manager) {
       g.add(chain(chainMat, new THREE.Vector3(x + 0.04, 1.52, z + 0.22), new THREE.Vector3(x + 0.04, CEIL, z + 0.24)));
     }
 
-    // the two LED bars, floor to ceiling, their light strips turned towards the plant
+    // the two LED bars, hanging from the ceiling down to the top of the plant's box, their
+    // light strips turned towards the plant
     for (const bar of BARS) {
       const toPlant = Math.atan2(x - bar.x, z - bar.z);
       const post = new THREE.Group();
       post.position.set(bar.x, 0, bar.z);
       post.rotation.y = toPlant;
-      post.add(new THREE.Mesh(new THREE.BoxGeometry(BAR_HALF * 2, CEIL - 0.02, 0.025), materials.black).translateY(CEIL / 2));
-      post.add(new THREE.Mesh(new THREE.BoxGeometry(0.022, CEIL - 0.12, 0.006), materials.led).translateY(CEIL / 2).translateZ(0.014));
+      const len = CEIL - 0.02 - BAR_BOTTOM;
+      post.add(new THREE.Mesh(new THREE.BoxGeometry(BAR_HALF * 2, len, 0.025), materials.black).translateY(BAR_BOTTOM + len / 2));
+      post.add(new THREE.Mesh(new THREE.BoxGeometry(0.022, len - 0.1, 0.006), materials.led).translateY(BAR_BOTTOM + len / 2).translateZ(0.014));
       g.add(post);
     }
     OBSTACLES.push({ x0: x - 0.3, x1: x + 0.3, z0: z - 0.3, z1: z + 0.3 });

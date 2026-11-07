@@ -121,7 +121,7 @@ function drawTextSheet(g, data) {
   g.fillText(t('wall.sheetMeta'), 36, 160);
   let size = 16;
   const lines = (sz) => {
-    g.font = `${sz}px Helvetica, Arial, sans-serif`;
+    g.font = `500 ${sz}px Helvetica, Arial, sans-serif`;
     let n = 0;
     for (const p of data.text) {
       let line = '';
@@ -135,7 +135,7 @@ function drawTextSheet(g, data) {
   };
   while (size > 10 && lines(size) > 712) size -= 0.5;
   g.fillStyle = '#000';
-  g.font = `${size}px Helvetica, Arial, sans-serif`;
+  g.font = `500 ${size}px Helvetica, Arial, sans-serif`;
   let y = 200;
   for (const p of data.text) y = wrapText(g, p, 36, y, 440, size * 1.36) + 10;
   g.fillStyle = '#666';
@@ -192,6 +192,7 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
   const wallTexts = [];
   // the sheets are drawn at 3x (2x on phones) so the letters stay sharp up close
   const TEXT_SCALE = hdBudget > 3 ? 3 : 2;
+  const SHEET_SCALE = hdBudget > 3 ? 4 : 2.5;
   const wallText = (w, h, draw, anisotropy) => {
     const tex = canvasTexture(w, h, draw, anisotropy);
     wallTexts.push(tex);
@@ -348,12 +349,16 @@ export function buildGallery(data, materials, manager, renderer, { hdBudget = 6,
 
   // Exhibition texts and the room sheet (works list + plan), pinned up as in the photos
   for (const sh of data.sheets || []) {
-    const tex = wallText(512 * TEXT_SCALE, 724 * TEXT_SCALE, (g) => {
-      g.setTransform(TEXT_SCALE, 0, 0, TEXT_SCALE, 0, 0);
+    // the long exhibition text gets a bigger sheet (50 x 71 cm) drawn at 4x on desktop so its
+    // small type stays sharp; the room sheet keeps its size to fit the bar's pillar
+    const big = sh.kind !== 'roomsheet';
+    const k = big ? SHEET_SCALE : TEXT_SCALE;
+    const tex = wallText(Math.round(512 * k), Math.round(724 * k), (g) => {
+      g.setTransform(k, 0, 0, k, 0, 0);
       if (sh.kind === 'roomsheet') drawRoomSheet(g, data);
       else drawTextSheet(g, data);
     }, 16);
-    const panel = new THREE.Mesh(new THREE.PlaneGeometry(0.39, 0.55), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
+    const panel = new THREE.Mesh(new THREE.PlaneGeometry(big ? 0.5 : 0.39, big ? 0.707 : 0.55), new THREE.MeshBasicMaterial({ map: tex, color: TEXT_TINT }));
     const f = wallFrame(sh.face, sh.at, sh.along, 0.006);
     panel.position.set(f.x, sh.y, f.z);
     panel.rotation.y = f.rotY;

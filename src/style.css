@@ -265,6 +265,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 #site-foot a { color: inherit; text-underline-offset: 3px; }
 #site-foot .sep { opacity: 0.5; }
+.notice-links { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.notice-links .link { margin-top: 0; }
 #site-foot button {
   background: none;
   border: 0;

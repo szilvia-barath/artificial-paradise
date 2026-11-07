@@ -89,9 +89,28 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
         <dd><a href="${esc(c.href)}"${c.href.startsWith('http') ? ' target="_blank" rel="noopener"' : ''}>${esc(c.type === 'address' ? data.meta.address : c.text)}</a></dd>`).join('')}
       </dl>` : `<p class="note">${esc(t('panels.contactSoon'))}</p>`}`;
     }).join('')}
+    <p class="notice-links"><button class="link mono" data-nav="legal">${esc(t('nav.legal'))}</button> · <button class="link mono" data-nav="privacy">${esc(t('nav.privacy'))}</button></p>
   `;
 
-  const PAGES = { about: aboutHTML, works: worksHTML, bts: btsHTML, contact: contactHTML };
+  // Legal notice and privacy (texts in src/i18n/*.json "legal" / "privacy"): headed
+  // sections with optional links, external or to another panel (`nav`).
+  const noticeHTML = (key) => () => {
+    const n = t(key);
+    const link = (l) => (l.nav
+      ? `<button class="link mono" data-nav="${esc(l.nav)}">${esc(l.text)}</button>`
+      : `<a href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.text)} ↗</a>`);
+    return `
+    <p class="eyebrow">${esc(data.meta.title)}</p>
+    <h2>${esc(n.title)}</h2>
+    ${n.sections.map((s) => `
+      <h3>${esc(s.h)}</h3>
+      ${s.p.map((p) => `<p>${esc(p)}</p>`).join('')}
+      ${s.links ? `<p class="notice-links">${s.links.map(link).join(' · ')}</p>` : ''}`).join('')}
+    ${n.updated ? `<p class="note">${esc(n.updated)}</p>` : ''}
+  `;
+  };
+
+  const PAGES = { about: aboutHTML, works: worksHTML, bts: btsHTML, contact: contactHTML, legal: noticeHTML('legal'), privacy: noticeHTML('privacy') };
 
   const markNav = () => {
     for (const b of navButtons) b.setAttribute('aria-current', String(b.dataset.nav === current));
@@ -117,6 +136,11 @@ export function setupPanels(data, { onOpenPanel, onClosePanel, onJumpRoom, onOpe
   };
   panel.querySelector('[data-close]').addEventListener('click', close);
   body.addEventListener('click', (e) => {
+    const n = e.target.closest('[data-nav]');
+    if (n) {
+      show(n.dataset.nav);
+      return;
+    }
     const b = e.target.closest('[data-work]');
     if (!b || !onOpenWork) return;
     onOpenWork(data.works.find((w) => w.id === b.dataset.work));

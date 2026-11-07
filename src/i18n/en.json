@@ -11,7 +11,9 @@
       "build": "Behind the scenes",
       "menu": "Menu",
       "language": "Language",
-      "contact": "Contact"
+      "contact": "Contact",
+      "legal": "Legal notice",
+      "privacy": "Privacy"
     },
     "soundAsk": {
       "question": "Visit with sound?",
@@ -316,5 +318,111 @@
       "Also at the turn of the 1850s and 1860s, in 1859, a third book appeared from a third gentleman, ten years older than the other two: On the Origin of Species by Charles Darwin. Kristóf Szabó approaches the origin of species from the end of species, natural selection from artificial selection. His works claim that man is not only not the crown of creation but not even the peak of evolution; in fact, an error. Human as Error. The question is what correcting this error would mean: besides the radical transformation or abolition of capitalism, posthuman and post-anthropocentric theories argue that, if we do not want to abolish ourselves, it is precisely our human-centredness that we have to overcome in order to survive.",
       "Our problem today is still that of Baudelaire and Tyndall: the smoke of utopia drifts away, but the smoke of dystopia stays."
     ]
+  },
+  "legal": {
+    "title": "Legal notice",
+    "sections": [
+      {
+        "h": "Published by",
+        "p": [
+          "Szilvia Barath, who made this digital exhibition (3D reconstruction, design and programming)."
+        ],
+        "links": [
+          {
+            "nav": "contact",
+            "text": "Contact"
+          }
+        ]
+      },
+      {
+        "h": "About this site",
+        "p": [
+          "A non-commercial digital exhibition. It documents Artificial Paradise, the exhibition of Kristóf Szabó / KristofLab at MAMŰ Gallery, Budapest (10–31 January 2025), as a walkable 3D reconstruction."
+        ]
+      },
+      {
+        "h": "Hosting",
+        "p": [
+          "GitHub Pages, a service of GitHub, Inc., 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA."
+        ],
+        "links": [
+          {
+            "href": "https://pages.github.com",
+            "text": "pages.github.com"
+          }
+        ]
+      },
+      {
+        "h": "Copyright",
+        "p": [
+          "The artworks, their reproductions and videos, and the artist’s texts: © Kristóf Szabó / KristofLab. The installation photographs and documentation videos are shown for documentation purposes. The MAMŰ logo belongs to MAMŰ Society. The 3D reconstruction and the website: © Szilvia Barath.",
+          "Please ask before reusing any of it."
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Privacy",
+    "sections": [
+      {
+        "h": "In short",
+        "p": [
+          "This site uses no cookies, no analytics and no tracking, and does not collect personal data itself."
+        ]
+      },
+      {
+        "h": "What your browser keeps",
+        "p": [
+          "One setting: the language you chose, kept in your browser’s local storage so that the site opens in it next time. It never leaves your device; clearing your browser’s site data removes it."
+        ]
+      },
+      {
+        "h": "Hosting (GitHub)",
+        "p": [
+          "The site is served by GitHub Pages. To deliver it, GitHub processes technical data such as your IP address in its server logs."
+        ],
+        "links": [
+          {
+            "href": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+            "text": "GitHub privacy statement"
+          }
+        ]
+      },
+      {
+        "h": "Videos played from Google Drive",
+        "p": [
+          "For some works the full video plays in Google Drive’s player. It is loaded only when you click its button; from then on Google receives your IP address and may set its own cookies."
+        ],
+        "links": [
+          {
+            "href": "https://policies.google.com/privacy",
+            "text": "Google privacy policy"
+          }
+        ]
+      },
+      {
+        "h": "Links to other sites",
+        "p": [
+          "Links to the artist’s website, MAMŰ, Instagram, Facebook, LinkedIn and OpenStreetMap open those sites, under their own privacy policies."
+        ]
+      },
+      {
+        "h": "Your rights",
+        "p": [
+          "Under the GDPR you can ask any controller for access to your data, its correction or its erasure. This site holds no data about its visitors; for data held by GitHub or Google, contact them. With questions, use the Contact page. You can also turn to the Hungarian data protection authority (NAIH)."
+        ],
+        "links": [
+          {
+            "nav": "contact",
+            "text": "Contact"
+          },
+          {
+            "href": "https://naih.hu",
+            "text": "naih.hu"
+          }
+        ]
+      }
+    ],
+    "updated": "Last updated: 7 November 2026"
   }
 }

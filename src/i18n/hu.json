@@ -11,7 +11,9 @@
       "build": "Kulisszák mögött",
       "menu": "Menü",
       "language": "Nyelv",
-      "contact": "Kapcsolat"
+      "contact": "Kapcsolat",
+      "legal": "Impresszum",
+      "privacy": "Adatkezelés"
     },
     "soundAsk": {
       "question": "Hanggal nézed a kiállítást?",
@@ -314,5 +316,111 @@
       "Szintén az 1850-es és hatvanas évek fordulóján, 1859-ben jelenik meg egy harmadik könyv egy harmadik, az előző kettőnél tíz évvel idősebb úriembertől: A fajok eredete Charles Darwintól. Szabó Kristóf A fajok eredetét a fajok vége felől, a természetes szelekciót a mesterséges szelekció felől közelíti meg. Munkái azt állítják, hogy az ember nemcsak, hogy nem a teremtés koronája, de még csak nem is az evolúció csúcsa – ami azt illeti: hiba. Human as Error. Kérdés, mit jelent ennek a hibának a kijavítása: a kapitalizmus radikális átalakítása vagy felszámolása mellett a poszthumán és posztantropocentrikus elméletek alapján, ha nem akarjuk önmagunkat felszámolni, éppen az emberközpontúságunkat kell meghaladni ahhoz, hogy fennmaradhassunk.",
       "A problémánk ma is Baudelaire-é és Tyndallé: az utópia füstje elszáll, de a disztópia füstje itt marad."
     ]
+  },
+  "legal": {
+    "title": "Impresszum",
+    "sections": [
+      {
+        "h": "Üzemeltető",
+        "p": [
+          "Barath Szilvia, a digitális kiállítás készítője (3D-rekonstrukció, tervezés és programozás)."
+        ],
+        "links": [
+          {
+            "nav": "contact",
+            "text": "Kapcsolat"
+          }
+        ]
+      },
+      {
+        "h": "Az oldalról",
+        "p": [
+          "Nem kereskedelmi célú digitális kiállítás. Szabó Kristóf / KristofLab Artificial Paradise című kiállítását (MAMŰ Galéria, Budapest, 2025. január 10–31.) mutatja be bejárható 3D-rekonstrukcióként."
+        ]
+      },
+      {
+        "h": "Tárhelyszolgáltató",
+        "p": [
+          "GitHub Pages, a GitHub, Inc. szolgáltatása (88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, USA)."
+        ],
+        "links": [
+          {
+            "href": "https://pages.github.com",
+            "text": "pages.github.com"
+          }
+        ]
+      },
+      {
+        "h": "Szerzői jogok",
+        "p": [
+          "A műalkotások, reprodukcióik és videóik, valamint a művész szövegei: © Szabó Kristóf / KristofLab. Az installációs fotók és a dokumentációs videók dokumentációs céllal szerepelnek. A MAMŰ logó a MAMŰ Társaság tulajdona. A 3D-rekonstrukció és a weboldal: © Barath Szilvia.",
+          "Bármely részének felhasználásához kérj engedélyt."
+        ]
+      }
+    ]
+  },
+  "privacy": {
+    "title": "Adatkezelési tájékoztató",
+    "sections": [
+      {
+        "h": "Röviden",
+        "p": [
+          "Az oldal nem használ sütiket, látogatottságmérést vagy bármilyen követést, és maga nem gyűjt személyes adatot."
+        ]
+      },
+      {
+        "h": "Amit a böngésződ megjegyez",
+        "p": [
+          "Egyetlen beállítást: a választott nyelvet, a böngésző helyi tárolójában (local storage), hogy legközelebb is ezen a nyelven nyíljon meg az oldal. Nem hagyja el az eszközödet; a böngésző webhelyadatainak törlésével eltávolítható."
+        ]
+      },
+      {
+        "h": "Tárhely (GitHub)",
+        "p": [
+          "Az oldalt a GitHub Pages szolgálja ki. Ehhez a GitHub technikai adatokat, például az IP-címedet kezeli a szervernaplóiban."
+        ],
+        "links": [
+          {
+            "href": "https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement",
+            "text": "A GitHub adatvédelmi nyilatkozata"
+          }
+        ]
+      },
+      {
+        "h": "Google Drive-ról lejátszott videók",
+        "p": [
+          "Néhány műnél a teljes videó a Google Drive lejátszójában fut. Ez csak akkor töltődik be, ha a gombjára kattintasz; onnantól a Google megkapja az IP-címedet, és saját sütiket helyezhet el."
+        ],
+        "links": [
+          {
+            "href": "https://policies.google.com/privacy",
+            "text": "A Google adatvédelmi irányelvei"
+          }
+        ]
+      },
+      {
+        "h": "Más oldalakra mutató linkek",
+        "p": [
+          "A művész honlapjára, a MAMŰ-re, az Instagramra, a Facebookra, a LinkedInre és az OpenStreetMapre mutató linkek ezeket az oldalakat nyitják meg, saját adatkezelési szabályaikkal."
+        ]
+      },
+      {
+        "h": "Jogaid",
+        "p": [
+          "A GDPR alapján bármely adatkezelőtől kérhetsz hozzáférést az adataidhoz, azok helyesbítését vagy törlését. Ez az oldal nem tárol adatot a látogatóiról; a GitHub vagy a Google által kezelt adatokkal kapcsolatban hozzájuk fordulhatsz. Kérdés esetén használd a Kapcsolat oldalt. Panasszal a Nemzeti Adatvédelmi és Információszabadság Hatósághoz (NAIH) is fordulhatsz."
+        ],
+        "links": [
+          {
+            "nav": "contact",
+            "text": "Kapcsolat"
+          },
+          {
+            "href": "https://naih.hu",
+            "text": "naih.hu"
+          }
+        ]
+      }
+    ],
+    "updated": "Utolsó frissítés: 2026. november 7."
   }
 }

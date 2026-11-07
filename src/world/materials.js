@@ -146,7 +146,7 @@ function bareBrickCanvases(seed = 41) {
 }
 
 // Damp stains on the whitewashed wall the stairs run along, just above the treads (the
-// close-up of the flight): yellow-brown water marks spreading up from where each tread meets
+// close-up of the flight): faint grey water marks spreading up from where each tread meets
 // the wall, darker at their lower edge and tide lines, grey grime, a few spots where the
 // paint has flaked to the render. Transparent, laid over the wall; one tile is 2 x 0.6 m,
 // the bottom of the tile at the treads.
@@ -158,16 +158,16 @@ function stairStainCanvas(seed = 57) {
   c.height = H;
   const g = c.getContext('2d');
   g.clearRect(0, 0, W, H);
-  // soft yellow-brown damp rising from the bottom edge, uneven along the wall
+  // soft grey damp rising from the bottom edge, uneven along the wall
   for (let i = 0; i < 26; i++) {
     const x = rand() * W;
     const r = 30 + rand() * 90;
     const h = H * (0.25 + rand() * 0.55);
     const grd = g.createRadialGradient(x, H, 2, x, H, Math.max(r, h));
-    const a = 0.26 + rand() * 0.24;
-    grd.addColorStop(0, `rgba(150,118,62,${a})`);
-    grd.addColorStop(0.55, `rgba(170,140,82,${a * 0.6})`);
-    grd.addColorStop(1, 'rgba(180,150,90,0)');
+    const a = 0.1 + rand() * 0.12;
+    grd.addColorStop(0, `rgba(112,108,102,${a})`);
+    grd.addColorStop(0.55, `rgba(128,124,118,${a * 0.6})`);
+    grd.addColorStop(1, 'rgba(140,136,130,0)');
     g.fillStyle = grd;
     g.beginPath();
     g.ellipse(x, H, r * 1.3, h, 0, Math.PI, Math.PI * 2);
@@ -177,7 +177,7 @@ function stairStainCanvas(seed = 57) {
   for (let i = 0; i < 9; i++) {
     let x = rand() * W;
     const y0 = H * (0.35 + rand() * 0.45);
-    g.strokeStyle = `rgba(120,92,50,${0.18 + rand() * 0.2})`;
+    g.strokeStyle = `rgba(100,96,90,${0.08 + rand() * 0.1})`;
     g.lineWidth = 1 + rand() * 1.5;
     g.beginPath();
     g.moveTo(x, y0);
@@ -190,8 +190,8 @@ function stairStainCanvas(seed = 57) {
   }
   // grey grime at the foot, along the treads
   const foot = g.createLinearGradient(0, H, 0, H * 0.7);
-  foot.addColorStop(0, 'rgba(70,62,52,0.35)');
-  foot.addColorStop(1, 'rgba(70,62,52,0)');
+  foot.addColorStop(0, 'rgba(80,78,74,0.2)');
+  foot.addColorStop(1, 'rgba(80,78,74,0)');
   g.fillStyle = foot;
   g.fillRect(0, H * 0.7, W, H * 0.3);
   // a few spots of flaked paint showing the ochre render
@@ -199,7 +199,7 @@ function stairStainCanvas(seed = 57) {
     const x = rand() * W;
     const y = H * (0.55 + rand() * 0.4);
     for (let k = 0; k < 7; k++) {
-      g.fillStyle = `rgba(${175 + rand() * 15},${152 + rand() * 12},${100 + rand() * 15},${0.55 + rand() * 0.3})`;
+      g.fillStyle = `rgba(${150 + rand() * 15},${147 + rand() * 12},${140 + rand() * 12},${0.2 + rand() * 0.2})`;
       g.beginPath();
       g.ellipse(x + (rand() - 0.5) * 30, y + (rand() - 0.5) * 12, 4 + rand() * 12, 3 + rand() * 6, rand() * 3, 0, Math.PI * 2);
       g.fill();
@@ -207,7 +207,7 @@ function stairStainCanvas(seed = 57) {
   }
   // dark specks
   for (let i = 0; i < 700; i++) {
-    g.fillStyle = `rgba(80,64,44,${0.1 + rand() * 0.3})`;
+    g.fillStyle = `rgba(85,82,78,${0.06 + rand() * 0.16})`;
     g.fillRect(rand() * W, H * (0.4 + rand() * 0.6), 1 + rand() * 2, 1 + rand() * 2);
   }
   return c;
